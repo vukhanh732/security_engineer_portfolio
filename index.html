@@ -16,9 +16,9 @@
   <nav class="nav-links">
     <a href="#about" class="nav-link">About</a>
     <a href="#skills" class="nav-link">Skills</a>
+    <a href="#experience" class="nav-link">Experience</a>
     <a href="#projects" class="nav-link">Projects</a>
     <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
-    <a href="#experience" class="nav-link">Experience</a>
     <a href="#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
   </nav>
@@ -26,9 +26,9 @@
   <nav class="mobile-panel">
     <a href="#about" class="mobile-link">About</a>
     <a href="#skills" class="mobile-link">Skills</a>
+    <a href="#experience" class="mobile-link">Experience</a>
     <a href="#projects" class="mobile-link">Projects</a>
     <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
-    <a href="#experience" class="mobile-link">Experience</a>
     <a href="#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
@@ -60,9 +60,7 @@
   <div class="about-grid">
     <h2 class="about-heading">Curious first. Job title second.</h2>
     <div class="about-body">
-      <p>I'm a recent UNSW Computer Science (Security Engineering) graduate currently working as a Software Developer at Cybercore Solutions, building toward a dedicated Security Engineer role.</p>
-      <p>Right now I'm deliberately building hands-on depth across three concrete areas — detection engineering and SIEM/monitoring, identity and Microsoft security, and DevSecOps automation — rather than narrowing into a single specialty before I've had real exposure to know which one fits. I build SIEM platforms, run home-lab SOC environments, and wire security checks into CI/CD pipelines because I want to understand how each layer of the stack actually breaks, not because a job description told me to.</p>
-      <p>Everything on this site is my own lab work, my own systems, or authorised training — nothing here implies client or unauthorised engagement work.</p>
+      <p>Recent UNSW Computer Science (Security Engineering) graduate, currently a Software Developer at Cybercore Solutions and building toward a dedicated Security Engineer role. I'm building depth across three compounding areas — detection engineering and SIEM/monitoring, identity and Microsoft security, and DevSecOps automation — backed by real builds: a distributed SIEM, a live SOC lab, a CI/CD security pipeline. Everything on this site is my own lab work, my own systems, or authorised training — no client work, no unauthorised access.</p>
     </div>
   </div>
 </section>
@@ -159,58 +157,9 @@
   </div>
 </section>
 
-<section id="projects" class="section reveal">
-  <div class="section-number">03</div>
-  <div class="section-label">03 / PROJECTS</div>
-  <h2 class="section-heading">Three builds, verified code, real evidence</h2>
-  <div class="projects-grid">
-    <a href="sentrynode.html" class="project-card">
-      <div class="project-tag">SIEM · THREAT DETECTION</div>
-      <div class="project-name">SentryNode</div>
-      <p class="project-hook">Distributed SIEM detecting SSH brute force, SQLi, and path traversal in real time — backed by 1,100+ lines of tests.</p>
-      <div class="project-stack"><span>FastAPI</span><span>Elasticsearch</span><span>Redis</span><span>RabbitMQ</span></div>
-      <div class="project-cta">Read the case study →</div>
-    </a>
-    <a href="wazuh.html" class="project-card">
-      <div class="project-tag">SOC · FIM · RESPONSE</div>
-      <div class="project-name">Wazuh-SOC-HomeLab</div>
-      <p class="project-hook">Multi-endpoint SOC lab with real File Integrity Monitoring and automated VirusTotal-triggered quarantine.</p>
-      <div class="project-stack"><span>Wazuh</span><span>VMware</span><span>VirusTotal</span><span>Kali</span></div>
-      <div class="project-cta">Read the case study →</div>
-    </a>
-    <a href="gatekeeper.html" class="project-card">
-      <div class="project-tag">DEVSECOPS · CI/CD</div>
-      <div class="project-name">Gatekeeper</div>
-      <p class="project-hook">CI/CD pipeline that fails builds on HIGH severity findings and generates remediation dashboards.</p>
-      <div class="project-stack"><span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span></div>
-      <div class="project-cta">Read the case study →</div>
-    </a>
-  </div>
-</section>
-
-<section id="blog-preview" class="section reveal">
-  <div class="section-label">04 / BLOG</div>
-  <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:28px;">
-    <h2 class="section-heading tight">Write-ups on real incidents</h2>
-    <a href="blog.html" class="btn-link" style="padding:0;">All posts →</a>
-  </div>
-  <div class="blog-grid">
-    <a href="blog-log4shell.html" class="blog-card">
-      <div class="blog-tag">RCE / LOGGING · CVE-2021-44228</div>
-      <div class="blog-title">Log4Shell: why one logging call became a global incident</div>
-      <p class="blog-excerpt">Root cause, MITRE ATT&amp;CK mapping, and what I'd build to catch it.</p>
-    </a>
-    <a href="blog-moveit.html" class="blog-card">
-      <div class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</div>
-      <div class="blog-title">MOVEit: a single SQL injection, thousands of victims</div>
-      <p class="blog-excerpt">How a file-transfer bug turned into mass data exposure.</p>
-    </a>
-  </div>
-</section>
-
 <section id="experience" class="section reveal">
-  <div class="section-number">05</div>
-  <div class="section-label">05 / EXPERIENCE</div>
+  <div class="section-number">03</div>
+  <div class="section-label">03 / EXPERIENCE</div>
   <h2 class="section-heading">Work experience</h2>
   <div class="timeline">
     <div class="timeline-row">
@@ -253,6 +202,55 @@
         <li>Independently deployed a personal web app on AWS (EC2 and S3) with role-based access control</li>
       </ul>
     </div>
+  </div>
+</section>
+
+<section id="projects" class="section reveal">
+  <div class="section-number">04</div>
+  <div class="section-label">04 / PROJECTS</div>
+  <h2 class="section-heading">Three builds, verified code, real evidence</h2>
+  <div class="projects-grid">
+    <a href="sentrynode.html" class="project-card">
+      <div class="project-tag">SIEM · THREAT DETECTION</div>
+      <div class="project-name">SentryNode</div>
+      <p class="project-hook">Distributed SIEM detecting SSH brute force, SQLi, and path traversal in real time — backed by 1,100+ lines of tests.</p>
+      <div class="project-stack"><span>FastAPI</span><span>Elasticsearch</span><span>Redis</span><span>RabbitMQ</span></div>
+      <div class="project-cta">Read the case study →</div>
+    </a>
+    <a href="wazuh.html" class="project-card">
+      <div class="project-tag">SOC · FIM · RESPONSE</div>
+      <div class="project-name">Wazuh-SOC-HomeLab</div>
+      <p class="project-hook">Multi-endpoint SOC lab with real File Integrity Monitoring and automated VirusTotal-triggered quarantine.</p>
+      <div class="project-stack"><span>Wazuh</span><span>VMware</span><span>VirusTotal</span><span>Kali</span></div>
+      <div class="project-cta">Read the case study →</div>
+    </a>
+    <a href="gatekeeper.html" class="project-card">
+      <div class="project-tag">DEVSECOPS · CI/CD</div>
+      <div class="project-name">Gatekeeper</div>
+      <p class="project-hook">CI/CD pipeline that fails builds on HIGH severity findings and generates remediation dashboards.</p>
+      <div class="project-stack"><span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span></div>
+      <div class="project-cta">Read the case study →</div>
+    </a>
+  </div>
+</section>
+
+<section id="blog-preview" class="section reveal">
+  <div class="section-label">05 / BLOG</div>
+  <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:28px;">
+    <h2 class="section-heading tight">Write-ups on real incidents</h2>
+    <a href="blog.html" class="btn-link" style="padding:0;">All posts →</a>
+  </div>
+  <div class="blog-grid">
+    <a href="blog-log4shell.html" class="blog-card">
+      <div class="blog-tag">RCE / LOGGING · CVE-2021-44228</div>
+      <div class="blog-title">Log4Shell: why one logging call became a global incident</div>
+      <p class="blog-excerpt">Root cause, MITRE ATT&amp;CK mapping, and what I'd build to catch it.</p>
+    </a>
+    <a href="blog-moveit.html" class="blog-card">
+      <div class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</div>
+      <div class="blog-title">MOVEit: a single SQL injection, thousands of victims</div>
+      <p class="blog-excerpt">How a file-transfer bug turned into mass data exposure.</p>
+    </a>
   </div>
 </section>
 
