@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>body { margin:0; background:#12151b; } ::selection { background:#e8b93a; color:#14171d; }</style>
+</helmet>
+<div style="backgroundColor:#12151b; backgroundImage:radial-gradient(circle at 1px 1px, #232833 1.5px, transparent 0); backgroundSize:34px 34px; color:#f2f3f5; fontFamily:'IBM Plex Sans',sans-serif; minHeight:100vh;">
+  <dc-import name="Nav" base="index.dc.html" hint-size="100%,64px"></dc-import>
+
+  <section style="padding:clamp(48px,7vw,88px) clamp(20px,5vw,56px) clamp(24px,4vw,40px); maxWidth:900px; margin:0 auto;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:13px; marginBottom:10px;">BLOG</div>
+    <h1 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:700; fontSize:clamp(32px,5vw,48px); margin:'0 0 14px';">Incident write-ups</h1>
+    <p style="fontSize:16px; lineHeight:1.7; color:#c7cbd3; margin:0; maxWidth:60ch;">Original analysis of publicly reported incidents — root cause, MITRE ATT&amp;CK mapping, and what I'd build to detect or prevent each one. No reproduced articles, no breach reports beyond the public record.</p>
+  </section>
+
+  <section style="padding:'0 ' clamp(20px,5vw,56px) clamp(56px,8vw,88px); maxWidth:900px; margin:0 auto;">
+    <div style="display:flex; flexDirection:column; gap:16px;">
+      <sc-for list="{{ posts }}" as="post" hint-placeholder-count="2">
+        <a href="{{ post.href }}" style="display:flex; flexDirection:column; gap:10px; background:#171b22; border:1px solid #262b35; borderRadius:10px; padding:26px; textDecoration:none; color:inherit;" style-hover="borderColor:#e8b93a;">
+          <div style="display:flex; gap:10px; flexWrap:wrap; alignItems:center;">
+            <span style="fontFamily:'IBM Plex Mono',monospace; fontSize:12px; color:#e8b93a;">{{ post.tag }}</span>
+            <span style="fontFamily:'IBM Plex Mono',monospace; fontSize:12px; color:#7d8492;">{{ post.date }}</span>
+          </div>
+          <div style="fontFamily:'Space Grotesk',sans-serif; fontWeight:600; fontSize:22px;">{{ post.title }}</div>
+          <p style="margin:0; fontSize:15px; color:#c7cbd3; lineHeight:1.65;">{{ post.excerpt }}</p>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,90px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      posts: [
+        { title: 'Log4Shell: why one logging call became a global incident', tag: 'RCE / LOGGING · CVE-2021-44228', date: 'Jul 2026', excerpt: "How Log4j's JNDI lookup feature turned attacker-controlled strings into remote code execution, and what detection would have caught it early.", href: 'blog-log4shell.dc.html' },
+        { title: 'MOVEit: a single SQL injection, thousands of victims', tag: 'SUPPLY CHAIN · CVE-2023-34362', date: 'Jul 2026', excerpt: 'How an unauthenticated SQL injection in a file-transfer product became one of the largest mass data-theft campaigns on record.', href: 'blog-moveit.dc.html' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

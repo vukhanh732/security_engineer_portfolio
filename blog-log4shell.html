@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log4Shell: why one logging call became a global incident — Vu Luu</title>
+<meta name="description" content="Root cause analysis of Log4Shell (CVE-2021-44228), MITRE ATT&CK mapping, and detection ideas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<article class="article">
+  <a href="blog.html" class="article-back">← All posts</a>
+  <div class="article-eyebrow">RCE / LOGGING · CVE-2021-44228 · JUL 2026</div>
+  <h1 class="article-title">Log4Shell: why one logging call became a global incident</h1>
+
+  <h2>What happened</h2>
+  <p>In December 2021, a critical flaw was disclosed in Log4j, a Java logging library used across an enormous share of enterprise software. A specially crafted string logged by an application could make the server reach out to an attacker-controlled server and execute arbitrary code, with no authentication required.</p>
+
+  <h2>The likely technical root cause</h2>
+  <p>Log4j's message-lookup feature evaluated JNDI expressions embedded in logged strings. If any user-controllable value — a request header, a username, a form field — ended up in a log line, Log4j would try to resolve it, including reaching out over LDAP or RMI to a remote server and loading whatever class it returned. The core failure was treating logged, attacker-influenced text as something safe to actively evaluate rather than passively record. Logging is meant to be a read-only sink; here it became an execution path.</p>
+
+  <h2>How this maps to MITRE ATT&amp;CK</h2>
+  <div class="mitre-table">
+    <div class="mitre-row"><span class="mitre-id">T1190</span><span class="mitre-desc">Exploit Public-Facing Application — the JNDI string is delivered through any normal input the app logs</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1059</span><span class="mitre-desc">Command and Scripting Interpreter — the loaded remote class executes attacker code on the server</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1071 / T1105</span><span class="mitre-desc">Application Layer Protocol / Ingress Tool Transfer — LDAP/RMI callback fetches and stages the payload</span></div>
+  </div>
+
+  <h2>What I'd build to detect or prevent this</h2>
+  <p>Detection at the edge: a WAF-style rule flagging JNDI-lookup patterns (<code>${jndi:</code>) in any inbound header or parameter — the same URL-decode-before-match discipline I used for SQL injection detection in <a href="sentrynode.html" class="inline-link">SentryNode</a>, since encoded variants are the obvious bypass. At the pipeline level, this is exactly what <a href="gatekeeper.html" class="inline-link">Gatekeeper</a>'s dependency scanning is for: a known-CVE library version should fail the build before it ever reaches production, not get caught after an incident.</p>
+</article>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

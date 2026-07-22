@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog — Vu Luu</title>
+<meta name="description" content="Original analysis of publicly reported security incidents — root cause, MITRE ATT&CK mapping, and detection ideas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="section-label">BLOG</div>
+  <h1 class="page-title">Incident write-ups</h1>
+  <p class="page-lead">Original analysis of publicly reported incidents — root cause, MITRE ATT&amp;CK mapping, and what I'd build to detect or prevent each one. No reproduced articles, no breach reports beyond the public record.</p>
+</section>
+
+<section class="container-narrow" style="padding-bottom:clamp(56px,8vw,88px);">
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <a href="blog-log4shell.html" class="blog-card">
+      <div class="blog-meta">
+        <span class="blog-tag">RCE / LOGGING · CVE-2021-44228</span>
+        <span class="blog-date">Jul 2026</span>
+      </div>
+      <div class="blog-title-lg">Log4Shell: why one logging call became a global incident</div>
+      <p class="blog-excerpt">How Log4j's JNDI lookup feature turned attacker-controlled strings into remote code execution, and what detection would have caught it early.</p>
+    </a>
+    <a href="blog-moveit.html" class="blog-card">
+      <div class="blog-meta">
+        <span class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</span>
+        <span class="blog-date">Jul 2026</span>
+      </div>
+      <div class="blog-title-lg">MOVEit: a single SQL injection, thousands of victims</div>
+      <p class="blog-excerpt">How an unauthenticated SQL injection in a file-transfer product became one of the largest mass data-theft campaigns on record.</p>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

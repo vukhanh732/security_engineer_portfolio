@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOVEit: a single SQL injection, thousands of victims — Vu Luu</title>
+<meta name="description" content="Root cause analysis of the MOVEit Transfer breach (CVE-2023-34362), MITRE ATT&CK mapping, and detection ideas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<article class="article">
+  <a href="blog.html" class="article-back">← All posts</a>
+  <div class="article-eyebrow">SUPPLY CHAIN · CVE-2023-34362 · JUL 2026</div>
+  <h1 class="article-title">MOVEit: a single SQL injection, thousands of victims</h1>
+
+  <h2>What happened</h2>
+  <p>In 2023, an unauthenticated SQL injection flaw in MOVEit Transfer, a widely used managed file-transfer product, was exploited at scale before a patch was available. Attackers used it to reach the underlying database and exfiltrate files from a large number of organisations that used MOVEit to move sensitive data.</p>
+
+  <h2>The likely technical root cause</h2>
+  <p>A public-facing web endpoint built a database query from request input without adequately parameterising or validating it, letting attacker-supplied input change the query's structure. Because MOVEit sits deliberately at the edge of a network — its entire job is accepting files from external parties — a flaw here had an unusually direct path from internet-facing input to the data store, with no additional network segmentation to slow an attacker down.</p>
+
+  <h2>How this maps to MITRE ATT&amp;CK</h2>
+  <div class="mitre-table">
+    <div class="mitre-row"><span class="mitre-id">T1190</span><span class="mitre-desc">Exploit Public-Facing Application — the injection point was reachable directly from the internet</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1213 / T1005</span><span class="mitre-desc">Data from Information Repositories / Local System — the query granted access to stored files and records</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1567</span><span class="mitre-desc">Exfiltration Over Web Service — stolen data was pulled out through the same web-facing channel</span></div>
+  </div>
+
+  <h2>What I'd build to detect or prevent this</h2>
+  <p>This is squarely the pattern <a href="sentrynode.html" class="inline-link">SentryNode</a>'s SQL injection rule targets — matching injection patterns against decoded request payloads at the edge, rather than trusting the application layer alone. It's also a case for defence in depth beyond detection: database accounts for internet-facing services should carry the minimum privilege needed, so that even a successful injection can't reach the full dataset. And because internet-facing file-transfer software is exactly the kind of dependency <a href="gatekeeper.html" class="inline-link">Gatekeeper</a>'s scanning is meant to flag, staying current on vendor advisories for edge-facing software matters as much as scanning your own code.</p>
+</article>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

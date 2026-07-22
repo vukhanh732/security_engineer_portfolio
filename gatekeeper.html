@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gatekeeper — Vu Luu</title>
+<meta name="description" content="A CI/CD pipeline that genuinely fails the build on any HIGH severity Bandit finding or any Safety CVE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<section class="project-hero">
+  <a href="index.html#projects" class="article-back">← All projects</a>
+  <div class="project-eyebrow">PROJECT · DEVSECOPS / CI-CD</div>
+  <h1 class="project-title">Gatekeeper</h1>
+  <p class="project-lead">A CI/CD pipeline that <strong>genuinely fails the build</strong> on any HIGH severity Bandit finding or any Safety CVE — no vanity security scan that reports and moves on.</p>
+  <div class="project-stack-row">
+    <span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span>
+  </div>
+  <a href="https://github.com/vukhanh732/gatekeeper-devsecops" class="project-github">View on GitHub →</a>
+</section>
+
+<section class="project-block">
+  <div class="block-label">SCOPE</div>
+  <p class="block-body">Security tooling that only produces a report nobody reads doesn't change outcomes. I built a pipeline where static analysis and dependency scanning can actually block a merge, with a clear, tiered severity policy instead of an all-or-nothing gate.</p>
+</section>
+
+<section class="project-block">
+  <div class="block-label">APPROACH</div>
+  <p class="block-body">A GitHub Actions workflow runs Bandit for static analysis, Safety for dependency CVEs, and OWASP ZAP for dynamic scanning on every push, then generates a single remediation dashboard from the combined results.</p>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="diagram-node">Push / PR</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Bandit + Safety Scan</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">OWASP ZAP Scan</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Severity Gate</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Remediation Dashboard</div>
+    </div>
+    <div class="diagram-caption">HIGH findings block the merge; MEDIUM findings are logged only</div>
+  </div>
+</section>
+
+<section class="project-block">
+  <div class="block-label">WHAT I BUILT</div>
+  <ul class="block-list">
+    <li>A severity-tiered gate: any HIGH severity Bandit finding or any Safety CVE fails the build</li>
+    <li>MEDIUM findings are logged for visibility but do not block the pipeline</li>
+    <li>A 600-line HTML dashboard generator that turns raw scan output into a readable remediation report</li>
+  </ul>
+</section>
+
+<section class="project-block">
+  <div class="block-label">IMPACT</div>
+  <p class="block-body">This is the DevSecOps skill security teams actually need: knowing which findings are worth blocking a release over, and building the automation that enforces that judgment consistently.</p>
+</section>
+
+<section class="project-block last">
+  <div class="block-label">OUTCOME</div>
+  <p class="block-body">The pipeline runs on every push and the dashboard makes remediation actionable instead of burying findings in raw scanner output — the policy is intentionally conservative (MEDIUM findings stay visible, not blocking) to avoid gate fatigue.</p>
+</section>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

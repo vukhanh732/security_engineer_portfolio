@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>body { margin:0; background:#12151b; } ::selection { background:#e8b93a; color:#14171d; }</style>
+</helmet>
+<div style="backgroundColor:#12151b; backgroundImage:radial-gradient(circle at 1px 1px, #232833 1.5px, transparent 0); backgroundSize:34px 34px; color:#f2f3f5; fontFamily:'IBM Plex Sans',sans-serif; minHeight:100vh;">
+  <dc-import name="Nav" base="index.dc.html" hint-size="100%,64px"></dc-import>
+
+  <section style="padding:clamp(48px,7vw,88px) clamp(20px,5vw,56px) clamp(24px,4vw,40px); maxWidth:900px; margin:0 auto;">
+    <a href="index.dc.html#projects" style="color:#7d8492; fontSize:13px; textDecoration:none;">← All projects</a>
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:13px; margin:'18px 0 10px';">PROJECT · SIEM &amp; THREAT DETECTION</div>
+    <h1 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:700; fontSize:clamp(32px,5vw,52px); lineHeight:1.08; margin:'0 0 18px'; transition:'letter-spacing 0.4s ease';" style-hover="letterSpacing:'0.015em';">SentryNode</h1>
+    <p style="fontSize:clamp(17px,1.8vw,20px); lineHeight:1.6; color:#e6e8eb; margin:0;">Detects SSH brute force with a <strong style="color:#e8b93a;">stateful sliding time window</strong>, matches SQL injection against URL-decoded payloads, and flags path traversal and HTTP auth brute-forcing — a distributed SIEM built solo and backed by 1,100+ lines of unit and integration tests.</p>
+    <div style="display:flex; flexWrap:wrap; gap:8px; marginTop:20px;">
+      <sc-for list="{{ stack }}" as="s" hint-placeholder-count="7">
+        <span style="fontSize:13px; color:#c7cbd3; background:#171b22; border:1px solid #262b35; borderRadius:5px; padding:'5px 10px';">{{ s }}</span>
+      </sc-for>
+    </div>
+    <a href="https://github.com/vukhanh732/sentrynode" style="display:inline-block; marginTop:18px; color:#e8b93a; fontSize:14px; fontWeight:600; textDecoration:none;">View on GitHub →</a>
+  </section>
+
+  <section style="padding:'32px' clamp(20px,5vw,56px); maxWidth:900px; margin:0 auto; borderTop:1px solid #262b35;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:12px; marginBottom:8px;">SCOPE</div>
+    <p style="fontSize:16px; lineHeight:1.75; color:#c7cbd3; margin:0;">Most home-lab detection projects are single scripts reacting to a single log type. I wanted to build something closer to production shape: a distributed platform that ingests multiple log sources, applies stateful detection logic, enriches findings with threat intelligence, and visualises results — all built and operated solo.</p>
+  </section>
+
+  <section style="padding:'32px' clamp(20px,5vw,56px); maxWidth:900px; margin:0 auto; borderTop:1px solid #262b35;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:12px; marginBottom:8px;">APPROACH</div>
+    <p style="fontSize:16px; lineHeight:1.75; color:#c7cbd3; margin:'0 0 24px';">FastAPI handles ingestion, RabbitMQ decouples ingestion from processing, and detection rules run against the queue before results land in Elasticsearch and InfluxDB for Grafana dashboards. Redis caches AbuseIPDB threat-intel lookups with fallback handling when the API is unavailable.</p>
+    <div style="background:#0f1216; border:1px solid #262b35; borderRadius:12px; padding:'28px 20px'; display:flex; flexDirection:column; gap:16px; alignItems:center;">
+      <div style="display:flex; flexWrap:wrap; alignItems:center; justifyContent:center; gap:10px;">
+        <sc-for list="{{ diagram }}" as="node" hint-placeholder-count="6">
+          <sc-if value="{{ $index }}" hint-placeholder-val="{{ true }}">
+            <span style="color:#e8b93a; fontSize:18px; fontFamily:'IBM Plex Mono',monospace;">→</span>
+          </sc-if>
+          <div style="background:#171b22; border:1px solid #333a47; borderRadius:8px; padding:'12px 16px'; fontFamily:'IBM Plex Mono',monospace; fontSize:12.5px; textAlign:center; minWidth:110px; color:#e6e8eb;">{{ node }}</div>
+        </sc-for>
+      </div>
+      <div style="fontFamily:'IBM Plex Mono',monospace; fontSize:12px; color:#7d8492;">Redis threat-intel cache sits alongside the detection engine, fronting AbuseIPDB lookups</div>
+    </div>
+  </section>
+
+  <section style="padding:'32px' clamp(20px,5vw,56px); maxWidth:900px; margin:0 auto; borderTop:1px solid #262b35;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:12px; marginBottom:8px;">WHAT I BUILT</div>
+    <ul style="margin:0; paddingLeft:20px; color:#c7cbd3; fontSize:16px; lineHeight:1.85; display:flex; flexDirection:column; gap:8px;">
+      <li>SSH brute-force detection using a stateful sliding time window</li>
+      <li>SQL injection pattern matching against URL-decoded payloads</li>
+      <li>Path traversal detection</li>
+      <li>HTTP auth brute-force detection</li>
+      <li>AbuseIPDB threat-intel integration with Redis caching and fallback handling when the lookup fails</li>
+    </ul>
+  </section>
+
+  <section style="padding:'32px' clamp(20px,5vw,56px); maxWidth:900px; margin:0 auto; borderTop:1px solid #262b35;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:12px; marginBottom:8px;">IMPACT</div>
+    <p style="fontSize:16px; lineHeight:1.75; color:#c7cbd3; margin:0;">This proves I can design detection logic that handles the messy edge cases real traffic produces — URL-decoding before pattern matching, caching an external API with a safe fallback — not just wire together existing tools.</p>
+  </section>
+
+  <section style="padding:'32px' clamp(20px,5vw,56px) clamp(56px,8vw,88px); maxWidth:900px; margin:0 auto; borderTop:1px solid #262b35;">
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:12px; marginBottom:8px;">OUTCOME</div>
+    <p style="fontSize:16px; lineHeight:1.75; color:#c7cbd3; margin:0;">The system is backed by 1,100+ lines of genuine unit and integration tests. Midway through the build the RabbitMQ message queue started backpressuring under load — I had to refactor the queue architecture to fix it, which taught me more about message-broker behaviour under real load than any tutorial had.</p>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,90px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      stack: ['FastAPI', 'Docker', 'Elasticsearch', 'Redis', 'Grafana', 'InfluxDB', 'RabbitMQ'],
+      diagram: ['Log Sources', 'FastAPI Ingestion', 'RabbitMQ Queue', 'Detection Engine', 'Elasticsearch / InfluxDB', 'Grafana']
+    };
+  }
+}
+</script>
+</body>
+</html>

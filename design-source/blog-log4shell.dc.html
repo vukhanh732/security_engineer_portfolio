@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>body { margin:0; background:#12151b; } ::selection { background:#e8b93a; color:#14171d; }</style>
+</helmet>
+<div style="backgroundColor:#12151b; backgroundImage:radial-gradient(circle at 1px 1px, #232833 1.5px, transparent 0); backgroundSize:34px 34px; color:#f2f3f5; fontFamily:'IBM Plex Sans',sans-serif; minHeight:100vh;">
+  <dc-import name="Nav" base="index.dc.html" hint-size="100%,64px"></dc-import>
+
+  <article style="padding:clamp(48px,7vw,88px) clamp(20px,5vw,56px) clamp(56px,8vw,88px); maxWidth:760px; margin:0 auto;">
+    <a href="blog.dc.html" style="color:#7d8492; fontSize:13px; textDecoration:none;">← All posts</a>
+    <div style="fontFamily:'IBM Plex Mono',monospace; color:#e8b93a; fontSize:13px; margin:'18px 0 10px';">RCE / LOGGING · CVE-2021-44228 · JUL 2026</div>
+    <h1 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:700; fontSize:clamp(30px,4.5vw,46px); lineHeight:1.1; margin:'0 0 28px';">Log4Shell: why one logging call became a global incident</h1>
+
+    <h2 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:600; fontSize:20px; margin:'32px 0 12px'; color:#f2f3f5;">What happened</h2>
+    <p style="fontSize:16px; lineHeight:1.8; color:#c7cbd3; margin:0;">In December 2021, a critical flaw was disclosed in Log4j, a Java logging library used across an enormous share of enterprise software. A specially crafted string logged by an application could make the server reach out to an attacker-controlled server and execute arbitrary code, with no authentication required.</p>
+
+    <h2 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:600; fontSize:20px; margin:'32px 0 12px'; color:#f2f3f5;">The likely technical root cause</h2>
+    <p style="fontSize:16px; lineHeight:1.8; color:#c7cbd3; margin:0;">Log4j's message-lookup feature evaluated JNDI expressions embedded in logged strings. If any user-controllable value — a request header, a username, a form field — ended up in a log line, Log4j would try to resolve it, including reaching out over LDAP or RMI to a remote server and loading whatever class it returned. The core failure was treating logged, attacker-influenced text as something safe to actively evaluate rather than passively record. Logging is meant to be a read-only sink; here it became an execution path.</p>
+
+    <h2 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:600; fontSize:20px; margin:'32px 0 12px'; color:#f2f3f5;">How this maps to MITRE ATT&amp;CK</h2>
+    <div style="display:flex; flexDirection:column; gap:10px; margin:'12px 0 0';">
+      <sc-for list="{{ mitre }}" as="row" hint-placeholder-count="3">
+        <div style="display:flex; gap:14px; background:#171b22; border:1px solid #262b35; borderRadius:8px; padding:'14px 16px'; alignItems:baseline; flexWrap:wrap;">
+          <span style="fontFamily:'IBM Plex Mono',monospace; fontSize:13px; color:#e8b93a; minWidth:150px;">{{ row.id }}</span>
+          <span style="fontSize:14.5px; color:#c7cbd3;">{{ row.desc }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <h2 style="fontFamily:'Space Grotesk',sans-serif; fontWeight:600; fontSize:20px; margin:'32px 0 12px'; color:#f2f3f5;">What I'd build to detect or prevent this</h2>
+    <p style="fontSize:16px; lineHeight:1.8; color:#c7cbd3; margin:0;">Detection at the edge: a WAF-style rule flagging JNDI-lookup patterns (<span style="fontFamily:'IBM Plex Mono',monospace; fontSize:14px; color:#e8b93a;">${jndi:</span>) in any inbound header or parameter — the same URL-decode-before-match discipline I used for SQL injection detection in <a href="sentrynode.dc.html" style="color:#e8b93a; textDecoration:none;">SentryNode</a>, since encoded variants are the obvious bypass. At the pipeline level, this is exactly what <a href="gatekeeper.dc.html" style="color:#e8b93a; textDecoration:none;">Gatekeeper</a>'s dependency scanning is for: a known-CVE library version should fail the build before it ever reaches production, not get caught after an incident.</p>
+  </article>
+
+  <dc-import name="Footer" hint-size="100%,90px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      mitre: [
+        { id: 'T1190', desc: 'Exploit Public-Facing Application — the JNDI string is delivered through any normal input the app logs' },
+        { id: 'T1059', desc: 'Command and Scripting Interpreter — the loaded remote class executes attacker code on the server' },
+        { id: 'T1071 / T1105', desc: 'Application Layer Protocol / Ingress Tool Transfer — LDAP/RMI callback fetches and stages the payload' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+</helmet>
+<header style="position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:16px clamp(20px,5vw,56px); background:rgba(17,20,26,0.88); backdropFilter:blur(10px); borderBottom:1px solid #262b35; fontFamily:'IBM Plex Sans',sans-serif;">
+  <a href="{{ homeHref }}" style="fontFamily:'Space Grotesk',sans-serif; fontWeight:700; fontSize:19px; color:#f2f3f5; textDecoration:none; letterSpacing:'-0.01em'">Vu Luu<span style="color:#e8b93a">.</span></a>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ toggleOpen }}" aria-label="Toggle menu" style="width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid #333a47; borderRadius:6px; color:#f2f3f5; fontSize:18px; cursor:pointer;">{{ menuGlyph }}</button>
+  </sc-if>
+  <sc-if value="{{ !isMobile }}" hint-placeholder-val="{{ true }}">
+    <nav style="display:flex; align-items:center; gap:clamp(18px,2.5vw,36px);">
+      <sc-for list="{{ links }}" as="link" hint-placeholder-count="6">
+        <a href="{{ link.href }}" style="color:#c7cbd3; textDecoration:none; fontSize:15px; fontWeight:500; display:flex; alignItems:center; gap:6px;" style-hover="color:#e8b93a;">
+          {{ link.label }}
+          <sc-if value="{{ link.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="width:6px; height:6px; borderRadius:3px; background:#e8b93a; display:inline-block;"></span>
+          </sc-if>
+        </a>
+      </sc-for>
+      <a href="{{ resumeHref }}" download="" style="color:#14171d; background:#e8b93a; padding:9px 18px; borderRadius:6px; fontSize:14px; fontWeight:600; textDecoration:none;" style-hover="background:#f5c94e;">Resume</a>
+    </nav>
+  </sc-if>
+  <sc-if value="{{ showMobilePanel }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:absolute; top:100%; left:0; right:0; display:flex; flex-direction:column; padding:12px clamp(20px,5vw,56px) 20px; background:#14171d; borderBottom:1px solid #262b35; gap:2px;">
+      <sc-for list="{{ links }}" as="link" hint-placeholder-count="6">
+        <a href="{{ link.href }}" onClick="{{ closeMenu }}" style="color:#e6e8eb; textDecoration:none; fontSize:16px; fontWeight:500; padding:12px 8px; minHeight:44px; display:flex; alignItems:center; gap:8px; borderBottom:1px solid #21252e;">
+          {{ link.label }}
+          <sc-if value="{{ link.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="width:6px; height:6px; borderRadius:3px; background:#e8b93a; display:inline-block;"></span>
+          </sc-if>
+        </a>
+      </sc-for>
+      <a href="{{ resumeHref }}" download="" style="color:#14171d; background:#e8b93a; textAlign:center; padding:12px; borderRadius:6px; fontSize:15px; fontWeight:600; textDecoration:none; marginTop:10px;">Download Resume</a>
+    </nav>
+  </sc-if>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:64},&quot;base&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { isMobile: false, open: false };
+  computeIsMobile() { return typeof window !== 'undefined' && window.innerWidth < 880; }
+  componentDidMount() {
+    this.setState({ isMobile: this.computeIsMobile() });
+    this._onResize = () => this.setState({ isMobile: this.computeIsMobile() });
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._onResize); }
+  renderVals() {
+    const base = this.props.base || '';
+    const sections = [
+      ['About', '#about'], ['Skills', '#skills'], ['Projects', '#projects'],
+      ['Blog', 'blog.dc.html'], ['Experience', '#experience'], ['Contact', '#contact']
+    ];
+    const links = sections.map(([label, href]) => ({
+      label, href: href.startsWith('#') ? (base ? base + href : href) : href, badge: label === 'Blog'
+    }));
+    return {
+      isMobile: this.state.isMobile,
+      showMobilePanel: this.state.isMobile && this.state.open,
+      menuGlyph: this.state.open ? '\u2715' : '\u2630',
+      toggleOpen: () => this.setState(s => ({ open: !s.open })),
+      closeMenu: () => this.setState({ open: false }),
+      links,
+      homeHref: base || 'index.dc.html',
+      resumeHref: 'resume.pdf'
+    };
+  }
+}
+</script>
+</body>
+</html>

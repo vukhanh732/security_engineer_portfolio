@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SentryNode — Vu Luu</title>
+<meta name="description" content="A distributed SIEM detecting SSH brute force, SQL injection, and path traversal in real time — built solo and backed by 1,100+ lines of tests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<section class="project-hero">
+  <a href="index.html#projects" class="article-back">← All projects</a>
+  <div class="project-eyebrow">PROJECT · SIEM &amp; THREAT DETECTION</div>
+  <h1 class="project-title">SentryNode</h1>
+  <p class="project-lead">Detects SSH brute force with a <strong>stateful sliding time window</strong>, matches SQL injection against URL-decoded payloads, and flags path traversal and HTTP auth brute-forcing — a distributed SIEM built solo and backed by 1,100+ lines of unit and integration tests.</p>
+  <div class="project-stack-row">
+    <span>FastAPI</span><span>Docker</span><span>Elasticsearch</span><span>Redis</span><span>Grafana</span><span>InfluxDB</span><span>RabbitMQ</span>
+  </div>
+  <a href="https://github.com/vukhanh732/sentrynode" class="project-github">View on GitHub →</a>
+</section>
+
+<section class="project-block">
+  <div class="block-label">SCOPE</div>
+  <p class="block-body">Most home-lab detection projects are single scripts reacting to a single log type. I wanted to build something closer to production shape: a distributed platform that ingests multiple log sources, applies stateful detection logic, enriches findings with threat intelligence, and visualises results — all built and operated solo.</p>
+</section>
+
+<section class="project-block">
+  <div class="block-label">APPROACH</div>
+  <p class="block-body">FastAPI handles ingestion, RabbitMQ decouples ingestion from processing, and detection rules run against the queue before results land in Elasticsearch and InfluxDB for Grafana dashboards. Redis caches AbuseIPDB threat-intel lookups with fallback handling when the API is unavailable.</p>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="diagram-node">Log Sources</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">FastAPI Ingestion</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">RabbitMQ Queue</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Detection Engine</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Elasticsearch / InfluxDB</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Grafana</div>
+    </div>
+    <div class="diagram-caption">Redis threat-intel cache sits alongside the detection engine, fronting AbuseIPDB lookups</div>
+  </div>
+</section>
+
+<section class="project-block">
+  <div class="block-label">WHAT I BUILT</div>
+  <ul class="block-list">
+    <li>SSH brute-force detection using a stateful sliding time window</li>
+    <li>SQL injection pattern matching against URL-decoded payloads</li>
+    <li>Path traversal detection</li>
+    <li>HTTP auth brute-force detection</li>
+    <li>AbuseIPDB threat-intel integration with Redis caching and fallback handling when the lookup fails</li>
+  </ul>
+</section>
+
+<section class="project-block">
+  <div class="block-label">IMPACT</div>
+  <p class="block-body">This proves I can design detection logic that handles the messy edge cases real traffic produces — URL-decoding before pattern matching, caching an external API with a safe fallback — not just wire together existing tools.</p>
+</section>
+
+<section class="project-block last">
+  <div class="block-label">OUTCOME</div>
+  <p class="block-body">The system is backed by 1,100+ lines of genuine unit and integration tests. Midway through the build the RabbitMQ message queue started backpressuring under load — I had to refactor the queue architecture to fix it, which taught me more about message-broker behaviour under real load than any tutorial had.</p>
+</section>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
