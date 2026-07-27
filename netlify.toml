@@ -1,6 +1,21 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/it-support"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/software-engineer"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/security-engineer"
+  to = "/index.html"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
