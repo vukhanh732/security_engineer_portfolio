@@ -314,13 +314,13 @@ img { max-width: 100%; display: block; }
 .reveal.is-visible { opacity: 1; transform: none; }
 
 /* ===== About ===== */
-.about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: clamp(24px,4vw,56px); align-items: start; }
+.about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px,100%),1fr)); gap: clamp(24px,4vw,56px); align-items: start; }
 .about-heading { font-family: var(--font-head); font-weight: 700; font-size: clamp(26px,3vw,36px); margin: 0; max-width: 12ch; }
 .about-body { font-size: 16px; line-height: 1.75; color: var(--text-secondary); display: flex; flex-direction: column; gap: 16px; }
 .about-body p { margin: 0; }
 
 /* ===== Skills ===== */
-.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 20px; }
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px,100%),1fr)); gap: 20px; }
 .skill-card { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 10px; padding: 22px; }
 .skill-card-title { font-family: var(--font-head); font-weight: 600; font-size: 16px; margin-bottom: 14px; color: var(--text); }
 .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -337,7 +337,7 @@ img { max-width: 100%; display: block; }
 .edu-sublabel { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
 
 /* ===== Projects ===== */
-.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 22px; }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px,100%),1fr)); gap: 22px; }
 .project-card {
   display: flex; flex-direction: column; gap: 14px; background: var(--bg-raised);
   border: 1px solid var(--border); border-radius: 12px; padding: 26px; text-decoration: none;
@@ -352,7 +352,7 @@ img { max-width: 100%; display: block; }
 .project-cta { color: var(--accent-section); font-size: 14px; font-weight: 600; }
 
 /* ===== Blog cards ===== */
-.blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px,100%),1fr)); gap: 20px; }
 .blog-card {
   background: var(--bg-raised); border: 1px solid var(--border); border-radius: 10px; padding: 22px;
   text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 10px;
@@ -379,13 +379,13 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== Extracurricular ===== */
-.extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+.extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px,100%),1fr)); gap: 20px; }
 .extra-card { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
 .extra-title { font-family: var(--font-head); font-weight: 600; font-size: 16px; margin-bottom: 8px; }
 .extra-body { margin: 0; color: var(--text-secondary); font-size: 14.5px; line-height: 1.7; }
 
 /* ===== Contact ===== */
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: clamp(24px,4vw,56px); }
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px,100%),1fr)); gap: clamp(24px,4vw,56px); }
 .contact-heading { font-family: var(--font-head); font-weight: 700; font-size: clamp(26px,3vw,36px); margin: 0 0 14px; }
 .contact-lead { color: var(--text-secondary); font-size: 15.5px; line-height: 1.7; max-width: 40ch; margin: 0 0 20px; }
 .contact-links { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
@@ -452,7 +452,7 @@ img { max-width: 100%; display: block; }
 .diagram-arrow { color: var(--accent-section); font-size: 18px; font-family: var(--font-mono); }
 .diagram-caption { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); text-align: center; }
 
-.evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 16px; }
+.evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px,100%),1fr)); gap: 16px; }
 .evidence-item img {
   width: 100%; height: 220px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border);
 }
