@@ -43,6 +43,28 @@
   targets.forEach(function (el) { observer.observe(el); });
 })();
 
+// Cursor-following ambient glow + per-card spotlight hover
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var glow = document.querySelector('.ambient-cursor-glow');
+  if (glow) {
+    document.addEventListener('pointermove', function (e) {
+      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  var spotlightEls = document.querySelectorAll('.project-card, .skill-card, .blog-card, .extra-card, .edu-card');
+  spotlightEls.forEach(function (el) {
+    el.addEventListener('pointermove', function (e) {
+      var rect = el.getBoundingClientRect();
+      el.style.setProperty('--spot-x', (e.clientX - rect.left) + 'px');
+      el.style.setProperty('--spot-y', (e.clientY - rect.top) + 'px');
+    }, { passive: true });
+  });
+})();
+
 // Role-based hero variants — reached via /it-support, /software-engineer,
 // /security-engineer (rewritten to this page by netlify.toml) or ?role=
 // query param for local testing. Root path keeps the neutral hero in the HTML.

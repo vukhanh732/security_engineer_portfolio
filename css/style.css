@@ -53,6 +53,27 @@ a { color: inherit; }
 
 img { max-width: 100%; display: block; }
 
+/* ===== Ambient cursor glow + card spotlight ===== */
+.ambient-cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 15%), rgba(232,185,58,0.05), transparent 70%);
+}
+
+.project-card, .skill-card, .blog-card, .extra-card, .edu-card {
+  background-repeat: no-repeat;
+  background-image: radial-gradient(220px circle at var(--spot-x, 50%) var(--spot-y, 50%), transparent, transparent);
+}
+.project-card:hover, .skill-card:hover, .blog-card:hover, .extra-card:hover, .edu-card:hover {
+  background-image: radial-gradient(220px circle at var(--spot-x, 50%) var(--spot-y, 50%), color-mix(in srgb, var(--accent-section) 16%, transparent), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-cursor-glow { display: none; }
+}
+
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(20px, 5vw, 56px); }
 .container-narrow { max-width: var(--max-width-narrow); margin: 0 auto; padding: 0 clamp(20px, 5vw, 56px); }
 .container-article { max-width: var(--max-width-article); margin: 0 auto; padding: 0 clamp(20px, 5vw, 56px); }
@@ -204,7 +225,11 @@ img { max-width: 100%; display: block; }
 .hero-graphic-svg { width: 100%; height: auto; overflow: visible; }
 .hg-orbit { fill: none; stroke: var(--border-strong); stroke-width: 1; opacity: 0.6; }
 .hg-orbit--inner { stroke-dasharray: 3 6; }
-.hg-line { stroke: var(--c); stroke-width: 1.5; opacity: 0.32; }
+.hg-line {
+  stroke: var(--c); stroke-width: 1.5; opacity: 0.4;
+  stroke-dasharray: 4 7;
+  animation: lineFlow 5s linear infinite;
+}
 .hg-node {
   fill: var(--c); animation: nodePulse 3.2s ease-in-out infinite; animation-delay: var(--delay);
   transform-box: fill-box; transform-origin: center;
@@ -217,8 +242,13 @@ img { max-width: 100%; display: block; }
   50% { transform: scale(1.4); opacity: 1; }
 }
 
+@keyframes lineFlow {
+  to { stroke-dashoffset: -110; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hg-node { animation: none; }
+  .hg-line { animation: none; }
   .hero-glow-1, .hero-glow-2 { animation: none; }
   .hero-cursor { animation: none; opacity: 1; }
 }
