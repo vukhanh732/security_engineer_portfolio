@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SentryNode — Vu Luu</title>
-<meta name="description" content="A distributed SIEM detecting SSH brute force, SQL injection, and path traversal in real time — built solo and backed by 1,100+ lines of tests.">
+<meta name="description" content="A distributed SIEM detecting SSH brute force, SQL injection, and path traversal in real time — built solo, hardened for public exposure, and deployed as a live demo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/style.css">
@@ -20,6 +20,7 @@
     <a href="index.html#experience" class="nav-link">Experience</a>
     <a href="index.html#projects" class="nav-link">Projects</a>
     <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="study-notes.html" class="nav-link">Notes</a>
     <a href="index.html#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
   </nav>
@@ -30,6 +31,7 @@
     <a href="index.html#experience" class="mobile-link">Experience</a>
     <a href="index.html#projects" class="mobile-link">Projects</a>
     <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="study-notes.html" class="mobile-link">Notes</a>
     <a href="index.html#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
@@ -39,11 +41,14 @@
   <a href="index.html#projects" class="article-back">← All projects</a>
   <div class="project-eyebrow">PROJECT · SIEM &amp; THREAT DETECTION</div>
   <h1 class="project-title">SentryNode</h1>
-  <p class="project-lead">Detects SSH brute force with a <strong>stateful sliding time window</strong>, matches SQL injection against URL-decoded payloads, and flags path traversal and HTTP auth brute-forcing — a distributed SIEM built solo and backed by 1,100+ lines of unit and integration tests.</p>
+  <p class="project-lead">Detects SSH brute force with a <strong>stateful sliding time window</strong>, matches SQL injection against URL-decoded payloads, and flags path traversal and HTTP auth brute-forcing — a distributed SIEM built solo, hardened for public exposure, and backed by 800+ lines of unit and integration tests.</p>
   <div class="project-stack-row">
-    <span>FastAPI</span><span>Docker</span><span>Elasticsearch</span><span>Redis</span><span>Grafana</span><span>InfluxDB</span><span>RabbitMQ</span>
+    <span>FastAPI</span><span>Redis</span><span>Docker</span><span>slowapi</span><span>pytest</span>
   </div>
-  <a href="https://github.com/vukhanh732/sentrynode" class="project-github">View on GitHub →</a>
+  <div class="hero-actions">
+    <a href="https://sentrynode-backend.onrender.com/docs" target="_blank" rel="noopener" class="btn-primary">Try it live →</a>
+    <a href="https://github.com/vukhanh732/sentrynode" class="btn-secondary">View source →</a>
+  </div>
 </section>
 
 <section class="project-block">
@@ -53,22 +58,18 @@
 
 <section class="project-block">
   <div class="block-label">APPROACH</div>
-  <p class="block-body">FastAPI handles ingestion, RabbitMQ decouples ingestion from processing, and detection rules run against the queue before results land in Elasticsearch and InfluxDB for Grafana dashboards. Redis caches AbuseIPDB threat-intel lookups with fallback handling when the API is unavailable.</p>
+  <p class="block-body">FastAPI handles ingestion, an in-memory detection engine runs stateful rules against the incoming events, and Redis caches AbuseIPDB threat-intel lookups with graceful fallback when the cache or the API is unavailable. RabbitMQ, Elasticsearch, InfluxDB, and Grafana are provisioned via Docker Compose for the intended full pipeline — queued ingestion, long-term log storage, and metrics dashboards — but aren't yet wired into the live request path below. I'd rather ship an honest, working slice than claim a bigger one.</p>
   <div class="diagram">
     <div class="diagram-row">
       <div class="diagram-node">Log Sources</div>
       <span class="diagram-arrow">→</span>
       <div class="diagram-node">FastAPI Ingestion</div>
       <span class="diagram-arrow">→</span>
-      <div class="diagram-node">RabbitMQ Queue</div>
-      <span class="diagram-arrow">→</span>
       <div class="diagram-node">Detection Engine</div>
       <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Elasticsearch / InfluxDB</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Grafana</div>
+      <div class="diagram-node">Threat Intel (Redis cache)</div>
     </div>
-    <div class="diagram-caption">Redis threat-intel cache sits alongside the detection engine, fronting AbuseIPDB lookups</div>
+    <div class="diagram-caption">Live request path. RabbitMQ / Elasticsearch / InfluxDB / Grafana run locally via Docker Compose but aren't wired in yet — next phase, not a hidden gap.</div>
   </div>
 </section>
 
@@ -80,6 +81,7 @@
     <li>Path traversal detection</li>
     <li>HTTP auth brute-force detection</li>
     <li>AbuseIPDB threat-intel integration with Redis caching and fallback handling when the lookup fails</li>
+    <li>Rate limiting and payload caps on both public endpoints, plus input validation, so the API is safe to expose to the open internet</li>
   </ul>
 </section>
 
@@ -90,7 +92,7 @@
 
 <section class="project-block last">
   <div class="block-label">OUTCOME</div>
-  <p class="block-body">The system is backed by 1,100+ lines of genuine unit and integration tests. Midway through the build the RabbitMQ message queue started backpressuring under load — I had to refactor the queue architecture to fix it, which taught me more about message-broker behaviour under real load than any tutorial had.</p>
+  <p class="block-body">The system is backed by 800+ lines of genuine unit and integration tests. Midway through the build the RabbitMQ message queue started backpressuring under load — I had to refactor the queue architecture to fix it, which taught me more about message-broker behaviour under real load than any tutorial had. More recently, I went back and hardened the two public endpoints for internet exposure and shipped it as a live demo — the "Try it live" link above is a running instance, not a screenshot.</p>
 </section>
 
 <footer class="footer">

@@ -570,6 +570,31 @@ img { max-width: 100%; display: block; }
 .page-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(32px,5vw,48px); margin: 0 0 14px; }
 .page-lead { font-size: 16px; line-height: 1.7; color: var(--text-secondary); margin: 0; max-width: 60ch; }
 
+/* ===== Study notes ===== */
+.notes-topic { margin-bottom: clamp(40px,6vw,64px); }
+.notes-topic-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.notes-topic-title { font-family: var(--font-head); font-weight: 700; font-size: clamp(20px,2.4vw,26px); }
+.notes-photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px,100%),1fr)); gap: 16px; }
+.notes-photo-btn {
+  display: block; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  background: none; cursor: zoom-in; transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.notes-photo-btn:hover { border-color: var(--accent-section); transform: translateY(-3px); }
+.notes-photo-btn img { display: block; width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+.notes-repo-link { display: inline-block; margin-top: 20px; color: var(--accent-section); font-size: 14px; font-weight: 600; text-decoration: none; }
+.notes-repo-link:hover { text-decoration: underline; }
+
+.lightbox {
+  position: fixed; inset: 0; background: rgba(10,12,16,0.92); display: flex; align-items: center;
+  justify-content: center; padding: 32px; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+.lightbox.open { opacity: 1; pointer-events: auto; }
+.lightbox img { max-width: min(90vw, 900px); max-height: 88vh; border-radius: 8px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+.lightbox-close {
+  position: absolute; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: var(--bg-raised); color: var(--text); font-size: 20px; cursor: pointer;
+}
+
 @media (min-width: 768px) and (max-width: 1023px) {
   .container, .container-narrow, .container-article, .section, .hero { padding-left: clamp(24px, 4vw, 40px); padding-right: clamp(24px, 4vw, 40px); }
 }

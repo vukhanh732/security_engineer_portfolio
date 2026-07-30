@@ -65,6 +65,41 @@
   });
 })();
 
+// Study notes photo lightbox
+(function () {
+  var triggers = document.querySelectorAll('.notes-photo-btn');
+  var lightbox = document.querySelector('.lightbox');
+  if (!triggers.length || !lightbox) return;
+
+  var lightboxImg = lightbox.querySelector('img');
+  var closeBtn = lightbox.querySelector('.lightbox-close');
+
+  function open(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt;
+    lightbox.classList.add('open');
+  }
+
+  function close() {
+    lightbox.classList.remove('open');
+  }
+
+  triggers.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var img = btn.querySelector('img');
+      open(img.src, img.alt);
+    });
+  });
+
+  closeBtn.addEventListener('click', close);
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+
 // Role-based hero variants — reached via /it-support, /software-engineer,
 // /security-engineer (rewritten to this page by netlify.toml) or ?role=
 // query param for local testing. Root path keeps the neutral hero in the HTML.

@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog — Vu Luu</title>
-<meta name="description" content="Original analysis of publicly reported security incidents — root cause, MITRE ATT&CK mapping, and detection ideas.">
+<title>Study Notes — Vu Luu</title>
+<meta name="description" content="Handwritten study notes, photographed and archived by topic — with combined PDF downloads for each.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="page-rose">
+<body class="page-azure">
 <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
@@ -38,31 +38,38 @@
 </header>
 
 <section class="page-hero">
-  <div class="section-label">BLOG</div>
-  <h1 class="page-title">Incident write-ups</h1>
-  <p class="page-lead">Original analysis of publicly reported incidents — root cause, MITRE ATT&amp;CK mapping, and what I'd build to detect or prevent each one. No reproduced articles, no breach reports beyond the public record.</p>
+  <div class="section-label">STUDY NOTES</div>
+  <h1 class="page-title">Notes from the notebook, not the slide deck</h1>
+  <p class="page-lead">I study on paper — it's how the material actually sticks. These are photographed straight from the notebook and archived by topic, with a combined PDF for each so they're easy to skim or print.</p>
 </section>
 
 <section class="container-narrow" style="padding-bottom:clamp(56px,8vw,88px);">
-  <div style="display:flex; flex-direction:column; gap:16px;">
-    <a href="blog-log4shell.html" class="blog-card">
-      <div class="blog-meta">
-        <span class="blog-tag">RCE / LOGGING · CVE-2021-44228</span>
-        <span class="blog-date">Jul 2026</span>
-      </div>
-      <div class="blog-title-lg">Log4Shell: why one logging call became a global incident</div>
-      <p class="blog-excerpt">How Log4j's JNDI lookup feature turned attacker-controlled strings into remote code execution, and what detection would have caught it early.</p>
-    </a>
-    <a href="blog-moveit.html" class="blog-card">
-      <div class="blog-meta">
-        <span class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</span>
-        <span class="blog-date">Jul 2026</span>
-      </div>
-      <div class="blog-title-lg">MOVEit: a single SQL injection, thousands of victims</div>
-      <p class="blog-excerpt">How an unauthenticated SQL injection in a file-transfer product became one of the largest mass data-theft campaigns on record.</p>
-    </a>
+
+  <div class="notes-topic">
+    <div class="notes-topic-head">
+      <div class="notes-topic-title">Networking — interview prep</div>
+      <a href="images/study_notes/pdfs/networking.pdf" download class="btn-secondary">Download PDF ↓</a>
+    </div>
+    <div class="notes-photo-grid">
+      <button type="button" class="notes-photo-btn">
+        <img src="images/study_notes/networking/01.jpg" alt="Handwritten notes: OSI model layers with mnemonic, and why the OSI model matters for troubleshooting" loading="lazy">
+      </button>
+      <button type="button" class="notes-photo-btn">
+        <img src="images/study_notes/networking/02.jpg" alt="Handwritten notes: NAT (Network Address Translation) and DNS resolver/root server/TLD hierarchy" loading="lazy">
+      </button>
+      <button type="button" class="notes-photo-btn">
+        <img src="images/study_notes/networking/03.jpg" alt="Handwritten notes: DNS attacks, DNS record types, ARP, and DHCP" loading="lazy">
+      </button>
+    </div>
+    <a href="https://github.com/vukhanh732/study-notes" target="_blank" rel="noopener" class="notes-repo-link">Full-resolution archive on GitHub →</a>
   </div>
+
 </section>
+
+<div class="lightbox">
+  <button type="button" class="lightbox-close" aria-label="Close">✕</button>
+  <img src="" alt="">
+</div>
 
 <footer class="footer">
   <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
