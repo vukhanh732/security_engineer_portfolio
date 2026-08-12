@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MOVEit: a single SQL injection, thousands of victims — Vu Luu</title>
+<title>MOVEit: a single SQL injection, thousands of victims - Vu Luu</title>
 <meta name="description" content="Root cause analysis of the MOVEit Transfer breach (CVE-2023-34362), MITRE ATT&CK mapping, and detection ideas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -41,22 +41,29 @@
   <a href="blog.html" class="article-back">← All posts</a>
   <div class="article-eyebrow">SUPPLY CHAIN · CVE-2023-34362 · JUL 2026</div>
   <h1 class="article-title">MOVEit: a single SQL injection, thousands of victims</h1>
+  <div class="article-summary"><strong>The lesson:</strong> internet-facing software that stores sensitive files needs urgent patching, least privilege, and detection tied to the data it protects.</div>
 
   <h2>What happened</h2>
-  <p>In 2023, an unauthenticated SQL injection flaw in MOVEit Transfer, a widely used managed file-transfer product, was exploited at scale before a patch was available. Attackers used it to reach the underlying database and exfiltrate files from a large number of organisations that used MOVEit to move sensitive data.</p>
+  <p>In May 2023, the CL0P group exploited CVE-2023-34362 in MOVEit Transfer before defenders had a patch. The unauthenticated SQL injection exposed the product's database and enabled deployment of the LEMURLOOT web shell, which supported file theft at scale.</p>
 
-  <h2>The likely technical root cause</h2>
-  <p>A public-facing web endpoint built a database query from request input without adequately parameterising or validating it, letting attacker-supplied input change the query's structure. Because MOVEit sits deliberately at the edge of a network — its entire job is accepting files from external parties — a flaw here had an unusually direct path from internet-facing input to the data store, with no additional network segmentation to slow an attacker down.</p>
+  <h2>Why the impact spread</h2>
+  <p>MOVEit sits on the internet by design and holds files transferred between organisations. That gave one pre-authentication flaw a short path from a public endpoint to concentrated, sensitive data. The campaign also showed how a vulnerability in one widely deployed supplier can become an incident for every customer.</p>
 
   <h2>How this maps to MITRE ATT&amp;CK</h2>
   <div class="mitre-table">
-    <div class="mitre-row"><span class="mitre-id">T1190</span><span class="mitre-desc">Exploit Public-Facing Application — the injection point was reachable directly from the internet</span></div>
-    <div class="mitre-row"><span class="mitre-id">T1213 / T1005</span><span class="mitre-desc">Data from Information Repositories / Local System — the query granted access to stored files and records</span></div>
-    <div class="mitre-row"><span class="mitre-id">T1567</span><span class="mitre-desc">Exfiltration Over Web Service — stolen data was pulled out through the same web-facing channel</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1190</span><span class="mitre-desc">Exploit Public-Facing Application: reach the vulnerable endpoint without authentication.</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1505.003</span><span class="mitre-desc">Web Shell: deploy LEMURLOOT for persistence and file access.</span></div>
+    <div class="mitre-row"><span class="mitre-id">T1213</span><span class="mitre-desc">Data from Information Repositories: collect files held by the transfer service.</span></div>
   </div>
 
-  <h2>What I'd build to detect or prevent this</h2>
-  <p>This is squarely the pattern <a href="sentrynode.html" class="inline-link">SentryNode</a>'s SQL injection rule targets — matching injection patterns against decoded request payloads at the edge, rather than trusting the application layer alone. It's also a case for defence in depth beyond detection: database accounts for internet-facing services should carry the minimum privilege needed, so that even a successful injection can't reach the full dataset. And because internet-facing file-transfer software is exactly the kind of dependency <a href="gatekeeper.html" class="inline-link">Gatekeeper</a>'s scanning is meant to flag, staying current on vendor advisories for edge-facing software matters as much as scanning your own code.</p>
+  <h2>What I would build</h2>
+  <p>Maintain a high-priority inventory of edge-facing products and subscribe it to vendor and CISA alerts. Apply emergency isolation and patching for known exploitation. Add least-privilege database access, monitor for unexpected files in MOVEit's web directory, and alert on unusual downloads or admin activity. A decoded SQL injection rule in <a href="sentrynode.html" class="inline-link">SentryNode</a> adds defence in depth, but the vendor patch remains the primary control.</p>
+
+  <h2>Sources</h2>
+  <ul class="article-sources">
+    <li><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a" target="_blank" rel="noopener">CISA and FBI: CL0P exploitation of MOVEit</a></li>
+    <li><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities Catalog</a></li>
+  </ul>
 </article>
 
 <footer class="footer">

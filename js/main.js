@@ -1,3 +1,31 @@
+// 3D page transitions for same-origin navigation
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.body.classList.add('page-enter');
+
+  window.addEventListener('pageshow', function () {
+    document.body.classList.remove('page-exit');
+    document.body.classList.add('page-enter');
+  });
+
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href]');
+    if (!link || event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.target === '_blank' || link.hasAttribute('download')) return;
+
+    var url = new URL(link.href, window.location.href);
+    if (url.origin !== window.location.origin) return;
+    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+
+    event.preventDefault();
+    document.body.classList.remove('page-enter');
+    document.body.classList.add('page-exit');
+    window.setTimeout(function () { window.location.href = url.href; }, 390);
+  });
+})();
+
 // Mobile nav toggle
 (function () {
   var toggle = document.querySelector('.nav-toggle');
@@ -100,7 +128,7 @@
   });
 })();
 
-// Role-based hero variants — reached via /it-support, /software-engineer,
+// Role-based hero variants - reached via /it-support, /software-engineer,
 // /security-engineer (rewritten to this page by netlify.toml) or ?role=
 // query param for local testing. Root path keeps the neutral hero in the HTML.
 (function () {
@@ -111,25 +139,25 @@
 
   var variants = {
     'it-support': {
-      pageTitle: 'Vu Luu — IT Support',
-      description: 'Vu Luu — IT support engineer with hands-on Active Directory, Entra ID, and networking experience, backed by a live SOC lab and a distributed SIEM.',
+      pageTitle: 'Vu Luu - IT Support',
+      description: 'Vu Luu is an IT support engineer with hands-on Active Directory, Entra ID, and networking experience, backed by a live SOC lab and a distributed SIEM.',
       eyebrow: 'IT SUPPORT · SYSTEMS & SECURITY',
-      heroTitle: 'Vu Luu — IT support, hands-on with real systems.',
-      heroLead: 'UNSW Computer Science graduate (Security Engineering major), CompTIA Security+ and ISC2 CC certified. I’ve supported real users and infrastructure — Active Directory, Entra ID, Intune, networking, incident triage — and built a live SOC lab and a distributed SIEM to go past ticket-level troubleshooting.'
+      heroTitle: 'Vu Luu supports real systems.',
+      heroLead: 'IT support experience across identity, endpoints, and networking, backed by a live SOC lab and distributed SIEM.'
     },
     'software-engineer': {
-      pageTitle: 'Vu Luu — Software Engineer',
-      description: 'Vu Luu — software engineer building tested, production-grade systems: a distributed SIEM backend, a CI/CD pipeline, and full-stack apps.',
+      pageTitle: 'Vu Luu - Software Engineer',
+      description: 'Vu Luu is a software engineer building tested systems: a distributed SIEM backend, a CI/CD pipeline, and full-stack apps.',
       eyebrow: 'SOFTWARE ENGINEER',
-      heroTitle: 'Vu Luu — software engineer.',
-      heroLead: 'UNSW Computer Science graduate, currently a Software Developer at Cybercore Solutions. I build real, tested systems end to end — a distributed SIEM backend (FastAPI, Elasticsearch, Redis, RabbitMQ), a CI/CD pipeline, and a full-stack app, BrainTrain (Next.js, Supabase, Vitest) — verified against real data, not mocked.'
+      heroTitle: 'Vu Luu builds real systems.',
+      heroLead: 'Software developer building tested systems end to end, from distributed backends to production full-stack applications.'
     },
     'security-engineer': {
-      pageTitle: 'Vu Luu — Security Engineering Graduate',
-      description: 'Vu Luu — Security Engineering graduate building hands-on depth across detection engineering, identity security, and DevSecOps automation.',
+      pageTitle: 'Vu Luu - Security Engineer',
+      description: 'Vu Luu combines software development with hands-on depth across detection engineering, identity security, and DevSecOps automation.',
       eyebrow: 'SECURITY ENGINEERING GRADUATE',
-      heroTitle: 'Vu Luu — building toward Security Engineering.',
-      heroLead: 'UNSW Computer Science graduate (Security Engineering major), CompTIA Security+ and ISC2 CC certified. I build working detection systems — a distributed SIEM, a live SOC lab, a CI/CD security gate — to earn real depth across detection engineering, identity security, and DevSecOps automation.'
+      heroTitle: 'Vu Luu engineers secure systems.',
+      heroLead: 'Software developer with hands-on depth in detection engineering, identity security, and DevSecOps automation.'
     }
   };
 

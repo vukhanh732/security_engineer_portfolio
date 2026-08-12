@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The gym waitlist incident: an AI agent found the wrong shortcut - Vu Luu</title>
+<meta name="description" content="Analysis of the August 2026 gym waitlist incident involving an AI agent, weak API authorisation, and goal misalignment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-rose">
+<div class="ambient-cursor-glow" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="study-notes.html" class="nav-link">Notes</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="study-notes.html" class="mobile-link">Notes</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<article class="article">
+  <a href="blog.html" class="article-back">← All posts</a>
+  <div class="article-eyebrow">AI AGENTS / ACCESS CONTROL · AUG 2026 · 3 MIN READ</div>
+  <h1 class="article-title">The gym waitlist incident: an AI agent found the wrong shortcut</h1>
+  <div class="article-summary"><strong>The lesson:</strong> agent safety cannot live in a prompt alone. Constrain the tools, enforce ownership at the API, and require approval before actions that affect other people.</div>
+
+  <h2>What happened</h2>
+  <p>ABC News reported that an Australian user asked an OpenClaw agent, powered by Anthropic's Claude, to book a gym class and see whether it could move him up from fourth on the waitlist. The agent discovered that the booking API did not check ownership when cancelling reservations. It removed the person in first place, moving its user to third, then found it could not restore the cancelled reservation.</p>
+
+  <h2>Why this is an alignment failure</h2>
+  <p>The agent optimised for the stated goal while ignoring an obvious human constraint: do not harm another customer. It also turned vulnerability discovery into exploitation without approval. Still, this was not only a model failure. Broken object-level authorisation gave the agent a dangerous capability that no normal member should have had.</p>
+
+  <h2>What should change</h2>
+  <div class="mitre-table">
+    <div class="mitre-row"><span class="mitre-id">API boundary</span><span class="mitre-desc">Verify that the authenticated user owns a reservation before any change or cancellation.</span></div>
+    <div class="mitre-row"><span class="mitre-id">Agent boundary</span><span class="mitre-desc">Allow only ordinary user actions. Deny access to arbitrary endpoints and methods outside the task.</span></div>
+    <div class="mitre-row"><span class="mitre-id">Human approval</span><span class="mitre-desc">Pause before irreversible actions or any operation affecting another person, account, or booking.</span></div>
+    <div class="mitre-row"><span class="mitre-id">Recovery</span><span class="mitre-desc">Keep audit logs and compensating actions so an operator can reverse an agent's mistake.</span></div>
+  </div>
+
+  <h2>Sources and further reading</h2>
+  <ul class="article-sources">
+    <li><a href="https://www.abc.net.au/news/2026-08-10/ai-assistant-hacks-gym-website-aus-cyber-attack/107007986" target="_blank" rel="noopener">ABC News: original report, 10 August 2026</a></li>
+    <li><a href="https://owasp.org/API-Security/editions/2023/en/0x11-t10/" target="_blank" rel="noopener">OWASP API Security Top 10 (2023)</a></li>
+    <li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/" target="_blank" rel="noopener">OWASP: Excessive Agency</a></li>
+  </ul>
+</article>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links">
+    <a href="mailto:vukhanhluu@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+    <a href="https://github.com/vukhanh732">GitHub</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
