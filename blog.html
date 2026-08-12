@@ -40,35 +40,35 @@
 <section class="page-hero">
   <div class="section-label">BLOG</div>
   <h1 class="page-title">Security, explained clearly</h1>
-  <p class="page-lead">Short analysis of real incidents, the engineering failures behind them, and the controls that would have changed the outcome.</p>
+  <p class="page-lead">Focused analysis of real incidents, the engineering failures behind them, and the controls that would have changed the outcome.</p>
 </section>
 
 <section class="container-narrow" style="padding-bottom:clamp(56px,8vw,88px);">
-  <div style="display:flex; flex-direction:column; gap:16px;">
-    <a href="blog-ai-gym-waitlist.html" class="blog-card blog-card--featured">
-      <div class="blog-meta">
-        <span class="blog-tag">AI AGENTS / ACCESS CONTROL</span>
-        <span class="blog-date">Aug 2026 · 3 min read</span>
+  <div class="blog-index-grid">
+    <a href="blog-ai-gym-waitlist.html" class="blog-index-lead">
+      <img src="images/ai-agent-waitlist-editorial.webp" alt="Editorial illustration of an AI agent breaking a digital reservation queue" width="1536" height="1024" fetchpriority="high" decoding="async">
+      <div class="blog-index-lead-copy">
+        <div class="blog-meta">
+          <span class="blog-tag">AI AGENTS / ACCESS CONTROL</span>
+          <span class="blog-date">Aug 2026 · 5 min read</span>
+        </div>
+        <div class="blog-title-lg">The gym waitlist incident: an AI agent found the wrong shortcut</div>
+        <p class="blog-excerpt">A routine booking request exposed failures in alignment, authorisation, and reversible system design.</p>
+        <span class="editorial-read">Read the analysis →</span>
       </div>
-      <div class="blog-title-lg">The gym waitlist incident: an AI agent found the wrong shortcut</div>
-      <p class="blog-excerpt">Why a routine booking request became an unauthorised cancellation, and what agent builders should learn from it.</p>
     </a>
-    <a href="blog-log4shell.html" class="blog-card">
-      <div class="blog-meta">
-        <span class="blog-tag">RCE / LOGGING · CVE-2021-44228</span>
-        <span class="blog-date">Jul 2026 · 3 min read</span>
-      </div>
-      <div class="blog-title-lg">Log4Shell: why one logging call became a global incident</div>
-      <p class="blog-excerpt">How Log4j's JNDI lookup feature turned attacker-controlled strings into remote code execution, and what detection would have caught it early.</p>
-    </a>
-    <a href="blog-moveit.html" class="blog-card">
-      <div class="blog-meta">
-        <span class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</span>
-        <span class="blog-date">Jul 2026 · 3 min read</span>
-      </div>
-      <div class="blog-title-lg">MOVEit: a single SQL injection, thousands of victims</div>
-      <p class="blog-excerpt">How an unauthenticated SQL injection in a file-transfer product became one of the largest mass data-theft campaigns on record.</p>
-    </a>
+    <div class="blog-index-secondary">
+      <a href="blog-log4shell.html">
+        <div class="blog-meta"><span class="blog-tag">RCE / LOGGING · CVE-2021-44228</span><span class="blog-date">Jul 2026 · 3 min read</span></div>
+        <div class="blog-title-lg">Log4Shell: why one logging call became a global incident</div>
+        <p class="blog-excerpt">How attacker-controlled strings became remote code execution, and what detection would have caught it early.</p>
+      </a>
+      <a href="blog-moveit.html">
+        <div class="blog-meta"><span class="blog-tag">SUPPLY CHAIN · CVE-2023-34362</span><span class="blog-date">Jul 2026 · 3 min read</span></div>
+        <div class="blog-title-lg">MOVEit: a single SQL injection, thousands of victims</div>
+        <p class="blog-excerpt">How one edge-facing flaw in a concentrated data store enabled mass theft.</p>
+      </a>
+    </div>
   </div>
 </section>
 
