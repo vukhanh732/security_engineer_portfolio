@@ -97,7 +97,7 @@
   triggers.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var img = btn.querySelector('img');
-      open(img.src, img.alt);
+      open(btn.dataset.full || img.src, img.alt);
     });
   });
 

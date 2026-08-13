@@ -3,17 +3,17 @@
 
 [[redirects]]
   from = "/it-support"
-  to = "/index.html"
+  to = "/it-support.html"
   status = 200
 
 [[redirects]]
   from = "/software-engineer"
-  to = "/index.html"
+  to = "/software-engineer.html"
   status = 200
 
 [[redirects]]
   from = "/security-engineer"
-  to = "/index.html"
+  to = "/security-engineer.html"
   status = 200
 
 [[headers]]
@@ -22,6 +22,9 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'none'; upgrade-insecure-requests"
 
 [[headers]]
   for = "/images/*"
@@ -37,3 +40,8 @@
   for = "/js/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, must-revalidate"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

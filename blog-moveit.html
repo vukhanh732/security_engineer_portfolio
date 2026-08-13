@@ -5,14 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MOVEit: a single SQL injection, thousands of victims - Vu Luu</title>
 <meta name="description" content="Root cause analysis of the MOVEit Transfer breach (CVE-2023-34362), MITRE ATT&CK mapping, and detection ideas.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+<meta name="theme-color" content="#12151b">
+<link rel="canonical" href="https://vukhanhluu.com/blog-moveit.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vu Luu">
+<meta property="og:title" content="MOVEit: a single SQL injection, thousands of victims">
+<meta property="og:description" content="How one edge-facing flaw in a concentrated data store enabled mass theft.">
+<meta property="og:url" content="https://vukhanhluu.com/blog-moveit.html">
+<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta property="article:published_time" content="2026-07-22">
+<meta property="article:modified_time" content="2026-08-14">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MOVEit breach root cause analysis">
+<meta name="twitter:description" content="How one SQL injection flaw enabled mass data theft, plus practical controls and detections.">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"MOVEit: a single SQL injection, thousands of victims","description":"Root cause analysis of the MOVEit Transfer breach (CVE-2023-34362), MITRE ATT&CK mapping, and detection ideas.","image":"https://vukhanhluu.com/images/portfolio-hero-v3.webp","datePublished":"2026-07-22","dateModified":"2026-08-14","author":{"@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/"},"mainEntityOfPage":"https://vukhanhluu.com/blog-moveit.html"}
+</script>
 </head>
 <body class="page-azure">
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
@@ -22,7 +36,7 @@
     <a href="index.html#skills" class="nav-link">Skills</a>
     <a href="index.html#experience" class="nav-link">Experience</a>
     <a href="index.html#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="nav-link">Blog</a>
     <a href="study-notes.html" class="nav-link">Notes</a>
     <a href="index.html#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
@@ -33,13 +47,14 @@
     <a href="index.html#skills" class="mobile-link">Skills</a>
     <a href="index.html#experience" class="mobile-link">Experience</a>
     <a href="index.html#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="mobile-link">Blog</a>
     <a href="study-notes.html" class="mobile-link">Notes</a>
     <a href="index.html#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
 </header>
 
+<main id="main-content">
 <article class="article">
   <a href="blog.html" class="article-back">← All posts</a>
   <div class="article-eyebrow">SUPPLY CHAIN · CVE-2023-34362 · JUL 2026</div>
@@ -68,6 +83,7 @@
     <li><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities Catalog</a></li>
   </ul>
 </article>
+</main>
 
 <footer class="footer">
   <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrainTrain - Vu Luu</title>
+<meta name="description" content="A full-stack brain-training product with six adaptive games, replayable Elo rankings, insights, and a live Supabase backend.">
+<meta name="theme-color" content="#12151b">
+<link rel="canonical" href="https://vukhanhluu.com/braintrain.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vu Luu">
+<meta property="og:title" content="BrainTrain - full-stack product case study">
+<meta property="og:description" content="Six adaptive games, replayable Elo rankings, insights, and a live Supabase backend.">
+<meta property="og:url" content="https://vukhanhluu.com/braintrain.html">
+<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BrainTrain - full-stack product case study">
+<meta name="twitter:description" content="Six adaptive games with persistent progression and a tested live backend.">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"BrainTrain","applicationCategory":"GameApplication","operatingSystem":"Web","description":"A full-stack brain-training product with six adaptive games, persistent progression, insights, and rankings.","url":"https://braintrain.space","codeRepository":"https://github.com/vukhanh732/BrainTrain","author":{"@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/"}}
+</script>
+</head>
+<body class="page-azure">
+<a href="#main-content" class="skip-link">Skip to content</a>
+<div class="ambient-cursor-glow" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+  <nav class="nav-links">
+    <a href="index.html#about" class="nav-link">About</a>
+    <a href="index.html#skills" class="nav-link">Skills</a>
+    <a href="index.html#experience" class="nav-link">Experience</a>
+    <a href="index.html#projects" class="nav-link">Projects</a>
+    <a href="blog.html" class="nav-link">Blog</a>
+    <a href="study-notes.html" class="nav-link">Notes</a>
+    <a href="index.html#contact" class="nav-link">Contact</a>
+    <a href="resume.pdf" download class="btn-resume">Resume</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <nav class="mobile-panel">
+    <a href="index.html#about" class="mobile-link">About</a>
+    <a href="index.html#skills" class="mobile-link">Skills</a>
+    <a href="index.html#experience" class="mobile-link">Experience</a>
+    <a href="index.html#projects" class="mobile-link">Projects</a>
+    <a href="blog.html" class="mobile-link">Blog</a>
+    <a href="study-notes.html" class="mobile-link">Notes</a>
+    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+  </nav>
+</header>
+
+<main id="main-content">
+<section class="project-hero">
+  <a href="index.html#projects" class="article-back">← All projects</a>
+  <div class="project-eyebrow">PROJECT / FULL-STACK PRODUCT</div>
+  <h1 class="project-title">BrainTrain</h1>
+  <p class="project-lead">A complete brain-training product with <strong>six playable games</strong>, persistent progression, rankings, streaks, and detailed insights running against a live Supabase backend.</p>
+  <div class="project-stack-row">
+    <span>Next.js</span><span>TypeScript</span><span>Supabase</span><span>Tailwind CSS</span><span>Vitest</span>
+  </div>
+  <dl class="project-results">
+    <div><dt>PLAYABLE MODES</dt><dd>6 games</dd></div>
+    <div><dt>RANK SYSTEM</dt><dd>10 tiers</dd></div>
+    <div><dt>ACCESS</dt><dd>Free forever</dd></div>
+  </dl>
+  <div class="hero-actions">
+    <a href="https://braintrain.space" target="_blank" rel="noopener" class="btn-primary">Open live app →</a>
+    <a href="https://github.com/vukhanh732/BrainTrain" target="_blank" rel="noopener" class="btn-secondary">View source →</a>
+  </div>
+</section>
+
+<section class="project-block">
+  <div class="block-label">SCOPE</div>
+  <p class="block-body">I wanted to build a product with enough connected state to expose real engineering decisions: authenticated users, game sessions, adaptive difficulty, rankings, streak recovery, leaderboards, and analytics that all need to agree.</p>
+</section>
+
+<section class="project-block">
+  <div class="block-label">APPROACH</div>
+  <p class="block-body">Next.js renders the application and Supabase owns authentication and persistence. Every completed round passes through one session-recording path, which updates personal bests, adaptive difficulty, streak state, Brain Score, and Brain Elo without duplicating that logic across games.</p>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="diagram-node">Game Result</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Session Record</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Stats + Streak</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">Elo + Insights</div>
+    </div>
+    <div class="diagram-caption">One write path keeps every progression system consistent</div>
+  </div>
+</section>
+
+<section class="project-block">
+  <div class="block-label">WHAT I BUILT</div>
+  <ul class="block-list">
+    <li>Six distinct games covering mental maths, memory, focus, abstract reasoning, reaction time, and typing</li>
+    <li>Cross-session adaptive difficulty with explicit player-controlled tiers</li>
+    <li>A ten-tier Brain Elo system whose history can be reconstructed from session events</li>
+    <li>Streaks with weekly freeze recovery, opt-in leaderboards, and per-game insights</li>
+    <li>Pure, unit-tested scoring and analytics modules plus end-to-end verification against a real Supabase project</li>
+  </ul>
+</section>
+
+<section class="project-block">
+  <div class="block-label">ENGINEERING DECISION</div>
+  <p class="block-body">Elo is treated as an accumulated event history rather than a value that can be safely recalculated from current stats. The insights engine replays chronological sessions to rebuild that history, while Brain Score remains a live normalized snapshot across games.</p>
+</section>
+
+<section class="project-block last">
+  <div class="block-label">OUTCOME</div>
+  <p class="block-body">BrainTrain is deployed at braintrain.space as a working product, not a static demonstration. Users can create an account, play every game, build a streak, move through ranked tiers, and inspect their own performance trends.</p>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
+  <div class="footer-links"><a href="mailto:vukhanhluu@gmail.com">Email</a><a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a><a href="https://github.com/vukhanh732">GitHub</a></div>
+</footer>
+<script src="js/main.js" defer></script>
+</body>
+</html>

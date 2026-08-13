@@ -5,14 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Log4Shell: why one logging call became a global incident - Vu Luu</title>
 <meta name="description" content="Root cause analysis of Log4Shell (CVE-2021-44228), MITRE ATT&CK mapping, and detection ideas.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+<meta name="theme-color" content="#12151b">
+<link rel="canonical" href="https://vukhanhluu.com/blog-log4shell.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Vu Luu">
+<meta property="og:title" content="Log4Shell: why one logging call became a global incident">
+<meta property="og:description" content="Root cause analysis, MITRE ATT&CK mapping, and practical detection ideas for CVE-2021-44228.">
+<meta property="og:url" content="https://vukhanhluu.com/blog-log4shell.html">
+<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta property="article:published_time" content="2026-07-22">
+<meta property="article:modified_time" content="2026-08-14">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Log4Shell root cause analysis">
+<meta name="twitter:description" content="Why attacker-controlled log strings became an execution path, and how to detect it.">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Log4Shell: why one logging call became a global incident","description":"Root cause analysis of Log4Shell (CVE-2021-44228), MITRE ATT&CK mapping, and detection ideas.","image":"https://vukhanhluu.com/images/portfolio-hero-v3.webp","datePublished":"2026-07-22","dateModified":"2026-08-14","author":{"@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/"},"mainEntityOfPage":"https://vukhanhluu.com/blog-log4shell.html"}
+</script>
 </head>
 <body class="page-rose">
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
@@ -22,7 +36,7 @@
     <a href="index.html#skills" class="nav-link">Skills</a>
     <a href="index.html#experience" class="nav-link">Experience</a>
     <a href="index.html#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="nav-link">Blog</a>
     <a href="study-notes.html" class="nav-link">Notes</a>
     <a href="index.html#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
@@ -33,13 +47,14 @@
     <a href="index.html#skills" class="mobile-link">Skills</a>
     <a href="index.html#experience" class="mobile-link">Experience</a>
     <a href="index.html#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="mobile-link">Blog</a>
     <a href="study-notes.html" class="mobile-link">Notes</a>
     <a href="index.html#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
 </header>
 
+<main id="main-content">
 <article class="article">
   <a href="blog.html" class="article-back">← All posts</a>
   <div class="article-eyebrow">RCE / LOGGING · CVE-2021-44228 · JUL 2026</div>
@@ -67,6 +82,7 @@
     <li><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-356a" target="_blank" rel="noopener">CISA joint advisory: Log4Shell mitigation</a></li>
   </ul>
 </article>
+</main>
 
 <footer class="footer">
   <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>

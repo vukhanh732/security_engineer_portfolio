@@ -21,12 +21,19 @@ index.html                 home page: hero, about, skills, education, experience
 blog.html                  blog index
 blog-log4shell.html        post (page-rose)
 blog-moveit.html           post (page-azure)
+blog-ai-gym-waitlist.html  post (page-violet)
 sentrynode.html            project case study (page-violet)
 wazuh.html                 project case study (page-teal)
 gatekeeper.html            project case study (page-coral)
+braintrain.html            project case study
+resume.html                accessible online resume
+software-engineer.html     role-specific landing page
+security-engineer.html     role-specific landing page
+it-support.html            role-specific landing page
 css/style.css              shared design system (single file, no preprocessor)
-js/main.js                 mobile nav toggle + IntersectionObserver scroll-reveal
-images/                    Wazuh dashboard evidence screenshots (real, not stock)
+js/main.js                 navigation, filters, lightbox, and scroll-reveal
+fonts/                     self-hosted Space Grotesk and IBM Plex families
+images/                    optimised imagery and full-size study notes
 resume.pdf                 must stay lowercase — Netlify's Linux build is
                             case-sensitive, every download link points to
                             "resume.pdf" exactly
@@ -34,18 +41,16 @@ netlify.toml                publish = "." (repo root), no build command
 design-source/             archived Claude Design output, not deployed
 ```
 
-Every page shares the same nav/footer markup (hand-copied into each file, no
-templating layer). If you change nav structure, links, or footer copy, update
-it in **all seven** HTML files — search for the block, don't assume one edit
-propagates.
+Pages share nav/footer markup by hand, with intentionally simpler navigation
+on conversion-focused role, resume, and confirmation pages. Search all root
+HTML files when changing shared markup; there is no templating layer.
 
 ## Design system (css/style.css)
 
 - Dark theme only, single locked theme (no light mode). Base `#12151b`,
   cards `#171b22`, borders `#262b35`, body text `#f2f3f5`/`#c7cbd3`.
 - Fonts: Space Grotesk (headings), IBM Plex Sans (body), IBM Plex Mono
-  (labels/eyebrows/mono accents). Loaded via Google Fonts `<link>` in each
-  page `<head>`.
+  (labels/eyebrows/mono accents). Self-hosted as WOFF2 files in `fonts/`.
 - **Global brand color stays amber (`--accent`, `#e8b93a`)** for all
   functional/interactive elements: nav hover, primary/secondary buttons,
   hero, footer links, form. Do not vary these per section — that was a
@@ -88,15 +93,14 @@ propagates.
   Wazuh-SOC-HomeLab (SOC lab, real dashboard screenshots in `images/`),
   Gatekeeper (CI/CD security gate, HIGH-severity-only blocking policy —
   MEDIUM findings are logged, not blocking, keep this distinction accurate).
-- BrainTrain (github.com/vukhanh732/BrainTrain) is a 4th project card, added
+- BrainTrain (github.com/vukhanh732/BrainTrain) is a 4th project, added
   as a deliberate exception to the security-only lineup: a gamified
   brain-training web app (Next.js/Supabase/TypeScript/Vitest), framed on
   engineering rigor (Elo system replayed from session history, adaptive
-  difficulty, E2E-verified against a live DB) rather than security. Card-only
-  — no case-study page — links out directly to the live app
-  (braintrain.space) with `target="_blank"`, unlike the other three cards
-  which link to internal case-study pages. Future non-security projects
-  added the same way should follow this pattern: distinct project-tag
+  difficulty, E2E-verified against a live DB) rather than security. It has an
+  internal case-study page and links to the live app at braintrain.space.
+  Future non-security projects added the same way should follow this pattern:
+  distinct project-tag
   (not SIEM/SOC/DEVSECOPS-styled), hook framed on engineering/testing merit.
 - Full career history (Cybercore, Labourpower, Zonda) lives in the
   Experience section of index.html — do not trim the Labourpower phishing
@@ -116,18 +120,12 @@ propagates.
 - No env vars, database, or serverless functions — everything is static.
   Don't introduce a build step unless there's a real reason.
 
-## Deployment status
-
-Pushed to GitHub, not yet connected to Netlify (as of last session). Steps
-are in README.md. `resume.pdf` and all case-study images are committed and
-verified reachable via a local `python3 -m http.server` smoke test.
-
 ## Working agreement
 
 - Keep copy tight — user wants skimmable sections (3-4 sentences), not
   paragraphs. When editing prose, default to cutting, not expanding.
-- When asked for a rewrite/redesign, show the result and ask before pushing;
-  push only on explicit "yes"/"push it".
-- After any HTML/CSS change, do a quick `python3 -m http.server` + `curl`
-  sweep of all seven pages before calling it done — case-sensitivity and
-  cross-page nav sync have both bitten before.
+- The user has asked for completed website changes to be committed and pushed
+  directly to `main` unless they explicitly say otherwise.
+- After any HTML/CSS change, run `node scripts/validate-site.mjs` and a local
+  browser smoke test before calling it done. Case-sensitivity and cross-page
+  nav sync have both bitten before.

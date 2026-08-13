@@ -5,14 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vu Luu - Software Developer</title>
 <meta name="description" content="Vu Luu is a software developer building tested products and security systems across full-stack engineering, automation, and detection.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+<meta name="theme-color" content="#12151b">
+<link rel="canonical" href="https://vukhanhluu.com/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vu Luu">
+<meta property="og:title" content="Vu Luu - Software Developer">
+<meta property="og:description" content="Software developer building tested products and security systems across full-stack engineering, automation, and detection.">
+<meta property="og:url" content="https://vukhanhluu.com/">
+<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vu Luu - Software Developer">
+<meta name="twitter:description" content="Tested products and security systems across full-stack engineering, automation, and detection.">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/","jobTitle":"Software Developer","email":"mailto:vukhanhluu@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"UNSW Sydney"},"sameAs":["https://linkedin.com/in/vukhanhluu","https://github.com/vukhanh732"],"knowsAbout":["Full-stack software engineering","Detection engineering","Identity security","DevSecOps automation"]}
+</script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
@@ -22,7 +34,7 @@
     <a href="#skills" class="nav-link">Skills</a>
     <a href="#experience" class="nav-link">Experience</a>
     <a href="#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="nav-link">Blog</a>
     <a href="study-notes.html" class="nav-link">Notes</a>
     <a href="#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
@@ -33,13 +45,14 @@
     <a href="#skills" class="mobile-link">Skills</a>
     <a href="#experience" class="mobile-link">Experience</a>
     <a href="#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="mobile-link">Blog</a>
     <a href="study-notes.html" class="mobile-link">Notes</a>
     <a href="#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
 </header>
 
+<main id="main-content">
 <section class="hero">
   <div class="hero-glow-1"></div>
   <div class="hero-glow-2"></div>
@@ -171,17 +184,17 @@
   <div class="section-label">PROJECTS</div>
   <h2 class="section-heading">Selected builds with evidence</h2>
   <div class="project-showcase">
-    <a href="https://braintrain.space" class="project-feature project-feature--braintrain" target="_blank" rel="noopener">
-      <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Five adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>View live app →</span></div>
+    <a href="braintrain.html" class="project-feature project-feature--braintrain">
+      <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Six adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>Read case study →</span></div>
     </a>
     <a href="wazuh.html" class="project-feature project-feature--wazuh">
-      <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Real alerts. Real quarantine.</strong> Multi-endpoint FIM with VirusTotal-triggered response.</p><span>Read case study →</span></div>
+      <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Three monitored endpoints.</strong> Real FIM alerts with VirusTotal-triggered quarantine.</p><span>Read case study →</span></div>
     </a>
     <a href="sentrynode.html" class="project-feature project-feature--sentrynode">
-      <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>Detection that keeps state.</strong> URL-decoded matching, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
+      <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>800+ lines of tests.</strong> Stateful detection, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
     </a>
     <a href="gatekeeper.html" class="project-feature project-feature--gatekeeper">
-      <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Security policy as code.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
+      <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Three scanners, one release gate.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
     </a>
   </div>
 </section>
@@ -216,26 +229,28 @@
   <div class="contact-grid">
     <div>
       <h2 class="contact-heading">Let's talk.</h2>
-      <p class="contact-lead">Open to software engineering and security-focused development roles.</p>
+      <p class="contact-lead">Based in Sydney and open to software engineering and security-focused development roles.</p>
       <div class="contact-links">
         <a href="tel:+61424725899">0424 725 899</a>
         <a href="mailto:vukhanhluu@gmail.com">vukhanhluu@gmail.com</a>
       </div>
-      <a href="resume.pdf" download class="btn-link" style="padding:0;">Download résumé →</a>
+      <div class="contact-resume-actions">
+        <a href="resume.html" class="btn-link" style="padding:0;">View résumé online →</a>
+        <a href="resume.pdf" download class="btn-link" style="padding:0;">Download PDF →</a>
+      </div>
     </div>
-    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form">
+    <form name="contact" method="POST" action="/thanks.html" data-netlify="true" netlify-honeypot="bot-field" class="form">
       <input type="hidden" name="form-name" value="contact">
       <p class="form-honeypot"><label>Don't fill this out: <input name="bot-field"></label></p>
-      <label class="sr-only" for="contact-name">Name</label>
-      <input id="contact-name" type="text" name="name" placeholder="Name" required>
-      <label class="sr-only" for="contact-email">Email</label>
-      <input id="contact-email" type="email" name="email" placeholder="Email" required>
-      <label class="sr-only" for="contact-message">Message</label>
-      <textarea id="contact-message" name="message" placeholder="Message" required rows="5"></textarea>
+      <div class="form-field"><label for="contact-name">Name</label><input id="contact-name" type="text" name="name" autocomplete="name" placeholder="Your name" required></div>
+      <div class="form-field"><label for="contact-email">Email</label><input id="contact-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required></div>
+      <div class="form-field"><label for="contact-message">Message</label><textarea id="contact-message" name="message" placeholder="What would you like to discuss?" required rows="5"></textarea></div>
       <button type="submit">Send message</button>
     </form>
   </div>
 </section>
+
+</main>
 
 <footer class="footer">
   <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>

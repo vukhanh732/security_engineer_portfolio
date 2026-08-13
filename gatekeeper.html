@@ -3,16 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gatekeeper — Vu Luu</title>
+<title>Gatekeeper - Vu Luu</title>
 <meta name="description" content="A CI/CD pipeline that genuinely fails the build on any HIGH severity Bandit finding or any Safety CVE.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+<meta name="theme-color" content="#12151b">
+<link rel="canonical" href="https://vukhanhluu.com/gatekeeper.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vu Luu">
+<meta property="og:title" content="Gatekeeper - security policy as code">
+<meta property="og:description" content="Three scanners feed one severity-aware release gate that blocks HIGH findings while keeping MEDIUM findings visible.">
+<meta property="og:url" content="https://vukhanhluu.com/gatekeeper.html">
+<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gatekeeper - security policy as code">
+<meta name="twitter:description" content="A severity-aware CI/CD security gate built with GitHub Actions, Bandit, Safety, and OWASP ZAP.">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Gatekeeper","description":"A severity-aware CI/CD security gate using Bandit, Safety, and OWASP ZAP.","codeRepository":"https://github.com/vukhanh732/gatekeeper-devsecops","programmingLanguage":"Python","author":{"@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/"},"url":"https://vukhanhluu.com/gatekeeper.html"}
+</script>
 </head>
 <body class="page-coral">
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
@@ -22,7 +34,7 @@
     <a href="index.html#skills" class="nav-link">Skills</a>
     <a href="index.html#experience" class="nav-link">Experience</a>
     <a href="index.html#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="nav-link">Blog</a>
     <a href="study-notes.html" class="nav-link">Notes</a>
     <a href="index.html#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
@@ -33,18 +45,19 @@
     <a href="index.html#skills" class="mobile-link">Skills</a>
     <a href="index.html#experience" class="mobile-link">Experience</a>
     <a href="index.html#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog <span class="nav-badge"></span></a>
+    <a href="blog.html" class="mobile-link">Blog</a>
     <a href="study-notes.html" class="mobile-link">Notes</a>
     <a href="index.html#contact" class="mobile-link">Contact</a>
     <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
   </nav>
 </header>
 
+<main id="main-content">
 <section class="project-hero">
   <a href="index.html#projects" class="article-back">← All projects</a>
   <div class="project-eyebrow">PROJECT · DEVSECOPS / CI-CD</div>
   <h1 class="project-title">Gatekeeper</h1>
-  <p class="project-lead">A CI/CD pipeline that <strong>genuinely fails the build</strong> on any HIGH severity Bandit finding or any Safety CVE — no vanity security scan that reports and moves on.</p>
+  <p class="project-lead">A CI/CD pipeline that <strong>genuinely fails the build</strong> on any HIGH severity Bandit finding or any Safety CVE - no vanity security scan that reports and moves on.</p>
   <div class="project-stack-row">
     <span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span>
   </div>
@@ -91,8 +104,10 @@
 
 <section class="project-block last">
   <div class="block-label">OUTCOME</div>
-  <p class="block-body">The pipeline runs on every push and the dashboard makes remediation actionable instead of burying findings in raw scanner output — the policy is intentionally conservative (MEDIUM findings stay visible, not blocking) to avoid gate fatigue.</p>
+  <p class="block-body">The pipeline runs on every push and the dashboard makes remediation actionable instead of burying findings in raw scanner output - the policy is intentionally conservative (MEDIUM findings stay visible, not blocking) to avoid gate fatigue.</p>
 </section>
+
+</main>
 
 <footer class="footer">
   <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
