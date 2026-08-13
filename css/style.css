@@ -670,8 +670,9 @@ img { max-width: 100%; display: block; }
 
 .hero-graphic {
   display: block;
-  width: min(100%, 280px);
+  width: min(100%, 380px);
   margin-inline: auto;
+  align-self: center;
   position: relative;
   z-index: 1;
 }
@@ -690,7 +691,7 @@ img { max-width: 100%; display: block; }
 
 .hero-visual img {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 7;
   object-fit: cover;
 }
 
@@ -847,9 +848,8 @@ img { max-width: 100%; display: block; }
 .outside-list p { margin: 0; color: var(--text-secondary); line-height: 1.65; }
 
 @media (min-width: 880px) {
-  .hero { gap: 32px; }
-  .hero-graphic { display: block; flex: 0 0 auto; width: min(300px, 26vw); margin-inline: 0; }
-  .hero-visual img { aspect-ratio: 16 / 9; }
+  .hero { gap: 40px; }
+  .hero-graphic { display: block; flex: 0 0 auto; width: min(380px, 34vw); margin-inline: 0; }
 }
 
 @media (max-width: 879px) {
