@@ -1,31 +1,3 @@
-// 3D page transitions for same-origin navigation
-(function () {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  document.body.classList.add('page-enter');
-
-  window.addEventListener('pageshow', function () {
-    document.body.classList.remove('page-exit');
-    document.body.classList.add('page-enter');
-  });
-
-  document.addEventListener('click', function (event) {
-    var link = event.target.closest('a[href]');
-    if (!link || event.defaultPrevented || event.button !== 0) return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    if (link.target === '_blank' || link.hasAttribute('download')) return;
-
-    var url = new URL(link.href, window.location.href);
-    if (url.origin !== window.location.origin) return;
-    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
-
-    event.preventDefault();
-    document.body.classList.remove('page-enter');
-    document.body.classList.add('page-exit');
-    window.setTimeout(function () { window.location.href = url.href; }, 390);
-  });
-})();
-
 // Mobile nav toggle
 (function () {
   var toggle = document.querySelector('.nav-toggle');
@@ -74,12 +46,22 @@
 // Cursor-following ambient glow + per-card spotlight hover
 (function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
   var glow = document.querySelector('.ambient-cursor-glow');
   if (glow) {
+    var pointerFrame = 0;
+    var pointerX = 0;
+    var pointerY = 0;
     document.addEventListener('pointermove', function (e) {
-      document.documentElement.style.setProperty('--mx', e.clientX + 'px');
-      document.documentElement.style.setProperty('--my', e.clientY + 'px');
+      pointerX = e.clientX;
+      pointerY = e.clientY;
+      if (pointerFrame) return;
+      pointerFrame = window.requestAnimationFrame(function () {
+        document.documentElement.style.setProperty('--mx', pointerX + 'px');
+        document.documentElement.style.setProperty('--my', pointerY + 'px');
+        pointerFrame = 0;
+      });
     }, { passive: true });
   }
 

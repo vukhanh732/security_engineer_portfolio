@@ -6,7 +6,10 @@
 <title>Wazuh-SOC-HomeLab — Vu Luu</title>
 <meta name="description" content="A multi-endpoint SOC lab where a VirusTotal hash-enrichment hit automatically triggers Active Response quarantine.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="page-teal">
@@ -77,27 +80,27 @@
   <p class="block-body" style="margin-bottom:20px;">Real screenshots from the live manager — MITRE ATT&amp;CK tactic breakdowns, FIM events, and agent overviews.</p>
   <div class="evidence-grid">
     <div class="evidence-item">
-      <img src="images/mitre_events.png" alt="Wazuh dashboard showing MITRE ATT&CK tactic breakdown including Defense Evasion, Privilege Escalation, and Initial Access" loading="lazy">
+      <img src="images/mitre_events.png" alt="Wazuh dashboard showing MITRE ATT&CK tactic breakdown including Defense Evasion, Privilege Escalation, and Initial Access" width="1638" height="913" loading="lazy" decoding="async">
       <div class="evidence-caption">MITRE ATT&amp;CK breakdown (Defense Evasion, Privilege Escalation, Initial Access)</div>
     </div>
     <div class="evidence-item">
-      <img src="images/fim_events.png" alt="Wazuh File Integrity Monitoring events screenshot" loading="lazy">
+      <img src="images/fim_events.png" alt="Wazuh File Integrity Monitoring events screenshot" width="1654" height="888" loading="lazy" decoding="async">
       <div class="evidence-caption">File Integrity Monitoring events</div>
     </div>
     <div class="evidence-item">
-      <img src="images/agents.png" alt="Wazuh agent overview screenshot showing the live manager hostname" loading="lazy">
+      <img src="images/agents.png" alt="Wazuh agent overview screenshot showing the live manager hostname" width="1918" height="1037" loading="lazy" decoding="async">
       <div class="evidence-caption">Agent overview, live manager hostname</div>
     </div>
     <div class="evidence-item">
-      <img src="images/windows_overview.png" alt="Wazuh Windows endpoint overview dashboard" loading="lazy">
+      <img src="images/windows_overview.png" alt="Wazuh Windows endpoint overview dashboard" width="1722" height="953" loading="lazy" decoding="async">
       <div class="evidence-caption">Windows endpoint overview</div>
     </div>
     <div class="evidence-item">
-      <img src="images/windows_details.png" alt="Wazuh Windows endpoint detail view" loading="lazy">
+      <img src="images/windows_details.png" alt="Wazuh Windows endpoint detail view" width="1722" height="959" loading="lazy" decoding="async">
       <div class="evidence-caption">Windows endpoint detail view</div>
     </div>
     <div class="evidence-item">
-      <img src="images/kali_overview.png" alt="Wazuh Kali endpoint overview dashboard" loading="lazy">
+      <img src="images/kali_overview.png" alt="Wazuh Kali endpoint overview dashboard" width="1646" height="883" loading="lazy" decoding="async">
       <div class="evidence-caption">Kali endpoint overview</div>
     </div>
   </div>
@@ -122,6 +125,6 @@
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
