@@ -670,7 +670,8 @@ img { max-width: 100%; display: block; }
 
 .hero-graphic {
   display: block;
-  width: 100%;
+  width: min(100%, 280px);
+  margin-inline: auto;
   position: relative;
   z-index: 1;
 }
@@ -808,10 +809,7 @@ img { max-width: 100%; display: block; }
   border-color: color-mix(in srgb, var(--project-accent) 72%, var(--border));
   box-shadow: 0 18px 44px color-mix(in srgb, var(--project-accent) 12%, transparent);
 }
-.project-media { overflow: hidden; border-bottom: 1px solid var(--border); }
-.project-media img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.project-feature:hover .project-media img { transform: scale(1.025); }
-.project-feature-copy { display: flex; flex: 1; flex-direction: column; padding: clamp(20px, 2.4vw, 28px); }
+.project-feature-copy { display: flex; flex: 1; min-height: 250px; flex-direction: column; padding: clamp(24px, 3.2vw, 36px); }
 .project-feature-copy .project-tag {
   color: var(--project-accent);
   font-weight: 500;
@@ -832,7 +830,7 @@ img { max-width: 100%; display: block; }
 .editorial-heading { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
 .editorial-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 0.8fr); gap: clamp(24px, 4vw, 48px); }
 .editorial-lead { color: inherit; text-decoration: none; }
-.editorial-lead img { width: 100%; max-height: 320px; aspect-ratio: 16 / 7; object-fit: cover; object-position: center 58%; border: 1px solid var(--border); border-radius: 12px; }
+.editorial-lead img { width: 100%; max-height: 220px; aspect-ratio: 16 / 6; object-fit: cover; object-position: center 58%; border: 1px solid var(--border); border-radius: 12px; }
 .editorial-lead > div { padding-top: 20px; }
 .editorial-lead h3 { max-width: 24ch; margin: 8px 0 10px; font-family: var(--font-head); font-size: clamp(24px, 3vw, 38px); line-height: 1.12; }
 .editorial-lead p { max-width: 60ch; margin: 0 0 14px; color: var(--text-secondary); line-height: 1.65; }
@@ -849,7 +847,8 @@ img { max-width: 100%; display: block; }
 .outside-list p { margin: 0; color: var(--text-secondary); line-height: 1.65; }
 
 @media (min-width: 880px) {
-  .hero-graphic { display: block; flex: 0 0 auto; width: min(380px, 34vw); }
+  .hero { gap: 32px; }
+  .hero-graphic { display: block; flex: 0 0 auto; width: min(300px, 26vw); margin-inline: 0; }
   .hero-visual img { aspect-ratio: 16 / 9; }
 }
 
@@ -872,15 +871,12 @@ img { max-width: 100%; display: block; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-visual, .hero-visual:hover,
-  .project-feature, .project-feature:hover, .project-media img, .project-feature:hover .project-media img {
+  .project-feature, .project-feature:hover {
     transform: none;
     transition: none;
   }
 }
 
-.article-visual { margin: 0 0 38px; }
-.article-visual img { width: 100%; max-height: 360px; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--border); }
-.article-visual figcaption { margin-top: 10px; color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; line-height: 1.5; }
 .article p + p { margin-top: 16px; }
 .article h3 { font-family: var(--font-head); }
 .incident-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 28px 0 38px; overflow: hidden; border: 1px solid var(--border); background: var(--border); }
@@ -896,7 +892,7 @@ img { max-width: 100%; display: block; }
 
 .blog-index-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.8fr); gap: clamp(28px, 5vw, 52px); }
 .blog-index-lead, .blog-index-secondary a { color: inherit; text-decoration: none; }
-.blog-index-lead img { width: 100%; max-height: 340px; aspect-ratio: 16 / 7; object-fit: cover; object-position: center 58%; border: 1px solid var(--border); border-radius: 12px; }
+.blog-index-lead img { width: 100%; max-height: 240px; aspect-ratio: 16 / 6; object-fit: cover; object-position: center 58%; border: 1px solid var(--border); border-radius: 12px; }
 .blog-index-lead-copy { padding-top: 22px; }
 .blog-index-lead .blog-title-lg { margin: 10px 0; max-width: 24ch; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; }
 .blog-index-lead .blog-excerpt { margin-bottom: 14px; max-width: 58ch; }
