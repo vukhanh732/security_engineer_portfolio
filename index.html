@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#111318">
 <link rel="canonical" href="https://vukhanhluu.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vu Luu">
 <meta property="og:title" content="Vu Luu - Software Developer">
@@ -19,13 +20,13 @@
 <meta name="twitter:description" content="Tested products and security systems across full-stack engineering, automation, and detection.">
 <meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/","jobTitle":"Software Developer","email":"mailto:vukhanhluu@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"UNSW Sydney"},"sameAs":["https://linkedin.com/in/vukhanhluu","https://github.com/vukhanh732"],"knowsAbout":["Full-stack software engineering","Detection engineering","Identity security","DevSecOps automation"]}
 </script>
 </head>
-<body>
+<body class="portfolio-home">
 <a href="#main-content" class="skip-link">Skip to content</a>
-<div class="ambient-cursor-glow" aria-hidden="true"></div>
 
 <header class="nav">
   <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
@@ -52,7 +53,7 @@
 <section class="hero">
   <div class="hero-content">
     <div class="hero-eyebrow">Software development / security engineering</div>
-    <h1 class="hero-title">Vu Luu builds real systems.</h1>
+    <h1 class="hero-title">Built to work.<br><span>Designed to hold up.</span></h1>
     <p class="hero-lead">Software developer building tested products and security systems, from full-stack apps to detection pipelines.</p>
     <div class="hero-actions">
       <a href="#projects" class="btn-primary">See the projects</a>
@@ -128,23 +129,33 @@
 
 <section id="projects" class="section reveal section--projects">
   <div class="section-label">PROJECTS</div>
-  <h2 class="section-heading">Selected builds, shown in depth</h2>
-  <div class="project-deck" data-project-deck aria-roledescription="carousel" aria-label="Selected projects">
+  <h2 class="section-heading">The work behind the words.</h2>
+  <div class="project-deck" data-project-deck role="region" aria-label="Selected projects">
     <div class="project-deck-viewport">
       <div class="project-showcase">
         <a href="https://www.braintrain.space/showcase" target="_blank" rel="noopener" class="project-feature project-feature--braintrain">
+          <div class="project-media"><img src="images/braintrain-insights.webp" alt="BrainTrain insights showing Elo history and training patterns" width="1000" height="626" loading="lazy" decoding="async"></div>
           <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Six adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>View showcase →</span></div>
         </a>
         <a href="wazuh.html" class="project-feature project-feature--wazuh">
+          <div class="project-media"><img src="images/wazuh-fim.webp" alt="File integrity monitoring events captured in my Wazuh lab" width="1200" height="644" loading="lazy" decoding="async"></div>
           <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Three monitored endpoints.</strong> Real FIM alerts with VirusTotal-triggered quarantine.</p><span>Read case study →</span></div>
         </a>
         <a href="sentrynode.html" class="project-feature project-feature--sentrynode">
+          <div class="project-media project-media--flow" aria-label="SentryNode live request path"><span>Log sources</span><span>FastAPI ingestion</span><span>Stateful detection</span><span>Threat intelligence</span></div>
           <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>800+ lines of tests.</strong> Stateful detection, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
         </a>
         <a href="gatekeeper.html" class="project-feature project-feature--gatekeeper">
+          <div class="project-media project-media--gate"><span>Release policy</span><strong>HIGH findings<br>stop the build.</strong><span>MEDIUM findings stay visible.</span></div>
           <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Three scanners, one release gate.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
         </a>
       </div>
+    </div>
+    <div class="project-picker" aria-label="Choose a project">
+      <button type="button" data-deck-select="0" aria-pressed="true">BrainTrain</button>
+      <button type="button" data-deck-select="1" aria-pressed="false">Wazuh</button>
+      <button type="button" data-deck-select="2" aria-pressed="false">SentryNode</button>
+      <button type="button" data-deck-select="3" aria-pressed="false">Gatekeeper</button>
     </div>
     <div class="project-deck-controls" aria-label="Project controls">
       <button type="button" data-deck-prev>Previous</button>

@@ -69,6 +69,7 @@
   var previous = deck.querySelector('[data-deck-prev]');
   var next = deck.querySelector('[data-deck-next]');
   var activeLabel = deck.querySelector('[data-deck-label]');
+  var selectors = deck.querySelectorAll('[data-deck-select]');
   var canEnhance = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)');
   var active = 0;
 
@@ -90,19 +91,24 @@
       slide.tabIndex = offset === 0 ? 0 : -1;
     });
     activeLabel.textContent = slides[active].querySelector('h3').textContent;
+    selectors.forEach(function (button, index) { button.setAttribute('aria-pressed', String(index === active)); });
   }
 
   function setActive(index) {
+    var moveFocus = slides.indexOf(document.activeElement) !== -1;
     active = (index + slides.length) % slides.length;
     render();
+    if (moveFocus) slides[active].focus({ preventScroll: true });
   }
 
   function updateMode() {
     if (canEnhance.matches) {
       deck.classList.add('is-enhanced');
+      deck.setAttribute('aria-roledescription', 'carousel');
       render();
     } else {
       deck.classList.remove('is-enhanced');
+      deck.removeAttribute('aria-roledescription');
       slides.forEach(function (slide) {
         slide.removeAttribute('aria-hidden');
         slide.removeAttribute('tabindex');
@@ -112,6 +118,9 @@
   }
 
   previous.addEventListener('click', function () { setActive(active - 1); });
+  selectors.forEach(function (button) {
+    button.addEventListener('click', function () { setActive(Number(button.getAttribute('data-deck-select'))); });
+  });
   next.addEventListener('click', function () { setActive(active + 1); });
   deck.addEventListener('keydown', function (event) {
     if (!canEnhance.matches) return;
@@ -141,7 +150,10 @@
     });
   }, { threshold: 0.12 });
 
-  targets.forEach(function (el) { observer.observe(el); });
+  targets.forEach(function (el) {
+    el.classList.add('reveal-pending');
+    observer.observe(el);
+  });
 })();
 
 // Cursor-following ambient glow + per-card spotlight hover
