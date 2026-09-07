@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vu Luu - Software Developer</title>
 <meta name="description" content="Vu Luu is a software developer building tested products and security systems across full-stack engineering, automation, and detection.">
-<meta name="theme-color" content="#12151b">
+<meta name="theme-color" content="#111318">
 <link rel="canonical" href="https://vukhanhluu.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
@@ -37,7 +37,7 @@
     <a href="#contact" class="nav-link">Contact</a>
     <a href="resume.pdf" download class="btn-resume">Resume</a>
   </nav>
-  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">Menu</button>
   <nav class="mobile-panel">
     <a href="#about" class="mobile-link">About</a>
     <a href="#skills" class="mobile-link">Skills</a>
@@ -50,11 +50,8 @@
 
 <main id="main-content">
 <section class="hero">
-  <div class="hero-glow-1"></div>
-  <div class="hero-glow-2"></div>
-  <div class="hero-scanlines"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">SOFTWARE DEVELOPER / SECURITY ENGINEERING<span class="hero-cursor"></span></div>
+    <div class="hero-eyebrow">Software development / security engineering</div>
     <h1 class="hero-title">Vu Luu builds real systems.</h1>
     <p class="hero-lead">Software developer building tested products and security systems, from full-stack apps to detection pipelines.</p>
     <div class="hero-actions">
@@ -62,9 +59,17 @@
     </div>
   </div>
   <div class="hero-graphic">
-    <figure class="hero-visual">
-      <img src="images/portfolio-hero-v3.webp" alt="3D engineering workflow moving from product development through automated delivery to security monitoring" width="1913" height="822" fetchpriority="high" decoding="async">
-    </figure>
+    <div class="spatial-scene" data-spatial-scene>
+      <span class="spatial-plane spatial-plane--rear" aria-hidden="true"></span>
+      <span class="spatial-plane spatial-plane--middle" aria-hidden="true"></span>
+      <figure class="hero-visual">
+        <div class="window-bar">
+          <span>Systems in motion</span>
+          <span>Selected work</span>
+        </div>
+        <img src="images/portfolio-spatial-windows.webp" srcset="images/portfolio-spatial-windows-800.webp 800w, images/portfolio-spatial-windows.webp 1672w" sizes="(max-width: 879px) calc(100vw - 40px), min(44vw, 620px)" alt="Three graphite architectural planes representing connected software, delivery, and security systems" width="1672" height="941" fetchpriority="high" decoding="async">
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -123,20 +128,29 @@
 
 <section id="projects" class="section reveal section--projects">
   <div class="section-label">PROJECTS</div>
-  <h2 class="section-heading">Selected builds with evidence</h2>
-  <div class="project-showcase">
-    <a href="https://www.braintrain.space/showcase" target="_blank" rel="noopener" class="project-feature project-feature--braintrain">
-      <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Six adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>View showcase →</span></div>
-    </a>
-    <a href="wazuh.html" class="project-feature project-feature--wazuh">
-      <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Three monitored endpoints.</strong> Real FIM alerts with VirusTotal-triggered quarantine.</p><span>Read case study →</span></div>
-    </a>
-    <a href="sentrynode.html" class="project-feature project-feature--sentrynode">
-      <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>800+ lines of tests.</strong> Stateful detection, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
-    </a>
-    <a href="gatekeeper.html" class="project-feature project-feature--gatekeeper">
-      <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Three scanners, one release gate.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
-    </a>
+  <h2 class="section-heading">Selected builds, shown in depth</h2>
+  <div class="project-deck" data-project-deck aria-roledescription="carousel" aria-label="Selected projects">
+    <div class="project-deck-viewport">
+      <div class="project-showcase">
+        <a href="https://www.braintrain.space/showcase" target="_blank" rel="noopener" class="project-feature project-feature--braintrain">
+          <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Six adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>View showcase →</span></div>
+        </a>
+        <a href="wazuh.html" class="project-feature project-feature--wazuh">
+          <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Three monitored endpoints.</strong> Real FIM alerts with VirusTotal-triggered quarantine.</p><span>Read case study →</span></div>
+        </a>
+        <a href="sentrynode.html" class="project-feature project-feature--sentrynode">
+          <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>800+ lines of tests.</strong> Stateful detection, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
+        </a>
+        <a href="gatekeeper.html" class="project-feature project-feature--gatekeeper">
+          <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Three scanners, one release gate.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
+        </a>
+      </div>
+    </div>
+    <div class="project-deck-controls" aria-label="Project controls">
+      <button type="button" data-deck-prev>Previous</button>
+      <p aria-live="polite"><span data-deck-label>BrainTrain</span></p>
+      <button type="button" data-deck-next>Next</button>
+    </div>
   </div>
 </section>
 
@@ -146,7 +160,6 @@
     <div class="timeline-row">
       <div>
         <div class="timeline-role-head">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l3 3l-3 3"/><path d="M13 15l3 0"/><path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -12"/></svg></div>
           <div class="timeline-role">Software Developer</div>
         </div>
         <div class="timeline-company">Cybercore Solutions</div>
@@ -161,7 +174,6 @@
     <div class="timeline-row">
       <div>
         <div class="timeline-role-head">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-3a8 8 0 1 1 16 0v3"/><path d="M18 19c0 1.657 -2.686 3 -6 3"/><path d="M4 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3"/><path d="M15 14a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2v-3"/></svg></div>
           <div class="timeline-role">IT Support Engineer</div>
         </div>
         <div class="timeline-company">Labourpower</div>
@@ -176,7 +188,6 @@
     <div class="timeline-row">
       <div>
         <div class="timeline-role-head">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l18 0"/><path d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -8"/></svg></div>
           <div class="timeline-role">Software Developer Intern</div>
         </div>
         <div class="timeline-company">Zonda</div>

@@ -6,19 +6,120 @@
 
   function closeMenu() {
     panel.classList.remove('open');
-    toggle.textContent = '☰';
+    toggle.textContent = 'Menu';
+    toggle.setAttribute('aria-label', 'Open menu');
     toggle.setAttribute('aria-expanded', 'false');
   }
 
   toggle.addEventListener('click', function () {
     var open = panel.classList.toggle('open');
-    toggle.textContent = open ? '✕' : '☰';
+    toggle.textContent = open ? 'Close' : 'Menu';
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     toggle.setAttribute('aria-expanded', String(open));
   });
 
   panel.querySelectorAll('a').forEach(function (link) {
     link.addEventListener('click', closeMenu);
   });
+})();
+
+// Spatial hero depth. Pointer movement shifts the existing visual layers without
+// introducing a continuous render loop; reduced-motion and coarse pointers stay static.
+(function () {
+  var scene = document.querySelector('[data-spatial-scene]');
+  if (!scene) return;
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion) {
+    scene.classList.add('is-entering');
+    requestAnimationFrame(function () {
+      scene.classList.add('is-ready');
+      window.setTimeout(function () { scene.classList.remove('is-entering'); }, 1100);
+    });
+  }
+
+  if (reduceMotion) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  scene.addEventListener('pointermove', function (event) {
+    var rect = scene.getBoundingClientRect();
+    var x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+    var y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    scene.style.setProperty('--scene-shift-x', (x * 8).toFixed(2) + 'px');
+    scene.style.setProperty('--scene-shift-y', (y * 6).toFixed(2) + 'px');
+    scene.style.setProperty('--scene-tilt-x', (y * -2.2).toFixed(2) + 'deg');
+    scene.style.setProperty('--scene-tilt-y', (x * 3).toFixed(2) + 'deg');
+  }, { passive: true });
+
+  scene.addEventListener('pointerleave', function () {
+    scene.style.setProperty('--scene-shift-x', '0px');
+    scene.style.setProperty('--scene-shift-y', '0px');
+    scene.style.setProperty('--scene-tilt-x', '0deg');
+    scene.style.setProperty('--scene-tilt-y', '0deg');
+  });
+})();
+
+// Accessible 3D project deck. The static two-column grid remains the no-JS and
+// reduced-motion fallback; enhancement is limited to wide, precise-pointer screens.
+(function () {
+  var deck = document.querySelector('[data-project-deck]');
+  if (!deck) return;
+
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.project-feature'));
+  var previous = deck.querySelector('[data-deck-prev]');
+  var next = deck.querySelector('[data-deck-next]');
+  var activeLabel = deck.querySelector('[data-deck-label]');
+  var canEnhance = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)');
+  var active = 0;
+
+  function render() {
+    slides.forEach(function (slide, index) {
+      var offset = index - active;
+      var clamped = Math.max(-2, Math.min(2, offset));
+      var distance = Math.abs(clamped);
+      slide.style.setProperty('--deck-x', (clamped * 54) + '%');
+      slide.style.setProperty('--deck-z', (distance * -150) + 'px');
+      slide.style.setProperty('--deck-rotate', (clamped * -8) + 'deg');
+      slide.style.setProperty('--deck-scale', String(1 - distance * 0.055));
+      slide.style.setProperty('--deck-opacity', distance === 0 ? '1' : (distance === 1 ? '0.42' : '0'));
+      slide.style.zIndex = String(10 - distance);
+      slide.classList.toggle('is-active', offset === 0);
+      slide.classList.toggle('is-before', offset < 0);
+      slide.classList.toggle('is-after', offset > 0);
+      slide.setAttribute('aria-hidden', offset === 0 ? 'false' : 'true');
+      slide.tabIndex = offset === 0 ? 0 : -1;
+    });
+    activeLabel.textContent = slides[active].querySelector('h3').textContent;
+  }
+
+  function setActive(index) {
+    active = (index + slides.length) % slides.length;
+    render();
+  }
+
+  function updateMode() {
+    if (canEnhance.matches) {
+      deck.classList.add('is-enhanced');
+      render();
+    } else {
+      deck.classList.remove('is-enhanced');
+      slides.forEach(function (slide) {
+        slide.removeAttribute('aria-hidden');
+        slide.removeAttribute('tabindex');
+        slide.removeAttribute('style');
+      });
+    }
+  }
+
+  previous.addEventListener('click', function () { setActive(active - 1); });
+  next.addEventListener('click', function () { setActive(active + 1); });
+  deck.addEventListener('keydown', function (event) {
+    if (!canEnhance.matches) return;
+    if (event.key === 'ArrowLeft') { event.preventDefault(); setActive(active - 1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); setActive(active + 1); }
+  });
+  canEnhance.addEventListener('change', updateMode);
+  updateMode();
 })();
 
 // Scroll-reveal for sections

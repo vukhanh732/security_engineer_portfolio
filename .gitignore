@@ -1,2 +1,7 @@
 .DS_Store
 Thumbs.db
+
+# Local AI design tooling (kept on this machine, not deployed with the site)
+.agents/
+.claude/
+skills-lock.json

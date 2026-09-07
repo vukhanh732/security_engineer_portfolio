@@ -1,6 +1,8 @@
-# vukhanhluu.com — portfolio site
+# Security Vu — portfolio site
 
 Plain static HTML/CSS/JS, no build step, no framework. Deploys as-is on Netlify.
+
+**Live site:** [security-vu.netlify.app](https://security-vu.netlify.app/)
 
 ## Structure
 
