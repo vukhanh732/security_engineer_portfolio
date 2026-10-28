@@ -1,6 +1,6 @@
 # Vu's Clubhouse: interactive portfolio design
 
-Status: proposed, awaiting feedback on the visual concept. Production implementation has not started.
+Status: approved on 2026-10-29. The user requested more impressive free movement and both playable badminton and poker, using existing assets where suitable.
 
 ## Intent and audience
 
@@ -21,6 +21,8 @@ The scene is an authored miniature: grounded materials, rounded furniture edges,
 
 Builder's visual choices: pale concrete/silver surroundings, deep bottle-green court and furniture details, warm timber, off-white interface panels, and a vermilion interaction accent. These are scene materials, not six independent interface accent palettes. The UI itself uses charcoal, off-white, and vermilion consistently. Existing self-hosted Space Grotesk and IBM Plex fonts can remain if they suit the mockup. Compact rounded rectangular controls and panels share one radius scale.
 
+Design-taste calibration: DESIGN_VARIANCE 9, MOTION_INTENSITY 7, VISUAL_DENSITY 3. The authored room and actual games carry the unusual composition and motion; professional panels remain spacious and readable. Motion is driven by exploration and game state, with no perpetual decorative movement. Controls use a 7px radius, media 9px, and content panels 14px.
+
 ## Arrival and recruiter navigation
 
 On desktop, the clubhouse occupies the main viewport immediately. A short HTML introduction identifies Vu by name and role. A persistent HTML navigation bar offers Projects, Experience, About, Resume, and Contact. A separately labeled Explore action activates movement; visitors can also click labeled landmarks directly without entering movement mode. No loading-screen gate, forced tutorial, or game completion stands between visitors and professional content.
@@ -40,11 +42,11 @@ Object interactions have clear affordances and share the professional navigation
 - Noticeboard or shelf: experience, education, and credentials.
 - Notebook: existing writing and study notes.
 - Badminton area: a short optional rally minigame with actual hit/miss feedback, reset, and an exit. A small 2D accessible game overlay is acceptable; real-time physical simulation is unnecessary.
-- Poker table: deal and reveal an optional sample hand with simple feedback, rather than a casino or gambling service.
+- Poker table: a complete five-card draw game against a computer opponent. Deal, select cards to keep, draw replacements once, reveal and compare ranked hands, track a local win count, and play again. Use existing card artwork. This quick variant is the builder's choice.
 - Game cabinet: introduces BrainTrain and its case study. It does not present the unreleased redesign as playable.
 - Training corner: a short object reaction and personal-interest description; a full fitness game is outside this release.
 
-Include calming looping background music and quiet sound effects for navigation, object activation, explorer movement, and badminton hits. Sound starts only after an explicit Enable sound action, which also satisfies browser playback requirements. Provide a master mute plus separate music/effects volume controls, persist the volume preferences, pause audio when the tab is hidden, and resume only if the visitor previously enabled it. Start music quietly around 20% volume. Avoid incessant hover sounds, harsh alarms, or effects competing with the soundtrack. The preview auditions Sunset Walk by Kilua Boy and Kenney interface sounds; these are builder selections that can change based on feedback. Any discovery counter is optional and never locks content. Scope is one room and one small rally game plus object interactions, not a full open-world game.
+Include calming looping background music and quiet sound effects for navigation, object activation, explorer movement, and badminton hits. Sound starts only after an explicit Enable sound action, which also satisfies browser playback requirements. Provide a master mute plus separate music/effects volume controls, persist the volume preferences, pause audio when the tab is hidden, and resume only if the visitor previously enabled it. Start music quietly around 20% volume. Avoid incessant hover sounds, harsh alarms, or effects competing with the soundtrack. The preview auditions Sunset Walk by Kilua Boy and Kenney interface sounds; these are builder selections that can change based on feedback. Any discovery counter is optional and never locks content. Scope is one room, a badminton match, five-card draw poker, and object interactions.
 
 ## Content and release scope
 
@@ -92,4 +94,4 @@ The user has authorized a GitHub push. Once the agreed redesign is complete and 
 
 The result succeeds when the room is immediately recognizable and personal; recruiters can open substantive projects and experience in one click and download the resume without exploring; optional exploration and the rally interaction work; BrainTrain's unpublished status is honest; and the entire portfolio remains readable on mobile and without 3D.
 
-The next decision is feedback on the clickable visual concept and this direction. Implementation begins after approval of the design, as required by the brainstorming workflow.
+The visual direction is approved. Implement the expanded playable games and real free movement, then verify and push the finished site as already authorized.

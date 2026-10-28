@@ -3,170 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vu Luu - Software Developer</title>
+<title>Vu Luu - The Clubhouse</title>
 <meta name="description" content="Vu Luu is a software developer building tested products and security systems across full-stack engineering, automation, and detection.">
-<meta name="theme-color" content="#111318">
+<meta name="theme-color" content="#e8e9e2">
 <link rel="canonical" href="https://vukhanhluu.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vu Luu">
-<meta property="og:title" content="Vu Luu - Software Developer">
+<meta property="og:title" content="Vu Luu - The Clubhouse">
 <meta property="og:description" content="Software developer building tested products and security systems across full-stack engineering, automation, and detection.">
 <meta property="og:url" content="https://vukhanhluu.com/">
-<meta property="og:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
+<meta property="og:image" content="https://vukhanhluu.com/images/clubhouse-preview.webp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vu Luu - Software Developer">
+<meta name="twitter:title" content="Vu Luu - The Clubhouse">
 <meta name="twitter:description" content="Tested products and security systems across full-stack engineering, automation, and detection.">
-<meta name="twitter:image" content="https://vukhanhluu.com/images/portfolio-hero-v3.webp">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/home.css">
+<meta name="twitter:image" content="https://vukhanhluu.com/images/clubhouse-preview.webp">
+<link rel="stylesheet" href="css/clubhouse.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Vu Luu","url":"https://vukhanhluu.com/","jobTitle":"Software Developer","email":"mailto:vukhanhluu@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"UNSW Sydney"},"sameAs":["https://linkedin.com/in/vukhanhluu","https://github.com/vukhanh732"],"knowsAbout":["Full-stack software engineering","Detection engineering","Identity security","DevSecOps automation"]}
 </script>
+<script type="importmap">{"imports":{"three":"./js/vendor/three.module.js"}}</script>
 </head>
-<body class="portfolio-home">
+<body class="clubhouse-home">
 <a href="#main-content" class="skip-link">Skip to content</a>
-
-<header class="nav">
-  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
-  <nav class="nav-links">
-    <a href="#about" class="nav-link">About</a>
-    <a href="#skills" class="nav-link">Skills</a>
-    <a href="#projects" class="nav-link">Projects</a>
-    <a href="#experience" class="nav-link">Experience</a>
-    <a href="#contact" class="nav-link">Contact</a>
-    <a href="resume.pdf" download class="btn-resume">Resume</a>
-  </nav>
-  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">Menu</button>
-  <nav class="mobile-panel">
-    <a href="#about" class="mobile-link">About</a>
-    <a href="#skills" class="mobile-link">Skills</a>
-    <a href="#projects" class="mobile-link">Projects</a>
-    <a href="#experience" class="mobile-link">Experience</a>
-    <a href="#contact" class="mobile-link">Contact</a>
-    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
-  </nav>
+<header class="site-header">
+  <a class="identity" href="index.html"><span class="monogram" aria-hidden="true">vl.</span><span><strong>Vu Luu</strong><small>Software developer · Sydney</small></span></a>
+  <nav class="main-nav" aria-label="Main navigation"><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#play">Play</a><a href="#contact">Contact</a><a class="resume-link" href="resume.pdf" download>Résumé ↗</a></nav>
 </header>
-
-<main id="main-content">
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-eyebrow">Software development / security engineering</div>
-    <h1 class="hero-title">Built to work.<br><span>Designed to hold up.</span></h1>
-    <p class="hero-lead">Software developer building tested products and security systems, from full-stack apps to detection pipelines.</p>
-    <div class="hero-actions">
-      <a href="#projects" class="btn-primary">See the projects</a>
+<div class="world-shell">
+  <div class="room-heading"><div><h1>Vu's clubhouse.</h1><p>A few things I've built. A few things I play.</p></div><a href="#projects" class="direct-link">Here for the work? Projects ↗</a></div>
+  <section class="world" aria-label="Interactive 3D clubhouse">
+    <img class="world-preview" src="images/clubhouse-preview.webp" alt="Vu's clubhouse, a miniature room with a badminton court, computer workbench, poker table and games" width="1440" height="810" fetchpriority="high">
+    <canvas class="world-canvas" id="world-canvas" tabindex="0" aria-label="Explore Vu's 3D clubhouse. Move with WASD or arrow keys after choosing Explore. Drag to rotate, scroll or pinch to zoom. E opens a nearby object."></canvas>
+    <div class="landmarks" id="landmarks" aria-label="Places in the clubhouse">
+      <button data-landmark="projects">Projects</button><button data-landmark="experience">Experience</button><button data-landmark="badminton">Play badminton</button><button data-landmark="poker">Play poker</button><button data-landmark="braintrain">BrainTrain</button><button data-landmark="about">Off the clock</button>
     </div>
-  </div>
-  <div class="hero-graphic">
-    <div class="spatial-scene" data-spatial-scene>
-      <span class="spatial-plane spatial-plane--rear" aria-hidden="true"></span>
-      <span class="spatial-plane spatial-plane--middle" aria-hidden="true"></span>
-      <figure class="hero-visual">
-        <div class="window-bar">
-          <span>Systems in motion</span>
-          <span>Selected work</span>
-        </div>
-        <img src="images/portfolio-spatial-windows.webp" srcset="images/portfolio-spatial-windows-800.webp 800w, images/portfolio-spatial-windows.webp 1672w" sizes="(max-width: 879px) calc(100vw - 40px), min(44vw, 620px)" alt="Three graphite architectural planes representing connected software, delivery, and security systems" width="1672" height="941" fetchpriority="high" decoding="async">
-      </figure>
-    </div>
-  </div>
+    <div class="world-loading" id="world-status" role="status">Setting up the room. Projects and résumé are ready.</div>
+    <div class="touch-pad" aria-label="Move the explorer"><button data-move="up" aria-label="Move forward">↑</button><button data-move="left" aria-label="Move left">←</button><button data-move="down" aria-label="Move back">↓</button><button data-move="right" aria-label="Move right">→</button></div>
+  </section>
+  <div class="world-toolbar"><div class="exploration"><button class="button button-primary" id="explore">Explore the room</button><button class="utility" id="home-camera">Home</button><button class="utility" id="follow-camera" aria-pressed="false">Follow explorer</button><span class="movement-hint" id="movement-hint">Drag to look around. Click the floor to move.</span></div><div class="world-settings"><button class="utility" id="enable-audio" aria-pressed="false">Enable sound</button><a href="#sound">Sound settings</a><button class="utility" id="simple-view" aria-pressed="false">Simple view</button><a class="help-link" href="#help" aria-label="Controls and help">?</a></div></div>
+</div>
+<main id="main-content" class="portfolio-content" tabindex="-1">
+<div class="static-welcome"><h1>Hi, I'm Vu.</h1><p>Software developer, UNSW Computer Science graduate, and security enthusiast. Here's what I've been working on.</p><a href="#projects">Explore my projects ↓</a></div>
+<section id="projects" class="portfolio-section"><h2>Projects</h2><p class="section-intro">Products and security systems, built to run and made to be understood.</p>
+  <article class="featured-project"><span class="project-status">Featured · redesign in progress</span><h3>BrainTrain</h3><p>A brain-training product connecting adaptive games, persistent progression, Elo rankings, and performance insights.</p><figure><img src="images/braintrain-insights.webp" alt="Insights from BrainTrain's previously published version" width="1000" height="626" loading="lazy"><figcaption>Previously published version. The redesigned app is not published yet.</figcaption></figure><p class="project-technologies">Next.js · TypeScript · Supabase · Vitest</p><a href="braintrain.html" class="text-link">Inside the project ↗</a></article>
+  <article class="project-entry"><h3>SentryNode</h3><p>Stateful threat detection, enrichment, and a hardened ingestion API.</p><p class="project-technologies">Python · FastAPI · Elasticsearch · Redis</p><a href="sentrynode.html" class="text-link">Read the case study ↗</a></article>
+  <article class="project-entry"><h3>Wazuh SOC HomeLab</h3><p>Three monitored endpoints, real file-integrity alerts, and VirusTotal-triggered quarantine.</p><p class="project-technologies">Wazuh · VirusTotal · Windows · Linux</p><a href="wazuh.html" class="text-link">Read the case study ↗</a></article>
+  <article class="project-entry"><h3>Gatekeeper</h3><p>Three security scanners connected to one repeatable release gate.</p><p class="project-technologies">GitHub Actions · Docker · OWASP ZAP</p><a href="gatekeeper.html" class="text-link">Read the case study ↗</a></article>
 </section>
-
-<section id="about" class="section reveal section--about">
-  <div class="about-grid">
-    <h2 class="about-heading">Software craft, security depth.</h2>
-    <div class="about-body">
-      <p>I am a Software Developer at Cybercore Solutions and a UNSW Computer Science graduate. I build products end to end, then go deep on how they fail and how to detect it.</p>
-      <p>My strongest security work spans detection engineering, identity and Microsoft security, and DevSecOps automation. Everything shown here is my own build, lab, or authorised training.</p>
-    </div>
-  </div>
-  <dl class="profile-facts" aria-label="Professional highlights">
-    <div><dt>Current role</dt><dd>Software Developer</dd></div>
-    <div><dt>Degree</dt><dd>UNSW Computer Science</dd></div>
-    <div><dt>Security</dt><dd>Security+ and ISC2 CC</dd></div>
-    <div><dt>Build focus</dt><dd>Full-stack, detection, automation</dd></div>
-  </dl>
-</section>
-
-<section id="skills" class="section reveal section--skills">
-  <div class="capabilities-intro">
-    <h2 class="section-heading">Three ways I contribute</h2>
-    <p>Product engineering first, with security depth built from systems I can run, test, and explain.</p>
-  </div>
-  <div class="capability-grid">
-    <article class="capability capability--software">
-      <div class="capability-copy">
-        <h3>Build production software</h3>
-        <p>Full-stack applications, APIs, data models, automated tests, and deployment.</p>
-        <div class="skill-tags"><span class="skill-tag">Python</span><span class="skill-tag">TypeScript</span><span class="skill-tag">Next.js</span><span class="skill-tag">FastAPI</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">Supabase</span></div>
-      </div>
-    </article>
-    <article class="capability capability--detection">
-      <div class="capability-copy">
-        <h3>Detect and investigate</h3>
-        <p>Detection logic, SIEM pipelines, threat enrichment, incident triage, and MITRE ATT&amp;CK mapping.</p>
-        <div class="skill-tags"><span class="skill-tag">Wazuh</span><span class="skill-tag">Elasticsearch</span><span class="skill-tag">Redis</span><span class="skill-tag">Digital Forensics</span></div>
-      </div>
-    </article>
-    <article class="capability capability--platform">
-      <div class="capability-copy">
-        <h3>Secure the platform</h3>
-        <p>Identity controls and delivery automation that turn policy into repeatable engineering.</p>
-        <div class="skill-tags"><span class="skill-tag">Entra ID</span><span class="skill-tag">Conditional Access</span><span class="skill-tag">Intune</span><span class="skill-tag">Docker</span><span class="skill-tag">GitHub Actions</span><span class="skill-tag">OWASP ZAP</span></div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section id="education" class="section section--education">
-  <div class="education-band">
-    <div><span>UNSW Sydney</span><h2>Bachelor of Computer Science</h2><p>Security Engineering major, 2021-2025</p></div>
-    <div class="education-credentials"><span>CompTIA Security+ (2025)</span><span>ISC2 Certified in Cybersecurity (2023)</span></div>
-  </div>
-</section>
-
-<section id="projects" class="section reveal section--projects">
-  <div class="section-label">PROJECTS</div>
-  <h2 class="section-heading">The work behind the words.</h2>
-  <div class="project-deck" data-project-deck role="region" aria-label="Selected projects">
-    <div class="project-deck-viewport">
-      <div class="project-showcase">
-        <a href="https://www.braintrain.space/showcase" target="_blank" rel="noopener" class="project-feature project-feature--braintrain">
-          <div class="project-media"><img src="images/braintrain-insights.webp" alt="BrainTrain insights showing Elo history and training patterns" width="1000" height="626" loading="lazy" decoding="async"></div>
-          <div class="project-feature-copy"><div class="project-tag">FULL-STACK PRODUCT</div><h3>BrainTrain</h3><p><strong>Six adaptive games.</strong> Replayable Elo rankings, streaks, insights, and a live Supabase backend.</p><span>View showcase →</span></div>
-        </a>
-        <a href="wazuh.html" class="project-feature project-feature--wazuh">
-          <div class="project-media"><img src="images/wazuh-fim.webp" alt="File integrity monitoring events captured in my Wazuh lab" width="1200" height="644" loading="lazy" decoding="async"></div>
-          <div class="project-feature-copy"><div class="project-tag">SOC LAB / AUTOMATED RESPONSE</div><h3>Wazuh-SOC-HomeLab</h3><p><strong>Three monitored endpoints.</strong> Real FIM alerts with VirusTotal-triggered quarantine.</p><span>Read case study →</span></div>
-        </a>
-        <a href="sentrynode.html" class="project-feature project-feature--sentrynode">
-          <div class="project-media project-media--flow" aria-label="SentryNode live request path"><span>Log sources</span><span>FastAPI ingestion</span><span>Stateful detection</span><span>Threat intelligence</span></div>
-          <div class="project-feature-copy"><div class="project-tag">SIEM / THREAT DETECTION</div><h3>SentryNode</h3><p><strong>800+ lines of tests.</strong> Stateful detection, threat intelligence, and a hardened public API.</p><span>Read case study →</span></div>
-        </a>
-        <a href="gatekeeper.html" class="project-feature project-feature--gatekeeper">
-          <div class="project-media project-media--gate"><span>Release policy</span><strong>HIGH findings<br>stop the build.</strong><span>MEDIUM findings stay visible.</span></div>
-          <div class="project-feature-copy"><div class="project-tag">DEVSECOPS / CI-CD</div><h3>Gatekeeper</h3><p><strong>Three scanners, one release gate.</strong> HIGH findings block delivery while MEDIUM findings stay visible.</p><span>Read case study →</span></div>
-        </a>
-      </div>
-    </div>
-    <div class="project-picker" aria-label="Choose a project">
-      <button type="button" data-deck-select="0" aria-pressed="true">BrainTrain</button>
-      <button type="button" data-deck-select="1" aria-pressed="false">Wazuh</button>
-      <button type="button" data-deck-select="2" aria-pressed="false">SentryNode</button>
-      <button type="button" data-deck-select="3" aria-pressed="false">Gatekeeper</button>
-    </div>
-    <div class="project-deck-controls" aria-label="Project controls">
-      <button type="button" data-deck-prev>Previous</button>
-      <p aria-live="polite"><span data-deck-label>BrainTrain</span></p>
-      <button type="button" data-deck-next>Next</button>
-    </div>
-  </div>
-</section>
-
-<section id="experience" class="section reveal section--experience">
-  <h2 class="section-heading">Work experience</h2>
+<section id="experience" class="portfolio-section">
+  <h2>Experience</h2><p class="section-intro">Software, security, and the work of making things run.</p>
   <div class="timeline">
     <div class="timeline-row">
       <div>
@@ -211,70 +99,25 @@
       </ul>
     </div>
   </div>
-</section>
-
-<section id="blog-preview" class="section reveal section--blog">
-  <div class="editorial-heading">
-    <h2 class="section-heading tight">Write-ups on real incidents</h2>
-    <a href="blog.html" class="btn-link" style="padding:0;">All posts →</a>
-  </div>
-  <div class="editorial-grid">
-    <a href="blog-ai-gym-waitlist.html" class="editorial-lead">
-      <img src="images/ai-agent-waitlist-v3.webp" alt="Editorial 3D waitlist queue with one reservation token bypassing an access gate" width="1672" height="941" loading="lazy" decoding="async">
-      <div><span class="blog-tag">AI AGENTS / ACCESS CONTROL</span><h3>The gym waitlist incident: an AI agent found the wrong shortcut</h3><p>A routine booking request exposed failures in alignment, authorisation, and reversible system design.</p><span class="editorial-read">5 min read →</span></div>
-    </a>
-    <div class="editorial-secondary">
-      <a href="blog-log4shell.html"><span class="blog-tag">RCE / LOGGING</span><h3>Log4Shell: why one logging call became a global incident</h3><p>When observability became an execution path.</p></a>
-      <a href="blog-moveit.html"><span class="blog-tag">SUPPLY CHAIN</span><h3>MOVEit: a single SQL injection, thousands of victims</h3><p>Why concentrated data and an edge-facing flaw created mass exposure.</p></a>
-    </div>
-  </div>
-</section>
-
-<section id="extracurricular" class="section reveal section--extracurricular">
-  <h2 class="section-heading">Outside the day job</h2>
-  <div class="outside-list">
-    <div><h3>CTF competitions</h3><p>Fresh challenges keep my offensive tooling and defensive mental models current.</p></div>
-    <div><h3>UNSW Computer Science Society</h3><p>Led a small hackathon team from idea to working prototype under a tight deadline.</p></div>
-  </div>
-</section>
-
-<section id="contact" class="section reveal section--contact">
-  <div class="section-label">CONTACT</div>
-  <div class="contact-grid">
-    <div>
-      <h2 class="contact-heading">Let's talk.</h2>
-      <p class="contact-lead">Based in Sydney and open to software engineering and security-focused development roles.</p>
-      <div class="contact-links">
-        <a href="tel:+61424725899">0424 725 899</a>
-        <a href="mailto:vukhanhluu@gmail.com">vukhanhluu@gmail.com</a>
-      </div>
-      <div class="contact-resume-actions">
-        <a href="resume.html" class="btn-link" style="padding:0;">View résumé online →</a>
-        <a href="resume.pdf" download class="btn-link" style="padding:0;">Download PDF →</a>
-      </div>
-    </div>
-    <form name="contact" method="POST" action="/thanks.html" data-netlify="true" netlify-honeypot="bot-field" class="form">
+<div id="education" class="education-note"><h3>UNSW Sydney</h3><p>Bachelor of Computer Science, Security Engineering major, 2021-2025.</p><p>CompTIA Security+ (2025) · ISC2 Certified in Cybersecurity (2023)</p></div><a href="resume.html" class="text-link">Read the full résumé ↗</a></section>
+<section id="about" class="portfolio-section"><h2>Hi, I'm Vu.</h2><p class="section-intro">I build software, get curious about how it breaks, and make time for a game.</p><p>I'm a Software Developer at Cybercore Solutions and a UNSW Computer Science graduate. I build products end to end, then go deep on how they fail and how to detect it.</p><p>My security work spans detection engineering, identity and Microsoft security, and DevSecOps automation. Everything shown here is my own build, lab, or authorised training.</p><div id="skills"><h3>What I work with</h3><p>Python, TypeScript, Next.js, FastAPI, PostgreSQL, and Supabase for building products. Wazuh, Elasticsearch, and Redis for detection. Entra ID, Intune, Docker, GitHub Actions, and OWASP ZAP for securing platforms and delivery.</p></div><div class="personal-note"><h3>Outside the day job</h3><p>CTF competitions keep my offensive tooling and defensive mental models current. At the UNSW Computer Science Society, I led a small hackathon team from idea to working prototype under a tight deadline.</p></div><div class="personal-note"><h3>Off the clock</h3><p>Badminton, poker, games, and fitness. That's why the clubhouse has a court, a card table, and a training corner. Have a look around, or stay for a quick game.</p></div><p><a href="#play" class="text-link">Pick a game ↗</a></p><p><a href="#writing" class="text-link">Writing &amp; study notes ↗</a></p></section>
+<section id="writing" class="portfolio-section"><h2>From the notebook.</h2><p class="section-intro">Incident write-ups and things I'm learning.</p><article class="project-entry"><h3>The gym waitlist incident</h3><p>An AI agent found the wrong shortcut. A closer look at access control, authorisation, and reversible system design.</p><a class="text-link" href="blog-ai-gym-waitlist.html">Read the write-up ↗</a></article><article class="project-entry"><h3>Log4Shell</h3><p>How a logging call became a global incident.</p><a class="text-link" href="blog-log4shell.html">Read the write-up ↗</a></article><article class="project-entry"><h3>MOVEit</h3><p>A SQL injection and the risk of concentrated data.</p><a class="text-link" href="blog-moveit.html">Read the write-up ↗</a></article><p><a href="blog.html">All writing ↗</a> · <a href="study-notes.html">Handwritten study notes ↗</a></p></section>
+<section id="contact" class="portfolio-section"><h2>Say hello.</h2><p class="section-intro">For a role, a project, or a conversation.</p><a class="contact-email" href="mailto:vukhanhluu@gmail.com">vukhanhluu@gmail.com ↗</a><p><a href="tel:+61424725899">0424 725 899 ↗</a></p><p class="contact-socials"><a href="https://linkedin.com/in/vukhanhluu" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/vukhanh732" target="_blank" rel="noopener">GitHub ↗</a></p><form name="contact" method="POST" action="/thanks.html" data-netlify="true" netlify-honeypot="bot-field" class="form">
       <input type="hidden" name="form-name" value="contact">
       <p class="form-honeypot"><label>Don't fill this out: <input name="bot-field"></label></p>
       <div class="form-field"><label for="contact-name">Name</label><input id="contact-name" type="text" name="name" autocomplete="name" placeholder="Your name" required></div>
       <div class="form-field"><label for="contact-email">Email</label><input id="contact-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required></div>
       <div class="form-field"><label for="contact-message">Message</label><textarea id="contact-message" name="message" placeholder="What would you like to discuss?" required rows="5"></textarea></div>
       <button type="submit">Send message</button>
-    </form>
-  </div>
-</section>
-
+    </form></section>
+<section id="play" class="portfolio-section"><h2>A quick break?</h2><p class="section-intro">Two games from the clubhouse. Both are playable right here.</p><a class="game-choice" href="#badminton"><span>01</span><div><h3>Badminton</h3><p>Move, time your swing, and take on the clubhouse bot. First to seven.</p></div><span>↗</span></a><a class="game-choice" href="#poker"><span>02</span><div><h3>Poker</h3><p>A quick game of five-card draw. Keep, replace, and reveal.</p></div><span>↗</span></a><noscript><p>The games need JavaScript. All projects and professional information are available above.</p></noscript></section>
+<section id="badminton" class="portfolio-section game-section"><h2>Fancy a rally?</h2><div id="badminton-mount"><p>A playable badminton match against the clubhouse bot. Enable JavaScript to play.</p></div></section>
+<section id="poker" class="portfolio-section game-section"><h2>Take a seat.</h2><div id="poker-mount"><p>Five-card draw against the house. Enable JavaScript to play.</p></div></section>
+<section id="sound" class="portfolio-section"><h2>Settle in.</h2><p class="section-intro">A quiet soundtrack and small sounds for the room.</p><div class="track-credit"><strong>Sunset Walk</strong><p>Kilua Boy · a quiet ambient loop</p><a href="https://opengameart.org/content/sunset-walk-ambient-quiet-sweet-loop" target="_blank" rel="noopener">Original track ↗</a></div><div class="volume-control"><label for="music-volume">Background music <output id="music-output">20%</output></label><input id="music-volume" type="range" min="0" max="100" value="20"></div><div class="volume-control"><label for="effects-volume">Sound effects <output id="effects-output">25%</output></label><input id="effects-volume" type="range" min="0" max="100" value="25"></div><button class="button button-primary" id="audio-master">Enable sound</button><p id="audio-status" class="game-tip" role="status">Sound starts when you enable it. Your volume settings are remembered.</p><p><a href="#credits">Music &amp; asset credits ↗</a></p></section>
+<section id="help" class="portfolio-section"><h2>Make yourself at home.</h2><p class="section-intro">Explore at your own pace, or open Projects and get straight to the work.</p><dl class="controls-list"><div><dt>Move</dt><dd>Choose Explore, then WASD / arrow keys. Hold Shift to move faster. On touch, use the direction buttons.</dd></div><div><dt>Look around</dt><dd>Drag to orbit. Scroll or pinch to zoom. Click the floor to move there.</dd></div><div><dt>Interact</dt><dd>Click a label, or press E near an object. Projects, Experience, and Résumé are always in the navigation.</dd></div><div><dt>Reset</dt><dd>Home resets your explorer and camera. R also works while exploring.</dd></div><div><dt>Leave a game</dt><dd>Back to the room or Escape. Your movement keys won't affect the room while a game is open.</dd></div></dl><button class="button" id="quality-toggle" aria-pressed="false">Use lower graphics</button><p><a href="#play">Pick a game ↗</a></p></section>
+<section id="credits" class="portfolio-section"><h2>Made with good company.</h2><p class="section-intro">A personal place, with a little help from generous asset creators.</p><ul class="credits-list"><li><a href="https://opengameart.org/content/furniture-kit" target="_blank" rel="noopener">Furniture Kit · Kenney</a><span>Furniture, plants, computer and television models. CC0.</span></li><li><a href="https://opengameart.org/content/boardgame-pack" target="_blank" rel="noopener">Boardgame Pack · Kenney</a><span>Playing cards and card sounds. CC0.</span></li><li><a href="https://opengameart.org/content/interface-sounds" target="_blank" rel="noopener">Interface Sounds · Kenney</a><span>Quiet clicks and interface feedback. CC0.</span></li><li><a href="https://opengameart.org/content/sunset-walk-ambient-quiet-sweet-loop" target="_blank" rel="noopener">Sunset Walk · Kilua Boy</a><span>Background music. CC0.</span></li><li><a href="https://threejs.org" target="_blank" rel="noopener">Three.js</a><span>The 3D renderer. MIT licence.</span></li></ul><p><a href="ASSET-CREDITS.md">Full asset credits ↗</a></p></section>
 </main>
-
-<footer class="footer">
-  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
-  <div class="footer-links">
-    <a href="mailto:vukhanhluu@gmail.com">Email</a>
-    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
-    <a href="https://github.com/vukhanh732">GitHub</a>
-  </div>
-</footer>
-
-<script src="js/main.js" defer></script>
-</body>
-</html>
+<dialog id="content-panel" class="content-panel" aria-label="Clubhouse content"><div class="panel-bar"><span>Vu's clubhouse</span><button class="panel-close" id="close-panel">Back to the room ×</button></div><nav class="panel-nav" aria-label="Portfolio shortcuts"><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a><a href="resume.pdf" download>Résumé ↗</a></nav><div class="panel-content" id="panel-content"></div></dialog>
+<footer class="clubhouse-footer"><span>© 2026 Vu Luu</span><div><a href="#writing">Notebook</a><a href="#credits">Credits</a><a href="mailto:vukhanhluu@gmail.com">Email ↗</a></div></footer>
+<script type="module" src="js/clubhouse.js"></script>
+</body></html>
