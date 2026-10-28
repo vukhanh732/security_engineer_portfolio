@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add('js');</script>
 <title>Vu Luu - The Clubhouse</title>
 <meta name="description" content="Vu Luu is a software developer building tested products and security systems across full-stack engineering, automation, and detection.">
 <meta name="theme-color" content="#e8e9e2">
@@ -35,7 +36,7 @@
 <div class="world-shell">
   <div class="room-heading"><div><h1>Vu's clubhouse.</h1><p>A few things I've built. A few things I play.</p></div><a href="#projects" class="direct-link">Here for the work? Projects ↗</a></div>
   <section class="world" aria-label="Interactive 3D clubhouse">
-    <img class="world-preview" src="images/clubhouse-preview.webp" alt="Vu's clubhouse, a miniature room with a badminton court, computer workbench, poker table and games" width="1440" height="810" fetchpriority="high">
+    <img class="world-preview" src="images/clubhouse-preview.webp" alt="Vu's clubhouse, a miniature room with a badminton court, computer workbench, poker table and games" width="1440" height="810" loading="lazy" fetchpriority="low">
     <canvas class="world-canvas" id="world-canvas" tabindex="0" aria-label="Explore Vu's 3D clubhouse. Move with WASD or arrow keys after choosing Explore. Drag to rotate, scroll or pinch to zoom. E opens a nearby object."></canvas>
     <div class="landmarks" id="landmarks" aria-label="Places in the clubhouse">
       <button data-landmark="projects">Projects</button><button data-landmark="experience">Experience</button><button data-landmark="badminton">Play badminton</button><button data-landmark="poker">Play poker</button><button data-landmark="braintrain">BrainTrain</button><button data-landmark="about">Off the clock</button>

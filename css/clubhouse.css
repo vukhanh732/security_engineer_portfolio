@@ -1151,6 +1151,13 @@ body:has(.content-panel[open]) {
   .panel-nav {
     padding-inline: 21px;
   }
+  /* Reserve the compact toolbar before modules load; no layout shift on phones. */
+  .js .world-shell { display: block; }
+  .js .room-heading, .js .world, .js .exploration, .js #enable-audio { display: none; }
+  .js .world-toolbar { justify-content: flex-end; }
+  .enhanced:not(.simple-view) .room-heading, .enhanced:not(.simple-view) .world { display: block; }
+  .enhanced:not(.simple-view) .exploration { display: flex; }
+  .enhanced:not(.simple-view) #enable-audio { display: inline-block; }
   .portfolio-section {
     scroll-margin-top: 160px;
   }
