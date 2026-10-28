@@ -71,7 +71,7 @@ For browser checks, install Python Playwright and its Chromium browser, start th
 
 ## Exploring and playing
 
-Use **Explore the room**, then WASD/arrows to move, Shift for faster movement, and E near an object. Click the floor to move there. Drag to orbit, scroll/pinch to zoom, and use **Follow explorer** for a closer view. **Home** resets the camera and explorer. Touch exploration has direction buttons.
+The real scene preview appears immediately. Moving over the room, focusing its canvas, or choosing **Explore the room** loads the 3D controls. Then use WASD/arrows to move, Shift for faster movement, and E near an object. Click the floor to move there. Drag to orbit, scroll/pinch to zoom, and use **Follow explorer** for a closer view. **Home** resets the camera and explorer. Touch exploration has direction buttons.
 
 Projects, Experience, Contact and Resume are available without exploring. Panels contain their own recruiter navigation. **Simple view** restores the ordinary scrolling portfolio. Phone visitors start in that view and can choose **Explore 3D clubhouse**. Professional content remains available without JavaScript or WebGL.
 

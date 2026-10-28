@@ -234,6 +234,7 @@ $("#quality-toggle").addEventListener("click", (event) => {
 });
 async function loadScene() {
   if (scenePromise) return scenePromise;
+  $("#world-status").textContent = "Opening the room...";
   scenePromise = (async () => {
     try {
       const { createScene } = await import("./clubhouse-scene.js");
@@ -288,9 +289,9 @@ $("#follow-camera").addEventListener("click", () => {
   const following = scene.toggleFollow();
   $("#follow-camera").setAttribute("aria-pressed", String(following));
 });
-// Mobile opens on the actual projects; exploring remains one explicit tap away.
+// The room upgrades to 3D on intent; reading the portfolio never starts the GPU.
 if (matchMedia("(max-width: 767px)").matches) setSimple(true);
-else if ("requestIdleCallback" in window)
-  requestIdleCallback(loadScene, { timeout: 1800 });
-else setTimeout(loadScene, 1100);
+$(".world").addEventListener("pointermove", loadScene, { once: true, passive: true });
+$(".world").addEventListener("pointerdown", loadScene, { once: true, passive: true });
+$("#world-canvas").addEventListener("focus", loadScene, { once: true });
 if (location.hash) showSection(location.hash.slice(1), { push: false });

@@ -1152,6 +1152,7 @@ body:has(.content-panel[open]) {
     padding-inline: 21px;
   }
   /* Reserve the compact toolbar before modules load; no layout shift on phones. */
+  body.clubhouse-home { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .js .world-shell { display: block; }
   .js .room-heading, .js .world, .js .exploration, .js #enable-audio { display: none; }
   .js .world-toolbar { justify-content: flex-end; }

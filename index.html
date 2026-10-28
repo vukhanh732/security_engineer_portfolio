@@ -10,7 +10,7 @@
 <link rel="canonical" href="https://security-vu.netlify.app/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin media="(min-width: 768px)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vu Luu">
 <meta property="og:title" content="Vu Luu - The Clubhouse">
@@ -21,7 +21,7 @@
 <meta name="twitter:title" content="Vu Luu - The Clubhouse">
 <meta name="twitter:description" content="Tested products and security systems across full-stack engineering, automation, and detection.">
 <meta name="twitter:image" content="https://security-vu.netlify.app/images/clubhouse-preview.webp">
-<link rel="stylesheet" href="css/clubhouse.css?v=20261029">
+<link rel="stylesheet" href="css/clubhouse.css?v=20261029b">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Vu Luu","url":"https://security-vu.netlify.app/","jobTitle":"Software Developer","email":"mailto:vukhanhluu@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"UNSW Sydney"},"sameAs":["https://linkedin.com/in/vukhanhluu","https://github.com/vukhanh732"],"knowsAbout":["Full-stack software engineering","Detection engineering","Identity security","DevSecOps automation"]}
 </script>
@@ -41,7 +41,7 @@
     <div class="landmarks" id="landmarks" aria-label="Places in the clubhouse">
       <button data-landmark="projects">Projects</button><button data-landmark="experience">Experience</button><button data-landmark="badminton">Play badminton</button><button data-landmark="poker">Play poker</button><button data-landmark="braintrain">BrainTrain</button><button data-landmark="about">Off the clock</button>
     </div>
-    <div class="world-loading" id="world-status" role="status">Setting up the room. Projects and résumé are ready.</div>
+    <div class="world-loading" id="world-status" role="status">Choose Explore, or move over the room to look around.</div>
     <div class="touch-pad" aria-label="Move the explorer"><button data-move="up" aria-label="Move forward">↑</button><button data-move="left" aria-label="Move left">←</button><button data-move="down" aria-label="Move back">↓</button><button data-move="right" aria-label="Move right">→</button></div>
   </section>
   <div class="world-toolbar"><div class="exploration"><button class="button button-primary" id="explore">Explore the room</button><button class="utility" id="home-camera">Home</button><button class="utility" id="follow-camera" aria-pressed="false">Follow explorer</button><span class="movement-hint" id="movement-hint">Drag to look around. Click the floor to move.</span></div><div class="world-settings"><button class="utility" id="enable-audio" aria-pressed="false">Enable sound</button><a href="#sound">Sound settings</a><button class="utility" id="simple-view" aria-pressed="false">Simple view</button><a class="help-link" href="#help" aria-label="Controls and help">?</a></div></div>
@@ -120,5 +120,5 @@
 </main>
 <dialog id="content-panel" class="content-panel" aria-label="Clubhouse content"><div class="panel-bar"><span>Vu's clubhouse</span><button class="panel-close" id="close-panel">Back to the room ×</button></div><nav class="panel-nav" aria-label="Portfolio shortcuts"><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a><a href="resume.pdf" download>Résumé ↗</a></nav><div class="panel-content" id="panel-content"></div></dialog>
 <footer class="clubhouse-footer"><span>© 2026 Vu Luu</span><div><a href="#writing">Notebook</a><a href="#credits">Credits</a><a href="mailto:vukhanhluu@gmail.com">Email ↗</a></div></footer>
-<script type="module" src="js/clubhouse.js?v=20261029"></script>
+<script type="module" src="js/clubhouse.js?v=20261029b"></script>
 </body></html>

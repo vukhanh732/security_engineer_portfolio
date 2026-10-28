@@ -26,6 +26,7 @@ with sync_playwright() as p:
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.on('response', lambda r: missing.append(r.url) if r.status >= 400 and r.url.startswith(BASE) else None)
     page.goto(BASE, wait_until='networkidle')
+    page.locator('.world').hover()
     page.locator('#world-canvas[data-ready=true]').wait_for(timeout=45000)
     expect(page.locator('.world')).to_have_class(re.compile('is-ready'))
     assert page.evaluate('window.__played.length') == 0, 'Sound started without activation'
@@ -163,6 +164,7 @@ with sync_playwright() as p:
     failing = browser.new_context(viewport={'width': 1280, 'height': 800})
     failing.add_init_script('const get=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(type,...args){return type.includes("webgl")?null:get.call(this,type,...args)}')
     fallback = failing.new_page(); fallback.goto(BASE, wait_until='networkidle')
+    fallback.locator('.world').hover()
     fallback.wait_for_function('() => document.body.classList.contains("simple-view")')
     expect(fallback.locator('#projects')).to_be_visible()
     assert not errors, errors
