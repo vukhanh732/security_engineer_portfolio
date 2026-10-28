@@ -129,6 +129,8 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Simple view', exact=True).click()
     expect(page.locator('#main-content #projects')).to_be_visible()
     expect(page.locator('#main-content #experience')).to_be_visible()
+    expect(page.locator('#badminton-mount a[href="#badminton"]')).to_be_visible()
+    expect(page.locator('#poker-mount a[href="#poker"]')).to_be_visible()
     page.reload(wait_until='networkidle')
     assert page.get_by_label('Background music').input_value() == '8'
     assert page.get_by_label('Sound effects').input_value() == '0'

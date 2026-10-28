@@ -5,6 +5,9 @@ const body = document.body,
   panel = $("#content-panel"),
   panelContent = $("#panel-content");
 const audio = createAudio();
+const gameFallbacks = new Map(
+  ["badminton", "poker"].map((name) => [name, $(`#${name}-mount`).innerHTML]),
+);
 let activeSection = null,
   placeholder = null,
   trigger = null,
@@ -54,12 +57,17 @@ for (const kind of ["music", "effects"])
   );
 updateAudio();
 
-function restoreSection() {
-  routeVersion++;
+function stopGame() {
   if (cleanupGame) {
     cleanupGame();
     cleanupGame = null;
   }
+  for (const [name, html] of gameFallbacks) $(`#${name}-mount`).innerHTML = html;
+}
+
+function restoreSection() {
+  routeVersion++;
+  stopGame();
   if (activeSection && placeholder) {
     placeholder.replaceWith(activeSection);
     activeSection = placeholder = null;
@@ -79,10 +87,7 @@ function closePanel({ clearHash = true, focus = true } = {}) {
     });
 }
 async function mountGame(name, section) {
-  if (cleanupGame) {
-    cleanupGame();
-    cleanupGame = null;
-  }
+  stopGame();
   const version = ++routeVersion;
   if (name === "badminton" || name === "poker") {
     const mount = section.querySelector(`#${name}-mount`);
