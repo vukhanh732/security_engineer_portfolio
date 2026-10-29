@@ -727,3 +727,118 @@
 .desktop-welcome p {
   color: #eff1e5;
 }
+.desktop {
+  background: #315860;
+}
+.desktop-monogram {
+  color: #bdd5cd22;
+}
+.desktop-welcome p {
+  color: #f2eddd;
+}
+.desktop-welcome small {
+  color: #d3e1d9;
+}
+.project-purpose {
+  font: 500 clamp(21px, 2.1vw, 29px) / 1.4 var(--font-head) !important;
+  letter-spacing: -0.6px;
+  color: #29434d !important;
+  max-width: 34ch !important;
+  margin: 0 0 20px !important;
+}
+.project-result {
+  margin: 27px 0;
+  padding: 5px 0 5px 20px;
+  border-left: 3px solid #5c7c7a;
+}
+.project-result > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #496463;
+}
+.os-window .project-result p,
+.project-result p {
+  margin: 8px 0 0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.project-evidence {
+  display: grid;
+  gap: 22px;
+  margin: 28px 0;
+}
+.project-evidence > div {
+  display: grid;
+  grid-template-columns: 125px minmax(0, 1fr);
+  gap: 20px;
+}
+.project-evidence dt {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3e5d62;
+  padding-top: 2px;
+}
+.project-evidence dd {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #45534b;
+  margin: 0;
+  max-width: 66ch;
+}
+.project-flow {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 25px 0;
+  padding: 14px 0;
+  border-block: 1px solid #d7dfd4;
+  color: #46676a;
+  font-size: 13px;
+}
+.project-flow li:not(:last-child):after {
+  content: "→";
+  margin-left: 20px;
+  color: #83938b;
+}
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 25px;
+  margin: 22px 0;
+}
+.project-status {
+  font-size: 12px;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 767px) {
+  .project-purpose {
+    font-size: 23px !important;
+    max-width: 100% !important;
+  }
+  .project-evidence > div {
+    display: block;
+  }
+  .project-evidence dt {
+    margin-bottom: 5px;
+  }
+  .project-evidence dd {
+    font-size: 14px;
+  }
+  .project-flow {
+    font-size: 11px;
+    gap: 6px 10px;
+  }
+  .project-flow li:not(:last-child):after {
+    margin-left: 10px;
+  }
+  .project-result {
+    padding-left: 15px;
+  }
+  .project-result p {
+    font-size: 15px !important;
+  }
+  .project-links {
+    gap: 12px 20px;
+  }
+}

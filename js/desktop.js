@@ -140,6 +140,20 @@ export function createDesktop({
     }
     hideMenu();
   }
+  function land() {
+    for (const [name, item] of windows) {
+      item.minimized = true;
+      item.element.hidden = true;
+      item.element.classList.remove("is-active");
+      item.task.setAttribute("aria-pressed", "false");
+      item.task.setAttribute("aria-label", `Restore ${APPS[name].title}`);
+      onVisibility?.(name, false);
+    }
+    active = null;
+    show();
+    start.focus({ preventScroll: true });
+    changed();
+  }
   function open(name) {
     if (!APPS[name]) return;
     show();
@@ -332,6 +346,7 @@ export function createDesktop({
   return {
     open,
     show,
+    land,
     close,
     hide,
     getState: state,

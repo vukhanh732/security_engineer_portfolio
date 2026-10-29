@@ -33,10 +33,7 @@
       "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Computer/baked_computer.jpg",
       "original_sha256": "2ea48b3d9e135a1d901645925249643fd828d9d26af513281e659142f61e6376",
       "bytes": 356392,
-      "dimensions": [
-        4096,
-        4096
-      ],
+      "dimensions": [4096, 4096],
       "modifications": "JPEG to WebP, full original pixel dimensions preserved"
     },
     {
@@ -44,10 +41,7 @@
       "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/World/baked_environment.jpg",
       "original_sha256": "63c353baf84c4f6d9665d5d2db030593a9e306d7730fdb8dad409a62b186a2b7",
       "bytes": 249098,
-      "dimensions": [
-        4096,
-        4096
-      ],
+      "dimensions": [4096, 4096],
       "modifications": "JPEG to WebP, full original pixel dimensions preserved"
     },
     {
@@ -55,11 +49,15 @@
       "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Decor/baked_decor_modified.jpg",
       "original_sha256": "7d8fbbfa314a360905485f36ebfd2416e178c6e19925dd4ebd4f0a248197aa3d",
       "bytes": 463272,
-      "dimensions": [
-        4096,
-        4096
-      ],
+      "dimensions": [4096, 4096],
       "modifications": "JPEG to WebP, full original pixel dimensions preserved"
     }
+  ],
+  "runtime_modifications": [
+    "Slate/teal/copper material treatment; source GLB files unchanged on disk.",
+    "Top drawer front/handle and source paper trays removed from cloned scene geometry.",
+    "Original procedural drawer tray, notebook, pencil, Field Notes textbook, stationery and VL details added.",
+    "Coffee cup pivot/inspection and plant vertex-sway interaction added.",
+    "Original canvas screen and pointer-follow camera behavior."
   ]
 }

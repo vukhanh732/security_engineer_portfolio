@@ -60,7 +60,7 @@
   <a href="index.html#projects" class="article-back">← All projects</a>
   <div class="project-eyebrow">PROJECT · SOC HOME LAB</div>
   <h1 class="project-title">Wazuh-SOC-HomeLab</h1>
-  <p class="project-lead">A multi-endpoint SOC lab where a <strong>VirusTotal hash-enrichment hit automatically triggers Active Response quarantine</strong> - no human in the loop between detection and containment.</p>
+  <p class="project-lead">A three-endpoint home lab connecting file-integrity events, VirusTotal enrichment and an observable quarantine action.</p>
   <div class="project-stack-row">
     <span>Wazuh</span><span>VMware</span><span>Windows</span><span>Linux</span><span>Kali</span><span>VirusTotal</span>
   </div>
@@ -69,7 +69,7 @@
 
 <section class="project-block">
   <div class="block-label">SCOPE</div>
-  <p class="block-body">Reading about SOC operations is different from running one. I built a multi-endpoint lab spanning Windows, Linux, and Kali hosts under VMware, with Wazuh as the central manager, to get hands-on with the full detect-enrich-respond loop.</p>
+  <p class="block-body">I wanted to practice the whole response loop, from a file appearing on an endpoint to an observable containment action. The personal lab joins Windows, Ubuntu and Kali agents to one Wazuh manager under VMware.</p>
 </section>
 
 <section class="project-block">
@@ -124,12 +124,12 @@
 
 <section class="project-block">
   <div class="block-label">IMPACT</div>
-  <p class="block-body">Automated quarantine on a verified threat-intel hit shows I can build a response action that fires without waiting on an analyst - the exact loop a real SOC runs, just at home-lab scale.</p>
+  <p class="block-body">In this controlled lab, a matching VirusTotal alert can trigger quarantine without a separate manual file move. The manager keeps the endpoint event and resulting response available for inspection. The EICAR workflow documents how that hand-off was exercised safely.</p>
 </section>
 
 <section class="project-block last">
   <div class="block-label">OUTCOME</div>
-  <p class="block-body">The lab runs continuously across all endpoints, with the dashboards above pulled directly from the live manager - the clearest evidence on this whole site that the detection loop actually works end to end.</p>
+  <p class="block-body">The three-endpoint lab makes the full detection-to-response hand-off reproducible, with agent, FIM and MITRE ATT&CK screenshots and setup commands. Further work is to exercise noisy events and response failures before expanding the lab.</p>
 </section>
 
 </main>

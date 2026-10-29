@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SentryNode - Vu Luu</title>
-<meta name="description" content="A distributed SIEM detecting SSH brute force, SQL injection, and path traversal in real time, built solo and deployed as a live demo.">
+<meta name="description" content="A deployed phase-one detection API that turns SSH and web events into alerts, with IP-reputation context and tested input limits.">
 <meta name="theme-color" content="#f0f1e9">
 <link rel="canonical" href="https://security-vu.netlify.app/sentrynode.html">
 <link rel="icon" href="/favicon.svg?v=20261029-study1" type="image/svg+xml">
@@ -12,18 +12,18 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vu Luu">
-<meta property="og:title" content="SentryNode - distributed SIEM">
+<meta property="og:title" content="SentryNode - log detection API">
 <meta property="og:description" content="Stateful detection, URL-decoded matching, threat intelligence, and a hardened public API backed by 800+ lines of tests.">
 <meta property="og:url" content="https://security-vu.netlify.app/sentrynode.html">
 <meta property="og:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SentryNode - distributed SIEM">
+<meta name="twitter:title" content="SentryNode - log detection API">
 <meta name="twitter:description" content="Stateful detection and a hardened public API backed by 800+ lines of tests.">
 <meta name="twitter:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/editorial.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"SentryNode","description":"A distributed SIEM detecting SSH brute force, SQL injection, path traversal, and HTTP authentication attacks.","codeRepository":"https://github.com/vukhanh732/sentrynode","programmingLanguage":"Python","author":{"@type":"Person","name":"Vu Luu","url":"https://security-vu.netlify.app/"},"url":"https://security-vu.netlify.app/sentrynode.html"}
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"SentryNode","description":"A phase-one log-detection API for SSH brute force and suspicious web requests, with IP-reputation context.","codeRepository":"https://github.com/vukhanh732/sentrynode","programmingLanguage":"Python","author":{"@type":"Person","name":"Vu Luu","url":"https://security-vu.netlify.app/"},"url":"https://security-vu.netlify.app/sentrynode.html"}
 </script>
 </head>
 <body class="page-violet">
@@ -60,7 +60,7 @@
   <a href="index.html#projects" class="article-back">← All projects</a>
   <div class="project-eyebrow">PROJECT · SIEM &amp; THREAT DETECTION</div>
   <h1 class="project-title">SentryNode</h1>
-  <p class="project-lead">Detects SSH brute force with a <strong>stateful sliding time window</strong>, matches SQL injection against URL-decoded payloads, and flags path traversal and HTTP auth brute-forcing - a distributed SIEM built solo, hardened for public exposure, and backed by 800+ lines of unit and integration tests.</p>
+  <p class="project-lead">A personal log-detection API that turns repeated SSH failures and suspicious web payloads into alerts, with IP-reputation context for triage.</p>
   <div class="project-stack-row">
     <span>FastAPI</span><span>Redis</span><span>Docker</span><span>slowapi</span><span>pytest</span>
   </div>
@@ -72,12 +72,12 @@
 
 <section class="project-block">
   <div class="block-label">SCOPE</div>
-  <p class="block-body">Most home-lab detection projects are single scripts reacting to a single log type. I wanted to build something closer to production shape: a distributed platform that ingests multiple log sources, applies stateful detection logic, enriches findings with threat intelligence, and visualises results - all built and operated solo.</p>
+  <p class="block-body">When failed logins and suspicious web requests arrive as individual events, useful patterns can disappear. I built a personal detection service that groups those events, generates alerts and adds threat-intelligence context for investigation.</p>
 </section>
 
 <section class="project-block">
   <div class="block-label">APPROACH</div>
-  <p class="block-body">FastAPI handles ingestion, an in-memory detection engine runs stateful rules against the incoming events, and Redis caches AbuseIPDB threat-intel lookups with graceful fallback when the cache or the API is unavailable. RabbitMQ, Elasticsearch, InfluxDB, and Grafana are provisioned via Docker Compose for the intended full pipeline - queued ingestion, long-term log storage, and metrics dashboards - but aren't yet wired into the live request path below. I'd rather ship an honest, working slice than claim a bigger one.</p>
+  <p class="block-body">FastAPI handles ingestion, an in-memory detection engine runs stateful rules against the incoming events, and Redis caches AbuseIPDB threat-intel lookups with graceful fallback when the cache or the API is unavailable. RabbitMQ, Elasticsearch, InfluxDB, and Grafana are provisioned via Docker Compose for the intended full pipeline - queued ingestion, long-term log storage, and metrics dashboards - but are not connected to the live request path yet.</p>
   <div class="diagram">
     <div class="diagram-row">
       <div class="diagram-node">Log Sources</div>
@@ -88,7 +88,7 @@
       <span class="diagram-arrow">→</span>
       <div class="diagram-node">Threat Intel (Redis cache)</div>
     </div>
-    <div class="diagram-caption">Live request path. RabbitMQ / Elasticsearch / InfluxDB / Grafana run locally via Docker Compose but aren't wired in yet - next phase, not a hidden gap.</div>
+    <div class="diagram-caption">Live request path. RabbitMQ / Elasticsearch / InfluxDB / Grafana are provisioned locally via Docker Compose for the next phase.</div>
   </div>
 </section>
 
@@ -100,18 +100,18 @@
     <li>Path traversal detection</li>
     <li>HTTP auth brute-force detection</li>
     <li>AbuseIPDB threat-intel integration with Redis caching and fallback handling when the lookup fails</li>
-    <li>Rate limiting and payload caps on both public endpoints, plus input validation, so the API is safe to expose to the open internet</li>
+    <li>Rate limiting and payload caps on both public endpoints, plus input validation, to constrain public input and request volume</li>
   </ul>
 </section>
 
 <section class="project-block">
   <div class="block-label">IMPACT</div>
-  <p class="block-body">This proves I can design detection logic that handles the messy edge cases real traffic produces - URL-decoding before pattern matching, caching an external API with a safe fallback - not just wire together existing tools.</p>
+  <p class="block-body">A run of failed logins becomes an alert that can be investigated as a pattern. IP reputation adds context without requiring a fresh external lookup for every event. That is the practical value demonstrated by the current API slice.</p>
 </section>
 
 <section class="project-block last">
   <div class="block-label">OUTCOME</div>
-  <p class="block-body">The system is backed by 800+ lines of genuine unit and integration tests. Midway through the build the RabbitMQ message queue started backpressuring under load - I had to refactor the queue architecture to fix it, which taught me more about message-broker behaviour under real load than any tutorial had. More recently, I went back and hardened the two public endpoints for internet exposure and shipped it as a live demo - the "Try it live" link above is a running instance, not a screenshot.</p>
+  <p class="block-body">The phase-one API is deployed, hardened with input validation, rate limits and payload caps, and covered by unit and integration tests. The demo uses in-memory state that resets on redeploy; queued ingestion, durable storage and dashboards remain future integration work. The free-tier demo may need time to wake from sleep.</p>
 </section>
 
 </main>

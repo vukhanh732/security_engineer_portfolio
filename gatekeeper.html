@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gatekeeper - Vu Luu</title>
-<meta name="description" content="A CI/CD pipeline that genuinely fails the build on any HIGH severity Bandit finding or any Safety CVE.">
+<meta name="description" content="A personal Python CI gate that blocks HIGH Bandit findings and reported Safety vulnerabilities, with readable remediation evidence.">
 <meta name="theme-color" content="#f0f1e9">
 <link rel="canonical" href="https://security-vu.netlify.app/gatekeeper.html">
 <link rel="icon" href="/favicon.svg?v=20261029-study1" type="image/svg+xml">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vu Luu">
 <meta property="og:title" content="Gatekeeper - security policy as code">
-<meta property="og:description" content="Three scanners feed one severity-aware release gate that blocks HIGH findings while keeping MEDIUM findings visible.">
+<meta property="og:description" content="Bandit and Safety reports drive a readable security policy; MEDIUM code findings and non-blocking ZAP results stay available for review.">
 <meta property="og:url" content="https://security-vu.netlify.app/gatekeeper.html">
 <meta property="og:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
 <meta name="twitter:card" content="summary_large_image">
@@ -60,7 +60,7 @@
   <a href="index.html#projects" class="article-back">← All projects</a>
   <div class="project-eyebrow">PROJECT · DEVSECOPS / CI-CD</div>
   <h1 class="project-title">Gatekeeper</h1>
-  <p class="project-lead">A CI/CD pipeline that <strong>genuinely fails the build</strong> on any HIGH severity Bandit finding or any Safety CVE - no vanity security scan that reports and moves on.</p>
+  <p class="project-lead">A personal CI security gate with a readable policy: HIGH code findings and reported vulnerable dependencies block delivery; lower-severity code findings remain visible for review.</p>
   <div class="project-stack-row">
     <span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span>
   </div>
@@ -69,25 +69,25 @@
 
 <section class="project-block">
   <div class="block-label">SCOPE</div>
-  <p class="block-body">Security tooling that only produces a report nobody reads doesn't change outcomes. I built a pipeline where static analysis and dependency scanning can actually block a merge, with a clear, tiered severity policy instead of an all-or-nothing gate.</p>
+  <p class="block-body">A security report only helps a release if someone knows which findings should stop it. I built a personal CI workflow that applies an explicit policy to Python code and dependency scans, then keeps the resulting evidence available to reviewers.</p>
 </section>
 
 <section class="project-block">
   <div class="block-label">APPROACH</div>
-  <p class="block-body">A GitHub Actions workflow runs Bandit for static analysis, Safety for dependency CVEs, and OWASP ZAP for dynamic scanning on every push, then generates a single remediation dashboard from the combined results.</p>
+  <p class="block-body">Bandit and Safety reports feed a Python policy script. HIGH Bandit findings or reported Safety vulnerabilities fail the gate; MEDIUM Bandit findings are logged without blocking. After that gate, the workflow can run a non-blocking ZAP baseline against the container and collect its report.</p>
   <div class="diagram">
     <div class="diagram-row">
       <div class="diagram-node">Push / PR</div>
       <span class="diagram-arrow">→</span>
       <div class="diagram-node">Bandit + Safety Scan</div>
       <span class="diagram-arrow">→</span>
-      <div class="diagram-node">OWASP ZAP Scan</div>
-      <span class="diagram-arrow">→</span>
       <div class="diagram-node">Severity Gate</div>
+      <span class="diagram-arrow">→</span>
+      <div class="diagram-node">ZAP Report (non-blocking)</div>
       <span class="diagram-arrow">→</span>
       <div class="diagram-node">Remediation Dashboard</div>
     </div>
-    <div class="diagram-caption">HIGH findings block the merge; MEDIUM findings are logged only</div>
+    <div class="diagram-caption">HIGH Bandit findings and reported Safety vulnerabilities fail the gate. MEDIUM Bandit findings and ZAP results remain available for review.</div>
   </div>
 </section>
 
@@ -102,12 +102,12 @@
 
 <section class="project-block">
   <div class="block-label">IMPACT</div>
-  <p class="block-body">This is the DevSecOps skill security teams actually need: knowing which findings are worth blocking a release over, and building the automation that enforces that judgment consistently.</p>
+  <p class="block-body">The repository records two useful policy examples: flask-login passes with no HIGH findings, while the intentionally vulnerable demo fails with one HIGH finding. The dashboard puts the relevant code, dependency findings and remediation details in one place.</p>
 </section>
 
 <section class="project-block last">
   <div class="block-label">OUTCOME</div>
-  <p class="block-body">The pipeline runs on every push and the dashboard makes remediation actionable instead of burying findings in raw scanner output - the policy is intentionally conservative (MEDIUM findings stay visible, not blocking) to avoid gate fatigue.</p>
+  <p class="block-body">The working result is a repeatable policy decision and a readable report. The next improvement is to fail safely on scanner errors and invalid reports: the current parser can treat missing or malformed reports as empty results. That boundary needs hardening before production use.</p>
 </section>
 
 </main>

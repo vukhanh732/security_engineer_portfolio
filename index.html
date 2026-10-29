@@ -15,10 +15,10 @@
     <link rel="canonical" href="https://security-vu.netlify.app/" />
     <link
       rel="icon"
-      href="/favicon.svg?v=20261029-clean2"
+      href="/favicon.svg?v=20261030-personal1"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon.ico?v=20261029-clean2" sizes="any" />
+    <link rel="icon" href="/favicon.ico?v=20261030-personal1" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -45,7 +45,7 @@
     <meta property="og:url" content="https://security-vu.netlify.app/" />
     <meta
       property="og:image"
-      content="https://security-vu.netlify.app/images/desk-preview.webp"
+      content="https://security-vu.netlify.app/images/personal-desk-preview.webp"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vu Luu - The Desk" />
@@ -55,10 +55,10 @@
     />
     <meta
       name="twitter:image"
-      content="https://security-vu.netlify.app/images/desk-preview.webp"
+      content="https://security-vu.netlify.app/images/personal-desk-preview.webp"
     />
-    <link rel="stylesheet" href="css/clubhouse.css?v=20261029-clean2" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261029-clean2" />
+    <link rel="stylesheet" href="css/clubhouse.css?v=20261030-personal1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261030-personal1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,7 +94,7 @@
     <header class="site-header">
       <a class="identity" href="index.html"
         ><img
-          src="favicon.svg?v=20261029-clean2"
+          src="favicon.svg?v=20261030-personal1"
           class="identity-mark"
           alt=""
           width="38"
@@ -125,7 +125,7 @@
               data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
             " />
           <img
-            src="images/desk-preview.webp"
+            src="images/personal-desk-preview.webp"
             alt="A clean retro computer desk with books, a plant and a working monitor"
             width="1440"
             height="900"
@@ -135,7 +135,7 @@
           class="world-canvas"
           id="world-canvas"
           tabindex="0"
-          aria-label="A retro desk. Click the computer or use the destination buttons. Escape returns home."
+          aria-label="Vu's desk. Move your mouse to look around. Click the computer, drawer, cup, textbook or plant, or use Desk objects. Escape puts an object back or returns home."
         ></canvas>
         <div
           class="world-loading"
@@ -172,8 +172,18 @@
             </button>
           </nav>
           <button class="button button-primary" id="explore">
-            Use computer ↗</button
-          ><button
+            Use computer ↗
+          </button>
+          <details class="desk-objects">
+            <summary>Desk objects</summary>
+            <div>
+              <button data-prop="drawer">Open / close drawer</button
+              ><button data-prop="coffee">Pick up coffee cup</button
+              ><button data-prop="book">Pick up textbook</button
+              ><button data-prop="plant">Nudge the plant</button>
+            </div>
+          </details>
+          <button
             class="utility"
             id="home-camera"
             aria-label="Home, return to the desk"
@@ -194,6 +204,17 @@
         </div>
       </div>
     </div>
+    <aside
+      id="object-inspector"
+      class="object-inspector"
+      aria-labelledby="object-title"
+      hidden
+    >
+      <span class="object-kicker">A closer look</span>
+      <h2 id="object-title"></h2>
+      <p id="object-description" role="status"></p>
+      <button class="button" id="put-back">Put back</button>
+    </aside>
     <p class="scene-message" id="scene-message" role="status" hidden>
       The room couldn't open on this device. All projects, games and contact
       details are available below.
@@ -210,7 +231,8 @@
       <section id="projects" class="portfolio-section">
         <h2>Projects</h2>
         <p class="section-intro">
-          Products and security systems, built to run and made to be understood.
+          Problems worth solving. Working code, evidence, and what I am still
+          improving.
         </p>
         <div class="project-browser">
           <nav class="project-folders" aria-label="Project folders">
@@ -251,17 +273,53 @@
           <div class="project-previews">
             <article data-project-file="braintrain" class="featured-project">
               <span class="project-status"
-                >Featured · redesign in progress</span
+                >Personal product · redesign in progress</span
               >
               <h3>BrainTrain</h3>
-              <p>
-                A brain-training product connecting adaptive games, persistent
-                progression, Elo rankings, and performance insights.
+              <p class="project-purpose">
+                Make a short practice session part of a longer story.
               </p>
+              <p>
+                Standalone games forget you when a round ends. I built
+                BrainTrain so a player can return to saved progress, adaptive
+                difficulty, ranked tiers and insights across six games.
+              </p>
+              <div class="project-result">
+                <span>Working result</span>
+                <p>
+                  One session-recording path updates scores, streaks, rankings
+                  and insights together. A completed round carries through to
+                  the player's next visit.
+                </p>
+              </div>
+              <dl class="project-evidence">
+                <div>
+                  <dt>Real-world use</dt>
+                  <dd>
+                    A free web app for someone who wants short, repeatable games
+                    and a history of their own results.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    Unit-tested scoring and analytics, plus browser/backend
+                    checks against a real Supabase project. Elo history is
+                    replayed from recorded sessions.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Still improving</dt>
+                  <dd>
+                    The redesign is not published yet. The screenshot and case
+                    study show the earlier released version.
+                  </dd>
+                </div>
+              </dl>
               <figure>
                 <img
                   src="images/braintrain-insights.webp"
-                  alt="Insights from BrainTrain's previously published version"
+                  alt="Recorded performance insights in BrainTrain's previously published version"
                   width="1000"
                   height="626"
                   loading="lazy"
@@ -274,56 +332,235 @@
               <p class="project-technologies">
                 Next.js · TypeScript · Supabase · Vitest
               </p>
-              <a href="braintrain.html" class="text-link"
-                >Inside the project ↗</a
-              >
+              <div class="project-links">
+                <a href="braintrain.html" class="text-link"
+                  >Read the engineering story ↗</a
+                ><a
+                  href="https://github.com/vukhanh732/BrainTrain"
+                  target="_blank"
+                  rel="noopener"
+                  >Code &amp; evidence ↗</a
+                >
+              </div>
             </article>
             <article data-project-file="sentrynode" class="project-entry">
-              <h3>SentryNode</h3>
-              <p>
-                Stateful threat detection, enrichment, and a hardened ingestion
-                API.
-              </p>
-              <p class="project-technologies">
-                Python · FastAPI · Elasticsearch · Redis
-              </p>
-              <a href="sentrynode.html" class="text-link"
-                >Read the case study ↗</a
+              <span class="project-status"
+                >Personal build · working phase-one API</span
               >
+              <h3>SentryNode</h3>
+              <p class="project-purpose">
+                Turn a trail of suspicious requests into something worth
+                investigating.
+              </p>
+              <p>
+                A failed SSH login says little on its own. SentryNode groups
+                repeated failures inside a time window, checks web payloads for
+                attack patterns, and adds IP-reputation context for triage.
+              </p>
+              <ol
+                class="project-flow"
+                aria-label="SentryNode's working request path"
+              >
+                <li>Receive logs</li>
+                <li>Run detection rules</li>
+                <li>Enrich the alert</li>
+                <li>Return results</li>
+              </ol>
+              <div class="project-result">
+                <span>Working result</span>
+                <p>
+                  The live FastAPI slice accepts structured events and produces
+                  alerts. Redis reduces repeated threat-intelligence lookups,
+                  with fallback handling when the cache or external service is
+                  unavailable.
+                </p>
+              </div>
+              <dl class="project-evidence">
+                <div>
+                  <dt>Real-world use</dt>
+                  <dd>
+                    The first part of a small monitoring pipeline: flag patterns
+                    in SSH and web logs before a person investigates the
+                    underlying events.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    A deployed API, unit/integration tests, input validation,
+                    rate limits and payload caps. The source documents the
+                    request path.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Still improving</dt>
+                  <dd>
+                    The demo holds state in memory and resets on redeploy.
+                    RabbitMQ, Elasticsearch and dashboards are provisioned
+                    locally but are not connected to the live request path yet.
+                  </dd>
+                </div>
+              </dl>
+              <p class="project-technologies">
+                Python · FastAPI · Redis · Docker · pytest
+              </p>
+              <div class="project-links">
+                <a href="sentrynode.html" class="text-link"
+                  >Read the detection story ↗</a
+                ><a
+                  href="https://github.com/vukhanh732/sentrynode"
+                  target="_blank"
+                  rel="noopener"
+                  >Code &amp; evidence ↗</a
+                >
+              </div>
             </article>
             <article data-project-file="wazuh" class="project-entry">
+              <span class="project-status"
+                >Personal home lab · three monitored endpoints</span
+              >
               <h3>Wazuh SOC HomeLab</h3>
+              <p class="project-purpose">
+                Follow a suspicious file all the way from detection to
+                containment.
+              </p>
+              <p>
+                I joined Windows, Ubuntu and Kali endpoints to one Wazuh
+                manager, then connected file-integrity events to VirusTotal
+                enrichment and an Active Response quarantine action.
+              </p>
+              <ol class="project-flow" aria-label="Home-lab response workflow">
+                <li>File changes</li>
+                <li>Inspect its hash</li>
+                <li>Match an alert</li>
+                <li>Quarantine</li>
+              </ol>
+              <div class="project-result">
+                <span>Working result</span>
+                <p>
+                  In the controlled lab, a matching threat-intelligence alert
+                  can move a file into quarantine automatically. The detection
+                  event and response are visible together in the manager.
+                </p>
+              </div>
+              <dl class="project-evidence">
+                <div>
+                  <dt>Real-world use</dt>
+                  <dd>
+                    Practice the hand-off between endpoint visibility,
+                    investigation and response, instead of stopping at a
+                    dashboard full of alerts.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    Agent inventory, MITRE ATT&amp;CK views, FIM screenshots and
+                    a documented EICAR test workflow with reproducible commands.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Still improving</dt>
+                  <dd>
+                    The next step is exercising noisier events and failed
+                    response actions. Current evidence comes from three
+                    endpoints in a VMware home lab.
+                  </dd>
+                </div>
+              </dl>
               <figure>
                 <img
                   src="images/wazuh-fim.webp"
-                  alt="File integrity alerts from the Wazuh home lab"
+                  alt="File integrity events recorded by the Wazuh home lab"
                   width="1200"
                   height="644"
                   loading="lazy"
                 />
-                <figcaption>Real alerts from the existing home lab.</figcaption>
+                <figcaption>
+                  Actual file-integrity events from the existing lab.
+                </figcaption>
               </figure>
-              <p>
-                Three monitored endpoints, real file-integrity alerts, and
-                VirusTotal-triggered quarantine.
-              </p>
               <p class="project-technologies">
-                Wazuh · VirusTotal · Windows · Linux
+                Wazuh · Windows / Linux · VMware · VirusTotal
               </p>
-              <a href="wazuh.html" class="text-link">Read the case study ↗</a>
+              <div class="project-links">
+                <a href="wazuh.html" class="text-link"
+                  >Follow the lab workflow ↗</a
+                ><a
+                  href="https://github.com/vukhanh732/Wazuh-SOC-HomeLab"
+                  target="_blank"
+                  rel="noopener"
+                  >Configuration &amp; evidence ↗</a
+                >
+              </div>
             </article>
             <article data-project-file="gatekeeper" class="project-entry">
-              <h3>Gatekeeper</h3>
-              <p>
-                Three security scanners connected to one repeatable release
-                gate.
-              </p>
-              <p class="project-technologies">
-                GitHub Actions · Docker · OWASP ZAP
-              </p>
-              <a href="gatekeeper.html" class="text-link"
-                >Read the case study ↗</a
+              <span class="project-status"
+                >Personal build · security checks in CI</span
               >
+              <h3>Gatekeeper</h3>
+              <p class="project-purpose">
+                Give a security finding a clear consequence in the release
+                process.
+              </p>
+              <p>
+                A scan report is easy to ignore. Gatekeeper connects Python code
+                and dependency checks to an explicit build decision, then
+                packages the findings into a readable remediation dashboard.
+              </p>
+              <ol class="project-flow" aria-label="Gatekeeper release workflow">
+                <li>Code changes</li>
+                <li>Scan</li>
+                <li>Apply policy</li>
+                <li>Review evidence</li>
+              </ol>
+              <div class="project-result">
+                <span>Working result</span>
+                <p>
+                  HIGH Bandit findings and reported Safety dependency
+                  vulnerabilities fail the gate. MEDIUM Bandit findings remain
+                  visible without blocking. ZAP adds dynamic-scan evidence
+                  rather than deciding the gate.
+                </p>
+              </div>
+              <dl class="project-evidence">
+                <div>
+                  <dt>Real-world use</dt>
+                  <dd>
+                    A repeatable release check for a Python repository, with a
+                    policy reviewers can read and findings they can act on.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    The repository records a pass on flask-login with no HIGH
+                    findings and a fail on the deliberately vulnerable demo with
+                    one HIGH finding.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Still improving</dt>
+                  <dd>
+                    Report parsing and scanner-error handling need hardening:
+                    missing or invalid reports can currently be treated as empty
+                    results. This needs to fail safely before production use.
+                  </dd>
+                </div>
+              </dl>
+              <p class="project-technologies">
+                Python · GitHub Actions · Bandit · Safety · OWASP ZAP
+              </p>
+              <div class="project-links">
+                <a href="gatekeeper.html" class="text-link"
+                  >Read the policy decisions ↗</a
+                ><a
+                  href="https://github.com/vukhanh732/gatekeeper-devsecops"
+                  target="_blank"
+                  rel="noopener"
+                  >Workflow &amp; evidence ↗</a
+                >
+              </div>
             </article>
           </div>
         </div>
@@ -663,16 +900,17 @@
           <div>
             <dt>Look around</dt>
             <dd>
-              Each destination has a composed view. Home or Escape returns to
-              the desk. Reduced motion skips camera animation.
+              Move your mouse for a gentle change of angle. Home returns to the
+              desk. Reduced motion skips camera and object animation.
             </dd>
           </div>
           <div>
             <dt>Interact</dt>
             <dd>
-              Click the computer for a full-screen desktop. The binders open the
-              notebook; Sound settings are in the lower toolbar. Header
-              shortcuts take you straight to the work.
+              Open the drawer, pick up the cup or textbook, or nudge the plant.
+              Desk objects provides the same controls by keyboard or touch. Put
+              back or Escape ends an inspection. Click the computer to reach its
+              desktop; header shortcuts open the work directly.
             </dd>
           </div>
           <div>
@@ -709,8 +947,9 @@
               rel="noopener"
               >Retro desk artwork · Henry Heffernan</a
             ><span
-              >Desk, computer, chair, plant and baked lighting. Adapted under
-              the MIT license.</span
+              >Base desk, computer, chair, plant and baked lighting, adapted
+              under the MIT license. Vu's drawer, books, palette and
+              interactions are custom additions.</span
             ><a href="assets/desk/LICENSE-Henry-Heffernan.txt"
               >Original license ↗</a
             >
@@ -829,7 +1068,7 @@
           aria-controls="start-menu"
         >
           <img
-            src="favicon.svg?v=20261029-clean2"
+            src="favicon.svg?v=20261030-personal1"
             alt=""
             width="20"
             height="20"
@@ -852,7 +1091,7 @@
     </footer>
     <script
       type="module"
-      src="js/clubhouse.js?v=20261029-clean2"
+      src="js/clubhouse.js?v=20261030-personal1"
       onerror="document.documentElement.classList.remove('js')"
     ></script>
   </body>

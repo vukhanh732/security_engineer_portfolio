@@ -13,6 +13,11 @@ OUT = Path('.superpowers/build')
 OUT.mkdir(parents=True, exist_ok=True)
 POLICY = re.search(r'Content-Security-Policy = "([^"]+)"', Path('netlify.toml').read_text()).group(1)
 
+def expect_landing(page):
+    expect(page.locator('#desktop')).to_be_visible()
+    assert page.locator('[data-window]:visible').count() == 0, 'Computer skipped the wallpaper'
+    expect(page.locator('#start-button')).to_be_focused()
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True, args=['--enable-webgl', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'])
     context = browser.new_context(viewport={'width': 1440, 'height': 900}, device_scale_factor=1)
@@ -34,7 +39,7 @@ with sync_playwright() as p:
     assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))'), 'Heavy scene loaded before intent'
     # The primary computer works immediately, before 3D has initialized.
     page.locator('#explore').click()
-    expect(page.locator('[data-window=projects]')).to_be_visible()
+    expect_landing(page)
     assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))')
     page.keyboard.press('Escape')
     # Recruiter shortcuts work without downloading the renderer or room assets.
@@ -153,6 +158,8 @@ with sync_playwright() as p:
     expect(page.locator('#poker-mount a[href="#poker"]')).to_be_visible()
     assert page.locator('#main-content [data-project-file][hidden]').count() == 0
     page.get_by_role('button',name='Computer',exact=True).click()
+    expect_landing(page)
+    page.locator('.desktop-icons [data-app=projects]').click()
     expect(page.locator('[data-window=projects]')).to_be_visible()
     page.locator('[data-window=projects] a[href="#experience"]').click()
     expect(page.locator('[data-window=experience]')).to_be_visible()
@@ -165,11 +172,11 @@ with sync_playwright() as p:
         pending=instrument(context.new_page())
         pending.route('**/js/clubhouse-scene.js*',lambda route:route.fulfill(status=200,content_type='text/javascript',body=scene_stub))
         pending.goto(BASE,wait_until='networkidle');pending.locator('.world').dispatch_event('pointermove')
-        pending.wait_for_function('typeof window.__releaseScene === "function"')
+        pending.wait_for_function('() => typeof window.__releaseScene === "function"')
         pending.locator(selector).click()
         if open_desktop:
             pending.get_by_role('button',name='Computer',exact=True).click()
-            expect(pending.locator('[data-window=projects]')).to_be_visible()
+            expect_landing(pending)
         pending.keyboard.press('Escape');pending.evaluate('window.__releaseScene()')
         pending.locator('#world-canvas[data-ready=true]').wait_for()
         pending.wait_for_timeout(100)
@@ -184,6 +191,9 @@ with sync_playwright() as p:
     assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/")||r.name.includes("desk-preview.webp"))')
     mobile.screenshot(path=str(OUT/'home-mobile.png'),full_page=True)
     mobile.get_by_role('button',name='Computer',exact=True).click()
+    expect_landing(mobile)
+    mobile.screenshot(path=str(OUT/'computer-landing-mobile.png'))
+    mobile.locator('.desktop-icons [data-app=projects]').click()
     expect(mobile.locator('[data-window=projects]')).to_be_visible()
     assert mobile.locator('[data-window=projects]').evaluate('(e)=>e.scrollWidth<=e.clientWidth')
     mobile.screenshot(path=str(OUT/'desktop-mobile.png'))
@@ -198,7 +208,7 @@ with sync_playwright() as p:
     room=instrument(room_context.new_page())
     held=[]
     room.route('**/desk/world.glb',lambda route:held.append(route))
-    room.goto(BASE,wait_until='networkidle');room.locator('.world').hover()
+    room.goto(BASE,wait_until='domcontentloaded');room.locator('.world').hover()
     canvas=room.locator('#world-canvas')
     for _ in range(200):
         if held: break
@@ -235,7 +245,7 @@ with sync_playwright() as p:
     expect(room.locator('#desktop')).not_to_be_visible()
     room.locator('[data-room=study]').click()
     room.mouse.click(point['x'],point['y'])
-    expect(room.locator('[data-window=projects]')).to_be_visible()
+    expect_landing(room)
     room.keyboard.press('Escape')
     room.get_by_role('button',name='Home, return to the desk',exact=True).click()
     room.locator('.main-nav a[href="#experience"]').click();room.wait_for_timeout(300)
@@ -248,7 +258,7 @@ with sync_playwright() as p:
     room.set_viewport_size({'width':1280,'height':720});room.wait_for_timeout(250)
     room.screenshot(path=str(OUT/'room-laptop.png'))
     room.get_by_role('button',name='Use computer ↗',exact=True).click()
-    expect(room.locator('[data-window=projects]')).to_be_visible()
+    expect_landing(room)
     room.screenshot(path=str(OUT/'desktop-laptop.png'))
     room.keyboard.press('Escape')
     # Real animated travel can be interrupted and reversed without stale actions.
@@ -266,14 +276,129 @@ with sync_playwright() as p:
     room.get_by_role('button',name='Use computer ↗',exact=True).click()
     expect(canvas).to_have_attribute('data-traveling','true')
     room.emulate_media(reduced_motion='reduce')
-    expect(room.locator('[data-window=projects]')).to_be_visible()
+    expect_landing(room)
     room.keyboard.press('Escape')
     room.locator('.world-settings a[href="#help"]').click();room.locator('#quality-toggle').click()
     expect(canvas).to_have_attribute('data-quality','low')
-    room.keyboard.press('Escape');room.get_by_role('button',name='Home, return to the desk',exact=True).click()
-    room.wait_for_timeout(200);renders=canvas.get_attribute('data-renders');room.wait_for_timeout(600)
+    room.keyboard.press('Escape')
+    before=int(canvas.get_attribute('data-renders'))
+    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    room.wait_for_function('(before) => Number(document.querySelector("#world-canvas").dataset.renders)>before',arg=before)
+    renders=canvas.get_attribute('data-renders');room.wait_for_timeout(600)
     assert canvas.get_attribute('data-renders')==renders, 'Idle baked scene kept rendering'
-    print('Passed: separate destinations, reduced/animated/repeated travel, reading suspension, short laptop.',flush=True)
+    # Props work from keyboard-friendly controls and from the actual meshes.
+    room.set_viewport_size({'width':1440,'height':900})
+    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    def prop(name):
+        room.locator('.desk-objects summary').click()
+        room.locator('[data-prop='+name+']').click()
+        expect(canvas).to_have_attribute('data-inspection', name)
+        expect(room.locator('#put-back')).to_be_focused()
+    for name, label in [('drawer','Open or close the drawer'),('coffee','Pick up the coffee cup'),('book','Pick up the textbook'),('plant','Give the plant a nudge')]:
+        # Find each object's own raycast surface without changing the camera.
+        point=room.evaluate('''(label) => {const c=document.querySelector('#world-canvas');for(let y=200;y<770;y+=8)for(let x=360;x<1100;x+=8){c.dispatchEvent(new PointerEvent('pointermove',{clientX:x,clientY:y}));if(c.dataset.hover===label)return {x,y};}return null;}''',label)
+        assert point, 'No clickable mesh for '+name
+        room.mouse.click(point['x'],point['y'])
+        expect(canvas).to_have_attribute('data-inspection',name)
+        expect(room.locator('#object-inspector')).to_be_visible()
+        if name == 'drawer': expect(canvas).to_have_attribute('data-drawer','true')
+        if name == 'coffee': expect(room.locator('#object-description')).to_have_text('Hmmm, just a regular coffee cup.')
+        room.screenshot(path=str(OUT/('inspect-'+name+'.png')))
+        room.keyboard.press('Escape')
+        expect(room.locator('#object-inspector')).not_to_be_visible()
+        expect(canvas).to_have_attribute('data-inspection','')
+    expect(canvas).to_have_attribute('data-drawer','false')
+    # Reduced motion suppresses camera following and plant sway.
+    neutral=canvas.get_attribute('data-position')
+    room.mouse.move(1200,200);room.wait_for_timeout(150)
+    assert canvas.get_attribute('data-position')==neutral
+    prop('plant');expect(canvas).to_have_attribute('data-plant-motion','false')
+    room.locator('#put-back').click()
+    # With normal motion the camera follows, settles, and stops rendering.
+    room.emulate_media(reduced_motion='no-preference')
+    room.mouse.move(1200,200)
+    room.wait_for_function('(before) => document.querySelector("#world-canvas").dataset.position !== before',arg=neutral)
+    room.wait_for_timeout(1500)
+    renders=canvas.get_attribute('data-renders');room.wait_for_timeout(350)
+    assert canvas.get_attribute('data-renders')==renders, 'Mouse-follow never settled'
+    room.mouse.move(300,400);room.wait_for_timeout(1500)
+    assert canvas.get_attribute('data-position')!=neutral
+    # Picking up one object returns the previous one; the camera stays still.
+    prop('coffee');room.wait_for_timeout(800)
+    position=canvas.get_attribute('data-position')
+    room.mouse.move(1200,200);room.wait_for_timeout(150)
+    assert canvas.get_attribute('data-position')==position, 'Camera moved during inspection'
+    prop('book');room.wait_for_timeout(800)
+    room.locator('#put-back').click();room.wait_for_timeout(1500)
+    prop('plant');expect(canvas).to_have_attribute('data-plant-motion','true')
+    expect(canvas).to_have_attribute('data-plant-motion','false',timeout=5000)
+    renders=canvas.get_attribute('data-renders');room.wait_for_timeout(350)
+    assert canvas.get_attribute('data-renders')==renders, 'Plant kept rendering after sway'
+    room.locator('#put-back').click()
+    # Accessibility changes finish active object animation immediately.
+    prop('coffee');room.emulate_media(reduced_motion='reduce');room.wait_for_timeout(200)
+    renders=canvas.get_attribute('data-renders');room.wait_for_timeout(350)
+    assert canvas.get_attribute('data-renders')==renders
+    room.locator('#put-back').click()
+    # Leaving the scene or hiding the tab safely returns held objects.
+    prop('book');room.locator('[data-room=gym]').click()
+    expect(room.locator('#object-inspector')).not_to_be_visible()
+    room.locator('[data-room=study]').click();prop('coffee')
+    room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
+    expect(room.locator('#object-inspector')).not_to_be_visible()
+    renders=canvas.get_attribute('data-renders');room.wait_for_timeout(350)
+    assert canvas.get_attribute('data-renders')==renders
+    room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
+    # An open drawer survives a visit away, and can then be closed by clicking.
+    prop('drawer');room.locator('[data-room=gym]').click();room.locator('[data-room=study]').click()
+    expect(canvas).to_have_attribute('data-drawer','true')
+    room.locator('.desk-objects summary').click();room.locator('[data-prop=drawer]').click()
+    expect(canvas).to_have_attribute('data-drawer','false')
+    # Re-entering the computer lands on wallpaper even with existing windows.
+    room.locator('.main-nav a[href="#projects"]').click()
+    room.locator('[data-project=wazuh]').click();room.keyboard.press('Escape')
+    room.get_by_role('button',name='Computer',exact=True).click();expect_landing(room)
+    room.locator('[data-task=projects]').click()
+    expect(room.locator('[data-window=projects] [data-project-file=wazuh]')).to_be_visible()
+    room.screenshot(path=str(OUT/'projects-personal.png'))
+    room.keyboard.press('Escape')
+    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    room.emulate_media(reduced_motion='no-preference')
+    # A prop chosen during travel cancels the old destination, including a
+    # pending computer approach. The last explicit selection wins.
+    for destination in ['#explore','[data-room=gym]']:
+        room.locator(destination).click()
+        expect(canvas).to_have_attribute('data-traveling','true')
+        room.evaluate('document.querySelector(".desk-objects").open=true;document.querySelector("[data-prop=coffee]").click()')
+        expect(canvas).to_have_attribute('data-inspection','coffee',timeout=5000)
+        expect(canvas).to_have_attribute('data-location','study')
+        expect(room.locator('#desktop')).not_to_be_visible()
+        room.locator('#put-back').click()
+    # Cancel after a fade has already revealed its destination. Resuming must
+    # preserve that composition rather than restoring the prior scene's pose.
+    room.locator('[data-room=gym]').click()
+    room.wait_for_function('() => {const c=document.querySelector("#world-canvas");return c.dataset.node==="gym"&&c.dataset.traveling==="true";}')
+    position=room.evaluate('''() => {const c=document.querySelector('#world-canvas');const position=c.dataset.position;Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'));return position;}''')
+    room.wait_for_timeout(150)
+    room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
+    room.wait_for_timeout(200)
+    assert canvas.get_attribute('data-position')==position, 'Interrupted fade restored a stale camera pose'
+    expect(canvas).to_have_attribute('data-location','gym')
+    # Phone inspection fits around the header/panel, including short screens.
+    room.emulate_media(reduced_motion='reduce')
+    room.locator('[data-room=study]').click()
+    for height in [844,568]:
+        room.set_viewport_size({'width':390,'height':height})
+        prop('book')
+        panel=room.locator('#object-inspector')
+        assert panel.evaluate('(e)=>e.scrollHeight<=e.clientHeight+1'), 'Inspection action was clipped on a short phone'
+        assert room.evaluate('document.documentElement.scrollWidth<=innerWidth')
+        room.screenshot(path=str(OUT/('inspect-phone-'+str(height)+'.png')))
+        room.locator('#put-back').click()
+    prop('coffee');room.set_viewport_size({'width':844,'height':390})
+    expect(room.locator('#object-inspector')).not_to_be_visible()
+    expect(canvas).to_have_attribute('data-inspection','')
+    print('Passed: destinations, travel, picking, parallax, props, reduced motion, idle/hidden suspension and wallpaper landing.',flush=True)
     room_context.close()
     # A failed enhancement dependency exposes the ordinary portfolio, rather than
     # leaving the fixed loading image over otherwise functional HTML.

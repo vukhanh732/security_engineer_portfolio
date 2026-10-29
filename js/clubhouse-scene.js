@@ -1,9 +1,13 @@
 import * as THREE from "three";
+import { createDeskInteractions } from "./desk-interactions.js?v=20261030-personal1";
 import {
   buildDesk,
   buildDestination,
-} from "./clubhouse-objects.js?v=20261029-clean2";
-import { WAYPOINTS, planView } from "./study-navigation.mjs?v=20261029-clean2";
+} from "./clubhouse-objects.js?v=20261030-personal1";
+import {
+  WAYPOINTS,
+  planView,
+} from "./study-navigation.mjs?v=20261030-personal1";
 
 export async function createScene({
   canvas,
@@ -11,6 +15,8 @@ export async function createScene({
   onLocation,
   onReady,
   onProgress,
+  onInspect,
+  onDismiss,
   isVisible = () => true,
 }) {
   const renderer = new THREE.WebGLRenderer({
@@ -21,7 +27,7 @@ export async function createScene({
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color("#b8b8ba");
+  scene.background = new THREE.Color("#b6c5ca");
   const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 250),
     aim = new THREE.Vector3(...WAYPOINTS.study.target);
   camera.position.fromArray(WAYPOINTS.study.position);
@@ -40,7 +46,14 @@ export async function createScene({
     currentRoom = "study",
     resolveTrip = null,
     qualityLow = false,
-    renders = 0;
+    renders = 0,
+    deskInteractions = null;
+  const basePosition = camera.position.clone(),
+    baseAim = aim.clone(),
+    mouseTarget = new THREE.Vector2(),
+    mouseCurrent = new THREE.Vector2();
+  const finePointer = matchMedia("(pointer: fine)");
+  let lastFrame = 0;
   const views = new Map(),
     reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const manager = new THREE.LoadingManager(undefined, (_url, loaded, total) =>
@@ -63,6 +76,10 @@ export async function createScene({
       .join(",");
     canvas.dataset.traveling = String(!!transition);
     canvas.dataset.quality = qualityLow ? "low" : "full";
+    const props = deskInteractions?.getState();
+    canvas.dataset.inspection = props?.inspection || "";
+    canvas.dataset.drawer = String(props?.drawerOpen || false);
+    canvas.dataset.plantMotion = String(props?.plantMoving || false);
   }
   function fittedPosition(name) {
     const view = WAYPOINTS[name];
@@ -75,6 +92,8 @@ export async function createScene({
       .add(target);
   }
   function resize() {
+    // A viewport/orientation change ends a close-up before reframing the desk.
+    if (deskInteractions?.getState().inspection) deskInteractions.reset();
     const r = canvas.getBoundingClientRect();
     renderer.setPixelRatio(Math.min(devicePixelRatio, qualityLow ? 1 : 2));
     renderer.setSize(Math.max(1, r.width), Math.max(1, r.height), false);
@@ -85,6 +104,10 @@ export async function createScene({
       camera.position.copy(fittedPosition(currentNode));
       aim.fromArray(WAYPOINTS[currentNode].target);
       camera.lookAt(aim);
+      basePosition.copy(camera.position);
+      baseAim.copy(aim);
+      mouseCurrent.set(0, 0);
+      mouseTarget.set(0, 0);
     }
     invalidate();
   }
@@ -103,6 +126,8 @@ export async function createScene({
   }
   function finish(name) {
     currentNode = name;
+    basePosition.copy(camera.position);
+    baseAim.copy(aim);
     transition = null;
     canvas.style.removeProperty("opacity");
     state();
@@ -115,6 +140,12 @@ export async function createScene({
     clearHover();
     resolveTrip?.(false);
     resolveTrip = null;
+    // Preserve the last visible pose, including a destination already revealed
+    // halfway through a fade. The idle mouse-follow pass uses this baseline.
+    if (transition) {
+      basePosition.copy(camera.position);
+      baseAim.copy(aim);
+    }
     transition = null;
     canvas.style.removeProperty("opacity");
     state();
@@ -122,6 +153,9 @@ export async function createScene({
   function go(requested) {
     if (disposed || !ready) return Promise.resolve(false);
     const view = planView(currentNode, requested);
+    deskInteractions?.reset();
+    mouseTarget.set(0, 0);
+    mouseCurrent.set(0, 0);
     cancel();
     destination = view.name;
     return new Promise((resolve) => {
@@ -176,9 +210,34 @@ export async function createScene({
       if (t === 1) finish(transition.name);
       else state();
     }
+    const dt = Math.min((now - lastFrame) / 1000 || 1 / 60, 0.05);
+    lastFrame = now;
+    let mouseMoving = false;
+    if (!transition) {
+      if (!deskInteractions?.getState().inspection) {
+        if (reduced.matches || !finePointer.matches || canvas.clientWidth < 768)
+          mouseTarget.set(0, 0);
+        mouseCurrent.lerp(mouseTarget, 1 - Math.exp(-dt * 9));
+        if (mouseCurrent.distanceToSquared(mouseTarget) < 0.000001)
+          mouseCurrent.copy(mouseTarget);
+        else mouseMoving = true;
+      }
+      camera.position.copy(basePosition);
+      aim.copy(baseAim);
+      camera.lookAt(aim);
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(
+        camera.quaternion,
+      );
+      camera.position.addScaledVector(right, mouseCurrent.x * 0.65);
+      camera.position.y += mouseCurrent.y * 0.28;
+      aim.addScaledVector(right, -mouseCurrent.x * 0.06);
+      camera.lookAt(aim);
+    }
+    const propMoving = deskInteractions?.update(now) || false;
+    state();
     renderer.render(scene, camera);
     canvas.dataset.renders = String(++renders);
-    if (transition) invalidate();
+    if (transition || mouseMoving || propMoving) invalidate();
   }
   const raycaster = new THREE.Raycaster(),
     pointer = new THREE.Vector2();
@@ -206,6 +265,28 @@ export async function createScene({
     canvas.dataset.hover = "";
   }
   function pointermove(event) {
+    if (
+      !transition &&
+      !reduced.matches &&
+      finePointer.matches &&
+      canvas.clientWidth >= 768 &&
+      !deskInteractions?.getState().inspection
+    ) {
+      const rect = canvas.getBoundingClientRect();
+      mouseTarget.set(
+        THREE.MathUtils.clamp(
+          ((event.clientX - rect.left) / rect.width) * 2 - 1,
+          -1,
+          1,
+        ),
+        THREE.MathUtils.clamp(
+          1 - ((event.clientY - rect.top) / rect.height) * 2,
+          -1,
+          1,
+        ),
+      );
+      invalidate();
+    }
     hovered = pick(event);
     canvas.style.cursor = hovered ? "pointer" : "default";
     canvas.dataset.hover = hovered?.label || "";
@@ -213,9 +294,15 @@ export async function createScene({
   function interact(item) {
     if (!item) return;
     if (item.type === "computer") api.useComputer();
+    else if (item.type === "prop") api.activateProp(item.id);
     else onInteract?.(item.destination);
   }
   const click = (event) => interact(pick(event));
+  const pointerleave = () => {
+    clearHover();
+    mouseTarget.set(0, 0);
+    invalidate();
+  };
   const keydown = (event) => {
     if (
       !transition &&
@@ -230,10 +317,19 @@ export async function createScene({
     cancelAnimationFrame(frame);
     frame = null;
     if (document.hidden) {
+      deskInteractions?.reset();
+      mouseTarget.set(0, 0);
+      mouseCurrent.set(0, 0);
       cancel();
     } else invalidate();
   }
   const reduceChange = () => {
+    if (reduced.matches) {
+      deskInteractions?.finishMotion();
+      mouseTarget.set(0, 0);
+      mouseCurrent.set(0, 0);
+      invalidate();
+    }
     if (reduced.matches && transition) {
       const next = transition;
       activateView(next.room);
@@ -246,6 +342,7 @@ export async function createScene({
   };
   canvas.addEventListener("pointermove", pointermove);
   canvas.addEventListener("click", click);
+  canvas.addEventListener("pointerleave", pointerleave);
   canvas.addEventListener("keydown", keydown);
   document.addEventListener("visibilitychange", visibility);
   reduced.addEventListener("change", reduceChange);
@@ -258,11 +355,25 @@ export async function createScene({
   const api = {
     go,
     async useComputer() {
-      if (await go("screen")) onInteract?.("projects");
+      if (await go("screen")) onInteract?.("computer");
+    },
+    activateProp(name) {
+      if (!ready || currentRoom !== "study" || transition) return;
+      clearHover();
+      deskInteractions?.activate(name);
+      invalidate();
+    },
+    dismissInspection() {
+      deskInteractions?.dismiss();
+      mouseTarget.set(0, 0);
+      invalidate();
     },
     setActive(value) {
       active = value;
       if (!value) {
+        deskInteractions?.reset();
+        mouseTarget.set(0, 0);
+        mouseCurrent.set(0, 0);
         cancelAnimationFrame(frame);
         frame = null;
         cancel();
@@ -280,6 +391,7 @@ export async function createScene({
         active,
         qualityLow,
         traveling: !!transition,
+        inspection: deskInteractions?.getState().inspection || null,
       };
     },
     dispose() {
@@ -289,6 +401,7 @@ export async function createScene({
       observer.disconnect();
       canvas.removeEventListener("pointermove", pointermove);
       canvas.removeEventListener("click", click);
+      canvas.removeEventListener("pointerleave", pointerleave);
       canvas.removeEventListener("keydown", keydown);
       canvas.removeEventListener("webglcontextlost", contextLost);
       document.removeEventListener("visibilitychange", visibility);
@@ -320,6 +433,14 @@ export async function createScene({
     );
     views.set("study", desk);
     scene.add(desk);
+    deskInteractions = createDeskInteractions({
+      desk,
+      camera,
+      reduced,
+      invalidate,
+      onInspect,
+      onDismiss,
+    });
     ready = true;
     state();
     // Reveal only a complete frame; the loading image stays sharp until then.

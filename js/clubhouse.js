@@ -1,5 +1,5 @@
 import { createAudio } from "./clubhouse-audio.js";
-import { createDesktop } from "./desktop.js?v=20261029-clean2";
+import { createDesktop } from "./desktop.js?v=20261030-personal1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
 const audio = createAudio();
@@ -47,7 +47,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261029-clean2`);
+    const module = await import(`./games/${name}.js?v=20261030-personal1`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -156,7 +156,7 @@ function showSection(requested, { push = true } = {}) {
   if (name === "computer") {
     ++routeVersion;
     if (push) updateHash(name);
-    desktop.show();
+    desktop.land();
     scene?.setActive(false);
     return;
   }
@@ -235,8 +235,7 @@ function openDesktop() {
   ++routeVersion;
   if (isSimple()) stopGames();
   updateHash("computer");
-  desktop.show();
-  if (!desktop.getState().windows.length) desktop.open("projects");
+  desktop.land();
   scene?.setActive(false);
 }
 $("#open-desktop").addEventListener("click", openDesktop);
@@ -255,11 +254,32 @@ async function loadScene() {
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261029-clean2"
+        "./clubhouse-scene.js?v=20261030-personal1"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
         isVisible: () => !isSimple() && !desktop.getState().visible,
+        onInspect(item) {
+          const panel = $("#object-inspector");
+          panel.hidden = false;
+          body.classList.add("inspecting-object");
+          $("#object-title").textContent = item.title;
+          $("#object-description").textContent = item.description;
+          $("#put-back").textContent = item.action;
+          $("#put-back").focus({ preventScroll: true });
+          const rect = $("#world-canvas").getBoundingClientRect();
+          return {
+            width: rect.width,
+            height: rect.height,
+            top:
+              $(".site-header").getBoundingClientRect().bottom - rect.top + 16,
+            bottom: panel.getBoundingClientRect().top - rect.top - 16,
+          };
+        },
+        onDismiss() {
+          $("#object-inspector").hidden = true;
+          body.classList.remove("inspecting-object");
+        },
         onInteract(name) {
           if (isSimple()) setSimple(false, { load: false });
           navigate(name);
@@ -338,7 +358,7 @@ $("#explore").addEventListener("click", async () => {
     return;
   }
   if (isSimple()) setSimple(false, { load: false });
-  const version = routeVersion;
+  const version = ++routeVersion;
   const world = await loadScene();
   if (!world || version !== routeVersion) return;
   audio.play("click");
@@ -360,6 +380,24 @@ $("#home-camera").addEventListener("click", async () => {
   const world = await loadScene();
   if (version === routeVersion) world?.go("study");
 });
+$("#put-back").addEventListener("click", () => {
+  scene?.dismissInspection();
+  $("#world-canvas").focus({ preventScroll: true });
+});
+document.querySelectorAll("[data-prop]").forEach((button) =>
+  button.addEventListener("click", async () => {
+    ++routeVersion;
+    button.closest("details").open = false;
+    const version = routeVersion;
+    const world = await loadScene();
+    if (world && version === routeVersion) {
+      const state = world.getState();
+      if (state.traveling || !["study", "desk"].includes(state.node))
+        await world.go("study");
+      if (version === routeVersion) world.activateProp(button.dataset.prop);
+    }
+  }),
+);
 $("#room-action").addEventListener("click", (event) =>
   navigate(event.currentTarget.dataset.app),
 );
@@ -371,7 +409,10 @@ document.addEventListener("keydown", (event) => {
     !event.target.closest("input,textarea,select")
   ) {
     ++routeVersion;
-    scene?.go("study");
+    if (scene?.getState().inspection) {
+      scene.dismissInspection();
+      $("#world-canvas").focus({ preventScroll: true });
+    } else scene?.go("study");
   }
 });
 // Phones start with the ordinary portfolio. CSS reserves this layout before

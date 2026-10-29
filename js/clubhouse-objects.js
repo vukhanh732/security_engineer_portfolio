@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { personalizeDesk } from "./desk-props.js?v=20261030-personal1";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
@@ -93,6 +94,7 @@ export async function buildDesk(manager, anisotropy = 8) {
     label: "Use the computer",
   };
   group.add(display);
+  personalizeDesk(group);
   return group;
 }
 

@@ -1,10 +1,10 @@
 # Portfolio asset credits
 
-The main retro desk uses Henry Heffernan's original MIT-licensed artwork, adapted directly to match the style Vu requested. The source license and attribution are included with the self-hosted files. The HTML portfolio, desktop window manager, games, secondary gym/court/lounge scenes and VL favicon are built for Vu Luu.
+The main retro desk uses Henry Heffernan's original MIT-licensed artwork, personalized for Vu with a slate/teal/copper palette, working drawer, custom books and object interactions. The source license and attribution are included with the self-hosted files. The HTML portfolio, desktop window manager, games, secondary gym/court/lounge scenes and VL favicon are built for Vu Luu.
 
 | Asset | Author / source | License | Use / modifications |
 | --- | --- | --- | --- |
-| Retro desk, computer and decor | [Henry Heffernan, portfolio-website](https://github.com/henryjeff/portfolio-website) | MIT, Copyright 2024 Henry Heffernan | Three original GLB files plus baked computer, environment and decor textures. Meshes are unchanged; JPEG textures converted to WebP at original 4096×4096 dimensions. Materials/camera adapted; Vu's screen added, source paper details removed. Complete notice: [`assets/desk/LICENSE-Henry-Heffernan.txt`](assets/desk/LICENSE-Henry-Heffernan.txt). |
+| Retro desk, computer and decor | [Henry Heffernan, portfolio-website](https://github.com/henryjeff/portfolio-website) | MIT, Copyright 2024 Henry Heffernan | Three original GLB files plus baked computer, environment and decor textures. Self-hosted source GLBs stay byte-for-byte intact; JPEG textures converted to WebP at original 4096×4096 dimensions. At runtime the top drawer front/handle and paper-tray geometry are removed and replaced with Vu's original drawer, tray, books and stationery. Materials are recolored, the plant gains a sway shader, and Vu's screen and details are added. Complete notice: [`assets/desk/LICENSE-Henry-Heffernan.txt`](assets/desk/LICENSE-Henry-Heffernan.txt). |
 | Phosphor folder/document/game icons | [Phosphor Icons](https://github.com/phosphor-icons/core) | MIT | Self-hosted desktop icons, unchanged. License in `assets/icons/LICENSE`. |
 | Boardgame Pack v2 | [Kenney](https://opengameart.org/content/boardgame-pack) | CC0 | Playing cards, green back and card placement/sliding audio. License in `assets/cards/LICENSE.txt`. |
 | Interface Sounds | [Kenney](https://opengameart.org/content/interface-sounds) | CC0 | Original clicks renamed `click.ogg` and `close.ogg`. License in `assets/audio/kenney-interface-license.txt`. |
@@ -18,4 +18,4 @@ The exact source commit, original download hashes, modifications, dimensions and
 
 The gym, badminton court and card lounge are separate small scenes generated in code. Their geometry, shadow textures, card faces and materials make no additional artwork downloads. They do not appear in the desk scene.
 
-The loading/sharing image is a sharp capture of the actual new desk. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.
+The loading/sharing image, `images/personal-desk-preview.webp`, is a sharp capture of the actual personalized desk. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.

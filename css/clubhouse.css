@@ -1304,3 +1304,173 @@ a {
 .world-canvas[data-traveling="true"] {
   transition: none;
 }
+/* Personal desk: cool slate, warm paper and copper details. */
+.inspecting-object .room-heading {
+  visibility: hidden;
+}
+:root {
+  --accent: #29434d;
+  --accent-hover: #1b3039;
+}
+.world {
+  background: #b6c5ca;
+}
+.button-primary {
+  background: #29434d;
+  border-color: #29434d;
+}
+.button-primary:hover {
+  background: #1b3039;
+}
+.rooms-nav button[aria-pressed="true"] {
+  background: #c7d5d6;
+}
+.desk-objects {
+  position: relative;
+  font-size: 12px;
+}
+.desk-objects summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 9px 10px;
+  cursor: pointer;
+  list-style: none;
+}
+.desk-objects summary::-webkit-details-marker {
+  display: none;
+}
+.desk-objects summary:after {
+  content: "+";
+  margin-left: 8px;
+}
+.desk-objects[open] summary:after {
+  content: "−";
+}
+.desk-objects > div {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  min-width: 210px;
+  padding: 7px;
+  background: #f2f1e8;
+  border: 1px solid #a9b8b9;
+  box-shadow: 0 10px 28px #243f4920;
+}
+.desk-objects button {
+  display: block;
+  min-height: 44px;
+  width: 100%;
+  border: 0;
+  background: none;
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+.desk-objects button:hover,
+.desk-objects button:focus-visible {
+  background: #dce5e2;
+}
+.object-inspector {
+  position: fixed;
+  z-index: 25;
+  right: 32px;
+  bottom: 115px;
+  width: 320px;
+  max-width: calc(100vw - 40px);
+  padding: 22px 24px;
+  background: #f4f0e4;
+  border: 1px solid #aab9b8;
+  box-shadow: 0 12px 38px #283f4b20;
+  color: #263f48;
+}
+.object-kicker {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #5b6e70;
+}
+.object-inspector h2 {
+  font: 500 25px/1.2 var(--font-head);
+  letter-spacing: -0.5px;
+  margin: 9px 0 12px;
+}
+.object-inspector p {
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0 0 18px;
+}
+.object-inspector .button {
+  min-height: 44px;
+  background: #e2e8de;
+  color: #29434d;
+  border-color: #9eafaa;
+}
+.desk-objects summary:focus-visible {
+  outline: 3px solid #a34a2e;
+  outline-offset: 2px;
+}
+@media (max-width: 1100px) {
+  .object-inspector {
+    bottom: 178px;
+  }
+}
+@media (max-width: 767px) {
+  .object-inspector {
+    left: 20px;
+    right: 20px;
+    bottom: 226px;
+    width: auto;
+    padding: 18px 20px;
+    max-height: calc(100dvh - 390px);
+    overflow-y: auto;
+  }
+  .object-inspector h2 {
+    font-size: 23px;
+  }
+  .object-inspector p {
+    font-size: 14px;
+  }
+  .desk-objects > div {
+    left: auto;
+    right: 0;
+  }
+  .desk-objects summary {
+    font-size: 11px;
+    padding-inline: 9px;
+  }
+  .exploration #home-camera {
+    padding-inline: 8px;
+  }
+}
+@media (max-width: 767px) and (max-height: 700px) {
+  .inspecting-object .main-nav {
+    display: none;
+  }
+  .object-inspector {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 14px;
+    padding: 14px 16px;
+    max-height: calc(100dvh - 320px);
+  }
+  .object-kicker {
+    display: none;
+  }
+  .object-inspector h2 {
+    grid-column: 1;
+    font-size: 20px;
+    margin: 0;
+  }
+  .object-inspector p {
+    grid-column: 1;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .object-inspector .button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
