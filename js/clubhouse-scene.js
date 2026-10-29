@@ -1,344 +1,419 @@
 import * as THREE from "three";
-import { OrbitControls } from "./vendor/OrbitControls.js";
-import { buildClubhouse } from "./clubhouse-objects.js";
+import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { SSAOPass } from "three/addons/postprocessing/SSAOPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
+import { buildBuilding } from "./clubhouse-objects.js?v=20261029-study1";
+import { WAYPOINTS, planRoute } from "./study-navigation.mjs";
 
-export async function createScene({ canvas, labels, onOpen, audio, onReady }) {
+export async function createScene({
+  canvas,
+  onInteract,
+  onLocation,
+  onReady,
+  onProgress,
+  isVisible = () => true,
+}) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
-    alpha: true,
-    powerPreference: "low-power",
+    powerPreference: "high-performance",
   });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.65));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
+  RectAreaLightUniformsLib.init();
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.06;
+  renderer.toneMappingExposure = 1.08;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene(),
-    camera = new THREE.PerspectiveCamera(38, 1, 0.1, 150);
-  scene.add(new THREE.HemisphereLight("#fff9ed", "#819180", 1.9));
-  const sun = new THREE.DirectionalLight("#fff5e2", 3);
-  sun.position.set(-9, 18, 8);
+    camera = new THREE.PerspectiveCamera(51, 1, 0.04, 85);
+  const aim = new THREE.Vector3(...WAYPOINTS.study.target);
+  camera.position.fromArray(WAYPOINTS.study.position);
+  camera.lookAt(aim);
+  const sun = new THREE.DirectionalLight("#ffe3b4", 3.0);
+  sun.position.set(-8, 3.8, 2);
+  sun.target.position.set(0.1, 0.4, -1.7);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.camera.left = sun.shadow.camera.bottom = -19;
-  sun.shadow.camera.right = sun.shadow.camera.top = 19;
-  sun.shadow.normalBias = 0.035;
+  sun.shadow.camera.left = -12;
+  sun.shadow.camera.right = 12;
+  sun.shadow.camera.bottom = -12;
+  sun.shadow.camera.top = 12;
+  sun.shadow.camera.near = 0.1;
+  sun.shadow.camera.far = 40;
+  sun.shadow.normalBias = 0.008;
   sun.shadow.bias = -0.0001;
-  scene.add(sun);
-  const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(200, 200),
-    new THREE.ShadowMaterial({ opacity: 0.13 }),
+  scene.add(sun, sun.target);
+  const ambient = new THREE.HemisphereLight("#dde5e2", "#b8ab90", 0.38);
+  scene.add(ambient);
+  let active = true,
+    disposed = false,
+    ready = false,
+    frame = null,
+    weatherTimer = null,
+    transition = null,
+    path = [],
+    currentNode = "study",
+    destination = "study";
+  let parkedEdge = null,
+    resolveTrip = null,
+    qualityLow = false,
+    still = matchMedia("(prefers-reduced-motion: reduce)").matches,
+    elapsed = 0,
+    lastWeather = performance.now(),
+    renderCount = 0;
+  let hovered = null,
+    interactionObjects = [];
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const occlusion = new SSAOPass(scene, camera, 1, 1, 16);
+  occlusion.kernelRadius = 0.25;
+  occlusion.minDistance = 0.002;
+  occlusion.maxDistance = 0.16;
+  composer.addPass(occlusion);
+  composer.addPass(new OutputPass());
+  const manager = new THREE.LoadingManager(
+    () => invalidate(),
+    (url, loaded, total) => onProgress?.(loaded, total),
   );
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.74;
-  floor.receiveShadow = true;
-  scene.add(floor);
-  const controls = new OrbitControls(camera, canvas);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.07;
-  controls.enablePan = false;
-  controls.minDistance = 15;
-  controls.maxDistance = 48;
-  controls.minPolarAngle = 0.28;
-  controls.maxPolarAngle = Math.PI / 2.2;
-  controls.maxAzimuthAngle = Math.PI * 0.8;
-  controls.minAzimuthAngle = -Math.PI * 0.8;
-  controls.target.set(0, 0.5, 0);
-  controls.mouseButtons = {
-    LEFT: THREE.MOUSE.ROTATE,
-    MIDDLE: THREE.MOUSE.DOLLY,
-    RIGHT: THREE.MOUSE.ROTATE,
-  };
-  const world = await buildClubhouse(scene),
-    robot = world.robot;
-  let exploring = false,
-    active = true,
-    alive = true,
-    goal = null,
-    last = 0,
-    lastStep = 0,
-    pointerDown = null,
-    frame = 0,
-    follow = false,
-    gamepadDirection = { x: 0, z: 0 },
-    dirty = true;
-  const keys = new Set(),
-    raycaster = new THREE.Raycaster(),
-    pointer = new THREE.Vector2(),
-    ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
-    point = new THREE.Vector3();
-  function home() {
-    const mobile = canvas.clientWidth < 700;
-    camera.position.set(mobile ? 26 : 15, mobile ? 27 : 18, mobile ? 32 : 22);
-    controls.target.set(0, -0.5, 0);
-    controls.update();
-    follow = false;
-    dirty = true;
+  manager.onError = (url) => console.info("A room asset could not load:", url);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  function invalidate() {
+    if (
+      !disposed &&
+      active &&
+      isVisible() &&
+      !document.hidden &&
+      frame === null
+    )
+      frame = requestAnimationFrame(draw);
+  }
+  function updateDataset() {
+    canvas.dataset.node = currentNode;
+    canvas.dataset.location = WAYPOINTS[currentNode].room;
+    canvas.dataset.destination = destination;
+    canvas.dataset.position = camera.position
+      .toArray()
+      .map((n) => n.toFixed(3))
+      .join(",");
+    canvas.dataset.traveling = String(!!transition);
+  }
+  function completeTrip() {
+    transition = null;
+    updateDataset();
+    onLocation?.(WAYPOINTS[currentNode].room, currentNode);
+    const done = resolveTrip;
+    resolveTrip = null;
+    done?.(true);
+  }
+  function nextLeg(now = performance.now()) {
+    if (!path.length) {
+      completeTrip();
+      return;
+    }
+    const next = path.shift(),
+      to = WAYPOINTS[next],
+      distance = camera.position.distanceTo(new THREE.Vector3(...to.position));
+    transition = {
+      from: camera.position.clone(),
+      fromAim: aim.clone(),
+      to: new THREE.Vector3(...to.position),
+      toAim: new THREE.Vector3(...to.target),
+      edge: [currentNode, next],
+      next,
+      start: now,
+      duration: Math.max(350, Math.min(1400, distance * 330)),
+    };
+    canvas.dataset.path = JSON.stringify([currentNode, next, ...path]);
+    updateDataset();
+    invalidate();
+  }
+  function go(name) {
+    if (disposed || !WAYPOINTS[name]) return Promise.resolve(false);
+    resolveTrip?.(false);
+    resolveTrip = null;
+    path = planRoute(
+      {
+        node: currentNode,
+        edge: transition?.edge || parkedEdge,
+        position: camera.position.toArray(),
+      },
+      name,
+    );
+    parkedEdge = null;
+    destination = name;
+    return new Promise((resolve) => {
+      resolveTrip = resolve;
+      if (reduced.matches) {
+        currentNode = name;
+        camera.position.fromArray(WAYPOINTS[name].position);
+        aim.fromArray(WAYPOINTS[name].target);
+        camera.lookAt(aim);
+        path = [];
+        completeTrip();
+        invalidate();
+        return;
+      }
+      nextLeg();
+    });
+  }
+  function weatherTick() {
+    weatherTimer = null;
+    if (disposed || !active || !isVisible() || document.hidden) return;
+    const now = performance.now();
+    elapsed += Math.min(now - lastWeather, 1000);
+    lastWeather = now;
+    const cloud = still
+      ? 0
+      : (1 - Math.cos((elapsed / 1080000) * Math.PI * 2)) * 0.5;
+    sun.intensity = 3 - cloud * 1.95;
+    sun.color.set("#ffe3b4").lerp(new THREE.Color("#e0e8e9"), cloud);
+    sun.position.z = 2 + Math.sin((elapsed / 1080000) * Math.PI) * 0.8;
+    ambient.intensity = 0.38 + cloud * 0.13;
+    scene.backgroundIntensity = 0.68 - cloud * 0.14;
+    canvas.dataset.atmosphere = still
+      ? "still"
+      : cloud > 0.55
+        ? "overcast"
+        : "morning";
+    if (!still) invalidate();
+    if (!still) weatherTimer = setTimeout(weatherTick, 500);
+  }
+  function scheduleWeather() {
+    clearTimeout(weatherTimer);
+    lastWeather = performance.now();
+    weatherTick();
+  }
+  function draw(now) {
+    frame = null;
+    if (disposed || !active || !isVisible() || document.hidden) return;
+    if (transition) {
+      const t = Math.min((now - transition.start) / transition.duration, 1),
+        ease = t * t * (3 - 2 * t);
+      camera.position.lerpVectors(transition.from, transition.to, ease);
+      aim.lerpVectors(transition.fromAim, transition.toAim, ease);
+      camera.lookAt(aim);
+      updateDataset();
+      if (t === 1) {
+        currentNode = transition.next;
+        transition = null;
+        nextLeg(now);
+      }
+    }
+    if (qualityLow) renderer.render(scene, camera);
+    else composer.render();
+    canvas.dataset.renders = String(++renderCount);
+    if (transition) invalidate();
   }
   function resize() {
-    const width = canvas.clientWidth,
-      height = canvas.clientHeight;
-    if (!width || !height) return;
+    const rect = canvas.getBoundingClientRect(),
+      width = Math.max(1, rect.width),
+      height = Math.max(1, rect.height);
+    renderer.setPixelRatio(qualityLow ? 1 : Math.min(devicePixelRatio, 1.5));
     renderer.setSize(width, height, false);
+    composer.setPixelRatio(qualityLow ? 1 : Math.min(devicePixelRatio, 1.5));
+    composer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    dirty = true;
+    invalidate();
   }
-  home();
-  resize();
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
-  controls.addEventListener("change", () => {
-    dirty = true;
-  });
-  const labelNodes = [...labels.querySelectorAll("[data-landmark]")];
-  labelNodes.forEach((node) =>
-    node.addEventListener("click", () => {
-      audio.play("click");
-      onOpen(node.dataset.landmark);
-    }),
-  );
-  const canMove = (x, z) =>
-    Math.abs(x) < 11.1 &&
-    Math.abs(z) < 6.15 &&
-    !world.obstacles.some(
-      (o) =>
-        Math.abs(x - o.x) < o.w / 2 + 0.38 &&
-        Math.abs(z - o.z) < o.d / 2 + 0.38,
-    );
-  function beginExplore() {
-    exploring = true;
-    canvas.dataset.exploring = "true";
-    canvas.focus({ preventScroll: true });
-  }
-  const moveKey = (key) =>
-    [
-      "w",
-      "a",
-      "s",
-      "d",
-      "arrowup",
-      "arrowdown",
-      "arrowleft",
-      "arrowright",
-    ].includes(key);
-  function keydown(event) {
-    if (!active || document.activeElement !== canvas || !exploring) return;
-    const key = event.key.toLowerCase();
-    if (moveKey(key) || key === " ") event.preventDefault();
-    keys.add(key);
-    goal = null;
-    if (key === "e" || key === "enter") {
-      const closest = Object.entries(world.anchors)
-        .map(([id, p]) => ({
-          id,
-          distance: Math.hypot(p.x - robot.position.x, p.z - robot.position.z),
-        }))
-        .sort((a, b) => a.distance - b.distance)[0];
-      if (closest.distance < 3.5) onOpen(closest.id);
-    }
-    if (key === "r") {
-      robot.position.set(0.2, 0.05, 0.7);
-      home();
-    }
-  }
-  canvas.addEventListener("keydown", keydown);
-  canvas.addEventListener("keyup", (event) =>
-    keys.delete(event.key.toLowerCase()),
-  );
-  canvas.addEventListener("blur", () => keys.clear());
-  canvas.addEventListener("pointerdown", (event) => {
-    pointerDown = { x: event.clientX, y: event.clientY };
-  });
-  canvas.addEventListener("pointerup", (event) => {
-    if (
-      !pointerDown ||
-      Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y) >
-        7 ||
-      !active
-    )
-      return;
-    pointerDown = null;
+  resize();
+  const pointer = new THREE.Vector2(),
+    raycaster = new THREE.Raycaster();
+  function pick(event) {
+    if (!ready || transition) return null;
     const rect = canvas.getBoundingClientRect();
     pointer.set(
       ((event.clientX - rect.left) / rect.width) * 2 - 1,
       (-(event.clientY - rect.top) / rect.height) * 2 + 1,
     );
     raycaster.setFromCamera(pointer, camera);
-    for (const hit of raycaster.intersectObjects(scene.children, true)) {
-      let node = hit.object;
-      while (node && !node.userData.panel) node = node.parent;
-      if (node?.userData.panel) {
-        audio.play("click");
-        onOpen(node.userData.panel);
-        return;
-      }
+    // Pick the nearest visible surface, so an object in another room cannot be
+    // activated through an enclosing wall.
+    const hit = raycaster
+      .intersectObjects(scene.children, true)
+      .find((hit) => hit.object.isMesh);
+    if (!hit) return null;
+    let object = hit.object;
+    while (object) {
+      if (object.userData.interaction) return object.userData.interaction;
+      object = object.parent;
     }
-    beginExplore();
-    if (
-      raycaster.ray.intersectPlane(ground, point) &&
-      canMove(point.x, point.z)
-    )
-      goal = point.clone();
-  });
-  const visibility = () => {
-    if (document.hidden) {
-      keys.clear();
-      gamepadDirection = { x: 0, z: 0 };
-    }
-  };
-  document.addEventListener("visibilitychange", visibility);
-  const touchButtons = document.querySelectorAll("[data-move]");
-  touchButtons.forEach((button) => {
-    const stop = () => {
-      gamepadDirection = { x: 0, z: 0 };
-    };
-    button.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      beginExplore();
-      button.setPointerCapture(event.pointerId);
-      const axis = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[
-        button.dataset.move
-      ];
-      gamepadDirection = { x: axis[0], z: axis[1] };
-    });
-    button.addEventListener("pointerup", stop);
-    button.addEventListener("pointercancel", stop);
-    button.addEventListener("lostpointercapture", stop);
-  });
-  function update(now) {
-    if (!alive) return;
-    frame = requestAnimationFrame(update);
-    const dt = Math.min((now - last) / 1000 || 0, 0.04);
-    last = now;
-    if (!active || document.hidden) return;
-    let dx =
-      Number(keys.has("d") || keys.has("arrowright")) -
-      Number(keys.has("a") || keys.has("arrowleft")) +
-      gamepadDirection.x;
-    let dz =
-      Number(keys.has("s") || keys.has("arrowdown")) -
-      Number(keys.has("w") || keys.has("arrowup")) +
-      gamepadDirection.z;
-    if (goal && !dx && !dz) {
-      dx = goal.x - robot.position.x;
-      dz = goal.z - robot.position.z;
-      if (Math.hypot(dx, dz) < 0.15) {
-        goal = null;
-        dx = dz = 0;
-      }
-    }
-    const distance = Math.hypot(dx, dz);
-    if (exploring && distance > 0.01) {
-      dx /= distance;
-      dz /= distance;
-      const speed = keys.has("shift") ? 5.5 : 3.5;
-      const x = robot.position.x + dx * dt * speed,
-        z = robot.position.z + dz * dt * speed;
-      let moved = false;
-      if (canMove(x, robot.position.z)) {
-        robot.position.x = x;
-        moved = true;
-      }
-      if (canMove(robot.position.x, z)) {
-        robot.position.z = z;
-        moved = true;
-      }
-      if (!moved) goal = null;
-      robot.rotation.y = Math.atan2(dx, dz);
-      world.animated.forEach((wheel) => (wheel.rotation.x += dt * speed * 3));
-      if (moved && now - lastStep > 340) {
-        audio.play("step");
-        lastStep = now;
-      }
-      canvas.dataset.position = `${robot.position.x.toFixed(2)},${robot.position.z.toFixed(2)}`;
-      dirty = true;
-    }
-    if (follow) {
-      const target = new THREE.Vector3(robot.position.x, 1, robot.position.z);
-      controls.target.lerp(target, 0.025);
-    }
-    controls.update();
-    if (world.room.userData.dirty) {
-      dirty = true;
-      world.room.userData.dirty = false;
-    }
-    if (!dirty) return;
-    dirty = false;
-    labelNodes.forEach((node) => {
-      const anchor = world.anchors[node.dataset.landmark];
-      if (!anchor) return;
-      const projected = anchor.clone().project(camera);
-      const x = (projected.x * 0.5 + 0.5) * canvas.clientWidth,
-        y = (-projected.y * 0.5 + 0.5) * canvas.clientHeight;
-      node.style.left = x + "px";
-      node.style.top = y + "px";
-      node.hidden =
-        projected.z > 1 ||
-        x < 12 ||
-        x > canvas.clientWidth - 12 ||
-        y < 10 ||
-        y > canvas.clientHeight - 10;
-    });
-    renderer.render(scene, camera);
-    canvas.dataset.camera = camera.position
-      .toArray()
-      .map((n) => n.toFixed(2))
-      .join(",");
+    return null;
   }
-  canvas.addEventListener("webglcontextlost", (event) => {
-    event.preventDefault();
-    active = false;
-    onReady(false);
-  });
-  frame = requestAnimationFrame(update);
-  canvas.dataset.ready = "true";
-  canvas.dataset.position = ".20,.70";
-  onReady(true, world.failedModels);
-  return {
-    explore: beginExplore,
-    home() {
-      robot.position.set(0.2, 0.05, 0.7);
-      goal = null;
-      home();
+  function pointermove(event) {
+    hovered = pick(event);
+    canvas.style.cursor = hovered ? "pointer" : "default";
+    canvas.dataset.hover = hovered?.label || "";
+  }
+  function click(event) {
+    const interaction = pick(event);
+    if (!interaction) return;
+    activate(interaction);
+  }
+  function activate(interaction) {
+    if (interaction.type === "go")
+      go(
+        WAYPOINTS[currentNode].room === interaction.destination
+          ? "corridor"
+          : interaction.destination,
+      );
+    else if (interaction.type === "computer") api.useComputer();
+    else onInteract?.(interaction.destination);
+  }
+  function keydown(event) {
+    if ((event.key === "Enter" || event.key.toLowerCase() === "e") && hovered) {
+      event.preventDefault();
+      activate(hovered);
+    }
+  }
+  function visibility() {
+    clearTimeout(weatherTimer);
+    weatherTimer = null;
+    if (document.hidden) {
+      cancelAnimationFrame(frame);
+      frame = null;
+      if (transition) {
+        transition.from.copy(camera.position);
+        transition.fromAim.copy(aim);
+      }
+    } else if (active) {
+      if (transition) transition.start = performance.now();
+      scheduleWeather();
+      invalidate();
+    }
+  }
+  canvas.addEventListener("pointermove", pointermove);
+  canvas.addEventListener("click", click);
+  canvas.addEventListener("keydown", keydown);
+  document.addEventListener("visibilitychange", visibility);
+  function reducedChange() {
+    if (reduced.matches) {
+      api.setStill(true);
+      if (transition) go(destination);
+    }
+  }
+  reduced.addEventListener("change", reducedChange);
+  canvas.addEventListener(
+    "webglcontextlost",
+    (event) => {
+      event.preventDefault();
+      onReady?.(false);
+    },
+    { once: true },
+  );
+  const api = {
+    go,
+    async useComputer() {
+      if (await go("screen")) onInteract?.("projects");
     },
     setActive(value) {
       active = value;
-      dirty = true;
-      controls.enabled = value;
+      clearTimeout(weatherTimer);
+      weatherTimer = null;
       if (!value) {
-        keys.clear();
-        gamepadDirection = { x: 0, z: 0 };
+        cancelAnimationFrame(frame);
+        frame = null;
+        // Freeze a transition exactly where it is; its current safe edge is
+        // retained so the next destination can reverse/finish it correctly.
+        if (transition) {
+          parkedEdge = transition.edge;
+          transition = null;
+          path = [];
+          resolveTrip?.(false);
+          resolveTrip = null;
+          updateDataset();
+        }
+      } else {
+        if (transition) transition.start = performance.now();
+        scheduleWeather();
+        resize();
+        invalidate();
       }
     },
     setQuality(low) {
-      renderer.setPixelRatio(low ? 1 : Math.min(devicePixelRatio, 1.65));
+      qualityLow = low;
       renderer.shadowMap.enabled = !low;
       resize();
+      invalidate();
     },
-    toggleFollow() {
-      follow = !follow;
-      dirty = true;
-      if (follow) {
-        const offset = camera.position
-          .clone()
-          .sub(controls.target)
-          .normalize()
-          .multiplyScalar(19);
-        controls.target.copy(robot.position);
-        camera.position.copy(robot.position).add(offset);
-      }
-      return follow;
+    setStill(value) {
+      still = value;
+      if (still) elapsed = 0;
+      scheduleWeather();
+      invalidate();
+    },
+    getState() {
+      return {
+        node: currentNode,
+        destination,
+        active,
+        still,
+        qualityLow,
+        traveling: !!transition,
+      };
     },
     dispose() {
-      alive = false;
+      disposed = true;
+      resolveTrip?.(false);
       cancelAnimationFrame(frame);
+      clearTimeout(weatherTimer);
       observer.disconnect();
-      controls.dispose();
-      renderer.dispose();
+      canvas.removeEventListener("pointermove", pointermove);
+      canvas.removeEventListener("click", click);
+      canvas.removeEventListener("keydown", keydown);
       document.removeEventListener("visibilitychange", visibility);
+      reduced.removeEventListener("change", reducedChange);
+      composer.dispose();
+      scene.traverse((object) => {
+        if (object.isMesh) {
+          object.geometry.dispose();
+          for (const m of Array.isArray(object.material)
+            ? object.material
+            : [object.material])
+            m.dispose();
+        }
+      });
+      renderer.dispose();
     },
   };
+  try {
+    const hdrLoader = new HDRLoader(manager);
+    const environments = await Promise.allSettled(
+      ["studio", "garden"].map((name) =>
+        hdrLoader.loadAsync(`assets/study/${name}.hdr`),
+      ),
+    );
+    for (const result of environments)
+      if (result.status === "fulfilled")
+        result.value.mapping = THREE.EquirectangularReflectionMapping;
+    if (environments[0].status === "fulfilled") {
+      scene.environment = environments[0].value;
+      scene.environmentIntensity = 0.6;
+    }
+    if (environments[1].status === "fulfilled") {
+      scene.background = environments[1].value;
+      scene.backgroundBlurriness = 0.025;
+      scene.backgroundRotation.y = 2.5;
+      scene.backgroundIntensity = 0.68;
+    } else scene.background = new THREE.Color("#c7d1bf");
+    const building = await buildBuilding(scene, manager, invalidate);
+    interactionObjects = building.interactables;
+    // Texture callbacks can complete after model parsing. The loading manager
+    // invalidates again when that happens, avoiding a permanently black prop.
+    ready = true;
+    canvas.dataset.ready = "true";
+    updateDataset();
+    scheduleWeather();
+    invalidate();
+    onReady?.(true, building.errors.length);
+    return api;
+  } catch (error) {
+    api.dispose();
+    throw error;
+  }
 }

@@ -1,0 +1,8 @@
+Poly Haven models, textures and HDR environments: CC0 1.0 Universal.
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Source license statement: https://polyhaven.com/license
+
+Old computer by NephthysGameDev: CC0.
+https://opengameart.org/content/old-computer-0
+
+See provenance.json and /ASSET-CREDITS.md for individual sources and modifications.

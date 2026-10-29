@@ -20,6 +20,7 @@ export function mountBadminton(container, audio) {
     previous = 0,
     paused = false,
     alive = true,
+    surfaceActive = true,
     pointer = false,
     moveX = 0,
     rally = 0;
@@ -140,11 +141,17 @@ export function mountBadminton(container, audio) {
   };
   const blur = () => keys.clear();
   const visibility = () => {
-    if (document.hidden && phase === "rally") {
+    if ((!surfaceActive || document.hidden) && phase === "rally") {
       paused = true;
       keys.clear();
       container.querySelector("#pause-match").textContent = "Resume";
       status.textContent = "Paused. Resume when you are ready.";
+    }
+    cancelAnimationFrame(frame);
+    frame = null;
+    if (!document.hidden && surfaceActive && alive) {
+      previous = 0;
+      frame = requestAnimationFrame(tick);
     }
   };
   canvas.addEventListener("pointerdown", down);
@@ -340,7 +347,10 @@ export function mountBadminton(container, audio) {
     }
   }
   function tick(now) {
-    if (!alive) return;
+    if (!alive || !surfaceActive || document.hidden) {
+      frame = null;
+      return;
+    }
     const dt = Math.min((now - previous) / 1000 || 0, 0.035);
     previous = now;
     if (!paused && !document.hidden) update(dt);
@@ -349,11 +359,17 @@ export function mountBadminton(container, audio) {
   }
   reset();
   frame = requestAnimationFrame(tick);
-  return () => {
+  const cleanup = () => {
     alive = false;
     cancelAnimationFrame(frame);
     keys.clear();
     document.removeEventListener("visibilitychange", visibility);
     container.replaceChildren();
   };
+  cleanup.setActive = (value) => {
+    surfaceActive = value;
+    keys.clear();
+    visibility();
+  };
+  return cleanup;
 }
