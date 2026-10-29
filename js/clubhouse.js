@@ -1,9 +1,8 @@
 import { createAudio } from "./clubhouse-audio.js";
-import { createDesktop } from "./desktop.js?v=20261029-study1";
+import { createDesktop } from "./desktop.js?v=20261029-clean2";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
-const audio = createAudio(),
-  reduced = matchMedia("(prefers-reduced-motion: reduce)");
+const audio = createAudio();
 const aliases = {
   skills: "about",
   education: "experience",
@@ -19,7 +18,6 @@ const games = new Map();
 let scene = null,
   scenePromise = null,
   lowQuality = false,
-  still = reduced.matches,
   routeVersion = 0,
   restoring = false;
 const isSimple = () => body.classList.contains("simple-view");
@@ -49,7 +47,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261029-study1`);
+    const module = await import(`./games/${name}.js?v=20261029-clean2`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -128,7 +126,7 @@ function setSimple(value, { load = true } = {}) {
   stopGames();
   body.classList.toggle("simple-view", value);
   $("#simple-view").setAttribute("aria-pressed", String(value));
-  $("#simple-view").textContent = value ? "Explore 3D study" : "Simple view";
+  $("#simple-view").textContent = value ? "Explore 3D desk" : "Simple view";
   scene?.setActive(!value);
   if (!value) {
     window.scrollTo(0, 0);
@@ -233,14 +231,15 @@ $("#simple-view").addEventListener("click", () => {
   updateHash("");
   setSimple(!isSimple());
 });
-$("#open-desktop").addEventListener("click", () => {
+function openDesktop() {
   ++routeVersion;
   if (isSimple()) stopGames();
   updateHash("computer");
   desktop.show();
   if (!desktop.getState().windows.length) desktop.open("projects");
   scene?.setActive(false);
-});
+}
+$("#open-desktop").addEventListener("click", openDesktop);
 $("#quality-toggle").addEventListener("click", () => {
   lowQuality = !lowQuality;
   scene?.setQuality(lowQuality);
@@ -249,27 +248,14 @@ $("#quality-toggle").addEventListener("click", () => {
     ? "Use full graphics"
     : "Use lower graphics";
 });
-$("#still-morning").setAttribute("aria-pressed", String(still));
-$("#still-morning").addEventListener("click", () => {
-  still = !still;
-  scene?.setStill(still);
-  $("#still-morning").setAttribute("aria-pressed", String(still));
-});
-reduced.addEventListener("change", () => {
-  if (reduced.matches) {
-    still = true;
-    $("#still-morning").setAttribute("aria-pressed", "true");
-    scene?.setStill(true);
-  }
-});
 async function loadScene() {
   if (scenePromise) return scenePromise;
-  $("#world-status").textContent = "Opening the study…";
+  $("#world-status").textContent = "Loading the desk…";
   body.classList.add("scene-loading");
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261029-study1"
+        "./clubhouse-scene.js?v=20261029-clean2"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
@@ -280,16 +266,16 @@ async function loadScene() {
         },
         onLocation(room) {
           const labels = {
-            study: "The study",
-            corridor: "The corridor",
+            study: "The desk",
+            corridor: "The desk",
             gym: "The gym",
             badminton: "The badminton hall",
             lounge: "The card lounge",
           };
           $("#place-name").textContent = labels[room];
           $("#room-description").textContent = {
-            study: "A quiet place to build things.",
-            corridor: "A change of pace, just through the next door.",
+            study: "A few things I’ve built. A place to explore.",
+            corridor: "A few things I’ve built. A place to explore.",
             gym: "A little movement. A clearer head.",
             badminton: "A full court. Fancy a rally?",
             lounge: "Take a seat. Stay for a hand.",
@@ -317,7 +303,7 @@ async function loadScene() {
         },
         onProgress(loaded, total) {
           $("#world-status").textContent =
-            `Opening the study · ${Math.round((loaded / Math.max(1, total)) * 100)}%`;
+            `Loading the desk · ${Math.round((loaded / Math.max(1, total)) * 100)}%`;
         },
         onReady(ready) {
           body.classList.remove("scene-loading");
@@ -329,7 +315,6 @@ async function loadScene() {
         },
       });
       scene.setQuality(lowQuality);
-      scene.setStill(still);
       scene.setActive(!isSimple() && !desktop.getState().visible);
       $("#explore").textContent = "Use computer ↗";
       return scene;
@@ -347,6 +332,11 @@ async function loadScene() {
   return scenePromise;
 }
 $("#explore").addEventListener("click", async () => {
+  // Reading the computer never waits for artwork or a graphics context.
+  if (!scene) {
+    openDesktop();
+    return;
+  }
   if (isSimple()) setSimple(false, { load: false });
   const version = routeVersion;
   const world = await loadScene();

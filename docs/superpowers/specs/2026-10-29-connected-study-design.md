@@ -1,5 +1,6 @@
 # Connected study and retro desktop
 
+Superseded by `2026-10-29-clean-desk-design.md`: the user rejected this realistic revision as blurry and slow, and requested Henry Heffernan's clean desk style.
 Status: implementation authorized. On 2026-10-29 the user explicitly instructed completion, testing and delivery without further permission or input. This supersedes the open-floor clubhouse concept.
 
 ## What the user decided

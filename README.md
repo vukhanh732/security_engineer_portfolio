@@ -1,67 +1,53 @@
-# Vu's Study
+# Vu's Desk
 
-A software developer's portfolio inside a morning study, with a working retro computer and separate gym, badminton hall and card lounge connected through a corridor. Plain static HTML/CSS/JavaScript, with pinned self-hosted Three.js 0.186.1. No build step or framework.
+A clean retro computer portfolio, closely following Henry Heffernan's desk style using his MIT-licensed original artwork. Static HTML/CSS/JavaScript, pinned local Three.js 0.186.1, no build step.
 
-**Live site:** [security-vu.netlify.app](https://security-vu.netlify.app/)
+**Live:** [security-vu.netlify.app](https://security-vu.netlify.app/)
 
-## Explore or get straight to the work
+## Using the site
 
-Header shortcuts open maximized Projects and Experience immediately, without loading the 3D scene. The computer opens an HTML desktop with independent windows, project folders, a Start menu and taskbar. Windows can be dragged when restored, minimized, maximized and closed. The original page sections move into windows; closing restores them to the ordinary portfolio. Contact remains the actual Netlify form and Resume opens the existing PDF.
+Projects and Experience open full-screen desktop windows immediately, without loading 3D. Use computer opens the desktop immediately while 3D is still preparing. The desk's computer opens the same desktop, with folders, independent windows, drag/minimize/maximize/close, a taskbar and Start menu. Resume opens the original PDF. Contact uses the original Netlify form.
 
-Click doors or the Rooms buttons for smooth travel through real openings. Home or Escape returns to the study. Interrupted trips can reverse or continue their current safe path. Reduced motion switches destinations immediately. No avatar, pointer lock or movement keys are needed for the room.
+Desk, Gym, Badminton and Card lounge are separate composed destinations. The primary scene is the complete desk/chair/plant arrangement; sports and card furniture never appear there. Click the computer, binders, game surface or destination buttons. Home and Escape return to the desk. Reduced motion switches immediately.
 
-The study's computer opens the desktop, its notebook/books open writing, and the cassette player opens Sound. The gym is a separate training room. A full-sized 6.1m by 13.4m court belongs in the tall badminton hall; the poker table belongs in the card lounge. **Play a match** and **Deal a hand** start the existing games in desktop windows.
+Poker is five-card draw. Badminton is first to seven against the bot, with keyboard and touch controls. Minimizing badminton pauses it; closing a game ends it. Sound starts only after Enable sound. Music/effects volumes are independently remembered; mute and hidden tabs pause playback.
 
-Phones start in the ordinary scrolling portfolio and can choose **Explore 3D study** or **Computer**. Simple view, unavailable WebGL and no JavaScript all preserve professional content. Existing case-study URLs, hash aliases, browser history and contact fields remain supported. BrainTrain's redesign is explicitly unpublished.
+Phones start with the normal scrolling portfolio, with optional Computer and Explore 3D desk controls. Simple view, unavailable JavaScript, failed scene downloads and unavailable WebGL all preserve the professional content. Existing case-study paths, legacy hash aliases, contact fields and facts remain intact. BrainTrain's redesign remains explicitly unpublished.
 
-## Sound and atmosphere
+## Sharpness and loading
 
-Audio starts only after **Enable sound**. Background music and effects have separate remembered volumes; mute stops both and hidden tabs pause playback. A slow 18-minute clear/overcast lighting cycle affects the room. **Still morning** pauses the cycle and starts enabled for reduced motion. This is an artistic atmosphere, not live weather. Rain is not included.
+The desk artwork is **1,361,990 bytes across six parallel downloads**, with original **4096×4096 baked textures** preserved in optimized WebP. Rendering uses native-resolution MSAA, up to device pixel ratio 2, with no HDR, SSAO, blur/noise filters, video layers or real-time desk lights/shadows. Phone framing keeps the entire desk visible. Secondary scenes create no additional model/texture requests.
 
-Heavy 3D starts on intent. The initial image is a real capture of the study. Rendering pauses in the desktop, Simple view and hidden tabs. Still scenes redraw only when needed. Help includes **Use lower graphics** to reduce rendering work. Minimized badminton pauses; closing a game ends it.
+The initial image is a high-resolution capture of the actual desk. Heavy 3D starts on intent; direct portfolio shortcuts do not wait for it. Rendering runs only for camera motion and explicit changes, and stops while reading, in Simple view or in hidden tabs. Help offers lower graphics for devices that need it.
 
-## Local preview and checks
+## Local preview and verification
 
 ```sh
 python3 -m http.server 4173
-```
-
-Open `http://localhost:4173`. In another terminal:
-
-```sh
 node scripts/validate-site.mjs
 node scripts/test-games.mjs
 node scripts/test-navigation.mjs
 python3 scripts/test-clubhouse.py
 ```
 
-Browser checks require Python Playwright and its Chromium browser. `CLUBHOUSE_TEST_URL` can select a different local origin. Screenshots go to ignored `.superpowers/build/`. Tests cover production CSP, window states and focus, history, forms without submitting them, both games, audio, rooms and interrupted travel, mobile/short laptops, reduced motion, missing furniture, no JS and unavailable WebGL. The existing GitHub workflow retains its Lighthouse thresholds unchanged.
+Browser checks require Python Playwright and Chromium. Set `CLUBHOUSE_TEST_URL` for another local origin. Screenshots go to ignored `.superpowers/build/`. The suite covers the 2 MB artwork budget, six-request limit, retina canvas dimensions, separate destinations, repeated/canceled camera movement, reading suspension, desktop/focus/history, both games, audio, contact without submission, mobile/short laptops, failed modules/artwork, no JS and no WebGL.
 
-## Structure
+The existing GitHub workflow and Lighthouse thresholds are unchanged. Measure the actual first 3D interaction as well as the untouched homepage; the homepage score alone does not describe room loading.
 
-| Path | Responsibility |
-| --- | --- |
-| `index.html` | Scene shell, source portfolio sections, desktop shell, form |
-| `css/clubhouse.css` | Responsive room shell, ordinary portfolio, game styles |
-| `css/desktop.css` | Retro desktop, windows, folders, taskbar |
-| `js/clubhouse.js` | Routes, lazy scene/games, audio, view switching |
-| `js/desktop.js` | Independent windows and original-section lifecycle |
-| `js/clubhouse-scene.js` | Rendering, picking, camera travel, atmosphere |
-| `js/clubhouse-objects.js` | Enclosed architecture, imported props, equipment |
-| `js/study-navigation.mjs` | Pure waypoint graph and safe interrupted routes |
-| `js/clubhouse-audio.js` | Explicit audio activation, volumes, hidden-tab pause |
-| `js/games/` | Badminton, poker and pure poker rules |
-| `js/vendor/` | Pinned Three.js and only needed official helpers |
-| `assets/study/` | Self-hosted models, PBR textures, HDRs, provenance |
-| `assets/icons/` | Phosphor icons/license and raster VL marks |
-| `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | Original forest/ivory VL identity |
-| `images/` | Actual room preview, optimized project evidence, study notes |
-| `css/style.css`, `css/editorial.css`, `js/main.js` | Existing reading/case-study pages |
-| `docs/superpowers/` | Design brief and implementation plan |
-| `design-source/` | Archived design source; not live |
+## Main files
 
-## Deployment
+- `index.html`: ordinary portfolio, scene/desktop shells and actual form.
+- `css/clubhouse.css`, `css/desktop.css`: scene framing, neutral chrome, reading and games.
+- `js/clubhouse.js`, `js/desktop.js`: routing, lazy loading, original-section/window lifecycle.
+- `js/clubhouse-scene.js`: direct renderer, camera transitions, picking and suspension.
+- `js/clubhouse-objects.js`: licensed baked desk and isolated procedural destinations.
+- `js/study-navigation.mjs`: named scene compositions and legacy aliases.
+- `assets/desk/`: optimized artwork, exact MIT notice and pinned provenance.
+- `js/games/`, `js/clubhouse-audio.js`: working games and explicit audio controls.
+- Existing reading pages, URLs, `resume.pdf`, self-hosted fonts and study notes are preserved.
 
-Netlify publishes the repo root directly with no build command, environment variables or backend. The `contact` form in `index.html` uses `data-netlify="true"`; submissions are managed in Netlify Forms. Public origin: `https://security-vu.netlify.app/`. Pushes to the existing `main` branch trigger site-quality CI and hosting deployment.
+## Deployment and attribution
 
-All production assets are self-hosted. See [ASSET-CREDITS.md](ASSET-CREDITS.md) and `assets/study/provenance.json` for authors, sources, licenses and modifications. Local design tooling under `.superpowers/` stays ignored.
+Netlify publishes the repo root with no build command or backend. Pushes to the existing `main` branch run site-quality CI and deploy. The `contact` form is detected from its ordinary HTML markup.
+
+Desk artwork: **Henry Heffernan**, MIT. See [ASSET-CREDITS.md](ASSET-CREDITS.md), [original license](assets/desk/LICENSE-Henry-Heffernan.txt) and `assets/desk/provenance.json`. The source artwork is self-hosted and adapted to Vu's own portfolio; no analytics, remote iframe, source artist's personal content, video or unnecessary assets are loaded from the reference site.

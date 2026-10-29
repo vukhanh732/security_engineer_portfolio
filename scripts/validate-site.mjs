@@ -15,50 +15,117 @@ for (const file of pages) {
   const noIndex = /<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html);
 
   if (!/<title>[^<]+<\/title>/.test(html)) fail(file, "missing title");
-  if (!noIndex && !/<meta\s+name="description"\s+content="[^"]+"/.test(html)) fail(file, "missing meta description");
+  if (!noIndex && !/<meta\s+name="description"\s+content="[^"]+"/.test(html))
+    fail(file, "missing meta description");
   if (!/<link\s+rel="icon"/.test(html)) fail(file, "missing favicon");
-  if (!/<a\s+href="#main-content"\s+class="skip-link">/.test(html)) fail(file, "missing skip link");
+  if (!/<a\s+href="#main-content"\s+class="skip-link">/.test(html))
+    fail(file, "missing skip link");
   if (!/id="main-content"/.test(html)) fail(file, "missing skip-link target");
-  if (!/<main\b[^>]*id="main-content"/.test(html)) fail(file, "main content is not a landmark");
-  if (/fonts\.(googleapis|gstatic)\.com/.test(html)) fail(file, "uses externally hosted fonts");
+  if (!/<main\b[^>]*id="main-content"/.test(html))
+    fail(file, "main content is not a landmark");
+  if (/fonts\.(googleapis|gstatic)\.com/.test(html))
+    fail(file, "uses externally hosted fonts");
   if (/[—–]/.test(html)) fail(file, "contains a banned long dash character");
-  if (/Five adaptive games/i.test(html)) fail(file, "contains stale BrainTrain game count");
+  if (/Five adaptive games/i.test(html))
+    fail(file, "contains stale BrainTrain game count");
 
   if (!noIndex) {
-    const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
+    const canonical = html.match(
+      /<link\s+rel="canonical"\s+href="([^"]+)"/i,
+    )?.[1];
     if (!canonical) fail(file, "missing canonical URL");
-    else if (canonicals.has(canonical)) fail(file, `duplicates canonical from ${canonicals.get(canonical)}`);
+    else if (canonicals.has(canonical))
+      fail(file, `duplicates canonical from ${canonicals.get(canonical)}`);
     else canonicals.set(canonical, file);
-    for (const property of ["og:title", "og:description", "og:url", "og:image"]) {
-      if (!new RegExp(`<meta\\s+property="${property}"\\s+content="[^"]+"`, "i").test(html)) fail(file, `missing ${property}`);
+    for (const property of [
+      "og:title",
+      "og:description",
+      "og:url",
+      "og:image",
+    ]) {
+      if (
+        !new RegExp(
+          `<meta\\s+property="${property}"\\s+content="[^"]+"`,
+          "i",
+        ).test(html)
+      )
+        fail(file, `missing ${property}`);
     }
   }
 
-  for (const block of html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) {
-    try { JSON.parse(block[1]); } catch { fail(file, "contains invalid JSON-LD"); }
+  for (const block of html.matchAll(
+    /<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi,
+  )) {
+    try {
+      JSON.parse(block[1]);
+    } catch {
+      fail(file, "contains invalid JSON-LD");
+    }
   }
 
   for (const image of html.matchAll(/<img\b([^>]*)>/gi)) {
     const attributes = image[1];
     const src = attributes.match(/\bsrc="([^"]*)"/)?.[1] ?? "";
-    if (!/\balt="[^"]*"/.test(attributes)) fail(file, `image ${src || "without src"} is missing alt text`);
-    if (src && (!/\bwidth="\d+"/.test(attributes) || !/\bheight="\d+"/.test(attributes))) {
+    if (!/\balt="[^"]*"/.test(attributes))
+      fail(file, `image ${src || "without src"} is missing alt text`);
+    if (
+      src &&
+      (!/\bwidth="\d+"/.test(attributes) || !/\bheight="\d+"/.test(attributes))
+    ) {
       fail(file, `image ${src} is missing width or height`);
     }
   }
 
   for (const match of html.matchAll(/\b(?:href|src|data-full)="([^"]+)"/g)) {
     const reference = match[1];
-    if (!reference || reference.startsWith("#") || /^(?:https?:|mailto:|tel:|data:)/.test(reference)) continue;
+    if (
+      !reference ||
+      reference.startsWith("#") ||
+      /^(?:https?:|mailto:|tel:|data:)/.test(reference)
+    )
+      continue;
     const pathname = reference.split(/[?#]/)[0].replace(/^\//, "");
     if (!pathname) continue;
     const target = join(root, pathname);
-    try { if (!statSync(target)) fail(file, `missing local asset ${reference}`); } catch { fail(file, `missing local asset ${reference}`); }
+    try {
+      if (!statSync(target)) fail(file, `missing local asset ${reference}`);
+    } catch {
+      fail(file, `missing local asset ${reference}`);
+    }
   }
 }
 
-for (const required of ["favicon.svg", "robots.txt", "sitemap.xml", "resume.pdf", "css/style.css", "js/main.js"]) {
-  try { statSync(join(root, required)); } catch { fail("site", `missing ${required}`); }
+for (const required of [
+  "favicon.svg",
+  "robots.txt",
+  "sitemap.xml",
+  "resume.pdf",
+  "css/style.css",
+  "js/main.js",
+]) {
+  try {
+    statSync(join(root, required));
+  } catch {
+    fail("site", `missing ${required}`);
+  }
+}
+
+// Keep the real 3D entry within the budget that motivated the clean-desk revision.
+// Homepage Lighthouse alone does not exercise the lazy artwork downloads.
+try {
+  const deskPath = join(root, "assets/desk");
+  const artwork = readdirSync(deskPath).filter((name) =>
+    /\.(glb|webp)$/.test(name),
+  );
+  const bytes = artwork.reduce(
+    (sum, name) => sum + statSync(join(deskPath, name)).size,
+    0,
+  );
+  if (artwork.length !== 6)
+    fail("desk", `expected six artwork files, got ${artwork.length}`);
+  if (bytes > 2_000_000) fail("desk", `artwork exceeds 2 MB: ${bytes} bytes`);
+} catch {
+  fail("desk", "missing self-hosted desk artwork");
 }
 
 if (failures.length) {
@@ -66,4 +133,6 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Validated ${pages.length} HTML pages, metadata, JSON-LD, images, and local links.`);
+console.log(
+  `Validated ${pages.length} HTML pages, metadata, JSON-LD, images, and local links.`,
+);

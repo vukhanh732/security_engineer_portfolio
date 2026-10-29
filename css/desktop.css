@@ -683,3 +683,47 @@
     top: 61px;
   }
 }
+/* Neutral 1990s chrome, with the familiar teal desktop kept crisp and readable. */
+.desktop {
+  background: #537b74;
+  color: #242b27;
+}
+.desktop-top,
+.taskbar {
+  background: #d1d3c9;
+}
+.title-bar {
+  background: #87928a;
+}
+.os-window.is-active .title-bar {
+  background: #304f47;
+}
+.window-content {
+  background: #f6f6ef;
+}
+.window-menu {
+  background: #dce0d4;
+}
+.os-window {
+  background: #d1d5c8;
+}
+.os-window .project-folders {
+  background: #e6eadd;
+}
+.project-folders button[aria-pressed="true"] {
+  background: #d4ddc8;
+  border-color: #a1ae95;
+}
+.taskbar button {
+  background: #d6dccd;
+}
+.start-menu {
+  background: #d5dbca;
+}
+.start-menu button:hover,
+.start-menu a:hover {
+  background: #304f47;
+}
+.desktop-welcome p {
+  color: #eff1e5;
+}

@@ -1,5 +1,6 @@
 # Connected Study Implementation Plan
 
+Superseded by `2026-10-29-clean-desk-design.md`: the user rejected this realistic revision as blurry and slow, and requested Henry Heffernan's clean desk style.
 > **For agentic workers:** Implement this plan task by task in the current session. The user explicitly authorized completion without further input on 2026-10-29. Obtain an independent final review before delivery.
 
 **Goal:** Replace the open-floor clubhouse with a believable connected study, gym, badminton hall and card lounge, and a working retro desktop.

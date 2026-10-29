@@ -31,7 +31,12 @@ with sync_playwright() as p:
     page = instrument(context.new_page())
     page.goto(BASE, wait_until='networkidle')
     assert page.evaluate('window.__played.length') == 0, 'Audio started without activation'
-    assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/study/"))'), 'Heavy scene loaded before intent'
+    assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))'), 'Heavy scene loaded before intent'
+    # The primary computer works immediately, before 3D has initialized.
+    page.locator('#explore').click()
+    expect(page.locator('[data-window=projects]')).to_be_visible()
+    assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))')
+    page.keyboard.press('Escape')
     # Recruiter shortcuts work without downloading the renderer or room assets.
     page.locator('.main-nav a[href="#projects"]').click()
     projects = page.locator('[data-window=projects]')
@@ -42,7 +47,7 @@ with sync_playwright() as p:
         projects.locator('[data-project='+name+']').click()
         expect(projects.locator('[data-project-file='+name+']')).to_be_visible()
         assert projects.locator('[data-project-file]:visible').count() == 1
-    assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/study/"))')
+    assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))')
     page.screenshot(path=str(OUT/'projects-desktop.png'))
     projects.locator('a[href="#experience"]').click()
     experience = page.locator('[data-window=experience]')
@@ -156,11 +161,12 @@ with sync_playwright() as p:
     expect(page.locator('#main-content #experience')).to_be_visible()
     # Escape also cancels destinations queued before createScene resolves.
     scene_stub='''export async function createScene(options){await new Promise(resolve=>window.__releaseScene=resolve);const api={go(name){window.__trips=(window.__trips||[]).concat(name);return Promise.resolve(true)},useComputer(){window.__opened=true;options.onInteract('projects')},setActive(){},setQuality(){},setStill(){},getState(){return{node:'study'}}};options.canvas.dataset.ready='true';options.onReady(true);return api;}'''
-    for selector, open_desktop in [('#explore',False),('[data-room=gym]',False),('#explore',True)]:
+    for selector, open_desktop in [('#explore',False),('[data-room=gym]',False),('[data-room=gym]',True)]:
         pending=instrument(context.new_page())
         pending.route('**/js/clubhouse-scene.js*',lambda route:route.fulfill(status=200,content_type='text/javascript',body=scene_stub))
-        pending.goto(BASE,wait_until='networkidle');pending.locator(selector).click()
+        pending.goto(BASE,wait_until='networkidle');pending.locator('.world').dispatch_event('pointermove')
         pending.wait_for_function('typeof window.__releaseScene === "function"')
+        pending.locator(selector).click()
         if open_desktop:
             pending.get_by_role('button',name='Computer',exact=True).click()
             expect(pending.locator('[data-window=projects]')).to_be_visible()
@@ -175,7 +181,7 @@ with sync_playwright() as p:
     mobile.goto(BASE,wait_until='networkidle')
     expect(mobile.locator('#main-content #projects')).to_be_visible()
     assert mobile.evaluate('document.documentElement.scrollWidth<=innerWidth')
-    assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/study/")||r.name.includes("study-preview.webp"))')
+    assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/")||r.name.includes("desk-preview.webp"))')
     mobile.screenshot(path=str(OUT/'home-mobile.png'),full_page=True)
     mobile.get_by_role('button',name='Computer',exact=True).click()
     expect(mobile.locator('[data-window=projects]')).to_be_visible()
@@ -188,10 +194,10 @@ with sync_playwright() as p:
     expect(mobile.locator('.mobile-panel')).to_be_visible();mobile.screenshot(path=str(OUT/'inner-mobile.png'),full_page=True)
     print('Passed: desktop, history, games, audio, forms, aliases, simple/mobile views.',flush=True)
     # Real room, all destinations, reading/visibility suspension and reduced motion.
-    room_context=browser.new_context(viewport={'width':1440,'height':900},reduced_motion='reduce')
+    room_context=browser.new_context(viewport={'width':1440,'height':900},reduced_motion='reduce',device_scale_factor=2)
     room=instrument(room_context.new_page())
     held=[]
-    room.route('**/metal_office_desk.gltf',lambda route:held.append(route))
+    room.route('**/desk/world.glb',lambda route:held.append(route))
     room.goto(BASE,wait_until='networkidle');room.locator('.world').hover()
     canvas=room.locator('#world-canvas')
     for _ in range(200):
@@ -205,7 +211,11 @@ with sync_playwright() as p:
     for request in held:request.continue_()
     room.locator('#world-canvas[data-ready=true]').wait_for(timeout=120000)
     room.keyboard.press('Escape')
-    expect(room.locator('#still-morning')).to_have_attribute('aria-pressed','true')
+    artwork=room.evaluate('performance.getEntriesByType("resource").filter(r=>r.name.includes("/assets/desk/"))')
+    assert len(artwork)==6, 'Desk artwork request count exceeded its budget'
+    assert sum(r['encodedBodySize'] for r in artwork)<2_000_000, 'Desk artwork exceeds 2 MB'
+    assert not room.evaluate('performance.getEntriesByType("resource").some(r=>/HDRLoader|SSAOPass|EffectComposer|assets\/study/.test(r.name))'), 'Heavy rendering path was requested'
+    assert canvas.evaluate('(c)=>c.width===Math.round(c.clientWidth*2)&&c.height===Math.round(c.clientHeight*2)'), 'Retina canvas was undersized'
     for name in ['gym','badminton','lounge','study']:
         room.locator('[data-room='+name+']').click()
         expect(canvas).to_have_attribute('data-location',name)
@@ -219,10 +229,15 @@ with sync_playwright() as p:
     # Actual desk/computer picking opens the desktop, as well as its text control.
     point=room.evaluate('''() => {const c=document.querySelector('#world-canvas');for(let y=330;y<650;y+=30)for(let x=400;x<1000;x+=30){c.dispatchEvent(new PointerEvent('pointermove',{clientX:x,clientY:y}));if(c.dataset.hover==='Use the computer')return {x,y};}return null;}''')
     assert point, 'The computer/desk had no usable interaction surface'
+    room.locator('[data-room=gym]').click();canvas.focus();room.keyboard.press('e')
+    room.wait_for_timeout(100)
+    expect(canvas).to_have_attribute('data-location','gym')
+    expect(room.locator('#desktop')).not_to_be_visible()
+    room.locator('[data-room=study]').click()
     room.mouse.click(point['x'],point['y'])
     expect(room.locator('[data-window=projects]')).to_be_visible()
     room.keyboard.press('Escape')
-    room.get_by_role('button',name='Home, return to the study',exact=True).click()
+    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
     room.locator('.main-nav a[href="#experience"]').click();room.wait_for_timeout(300)
     renders=canvas.get_attribute('data-renders');room.wait_for_timeout(700)
     assert canvas.get_attribute('data-renders') == renders, 'Room rendered while reading'
@@ -236,8 +251,6 @@ with sync_playwright() as p:
     expect(room.locator('[data-window=projects]')).to_be_visible()
     room.screenshot(path=str(OUT/'desktop-laptop.png'))
     room.keyboard.press('Escape')
-    room.get_by_role('button',name='Still morning',exact=True).click()
-    expect(canvas).to_have_attribute('data-atmosphere','morning')
     # Real animated travel can be interrupted and reversed without stale actions.
     room.emulate_media(reduced_motion='no-preference')
     room.locator('[data-room=gym]').click();room.wait_for_timeout(300)
@@ -249,7 +262,18 @@ with sync_playwright() as p:
     room.locator('.main-nav a[href="#projects"]').click();room.keyboard.press('Escape')
     room.wait_for_timeout(1200)
     expect(room.locator('#desktop')).not_to_be_visible()
-    print('Passed: connected rooms, reduced/animated/repeated travel, reading suspension, short laptop.',flush=True)
+    # Changing accessibility preferences during a computer approach preserves intent.
+    room.get_by_role('button',name='Use computer ↗',exact=True).click()
+    expect(canvas).to_have_attribute('data-traveling','true')
+    room.emulate_media(reduced_motion='reduce')
+    expect(room.locator('[data-window=projects]')).to_be_visible()
+    room.keyboard.press('Escape')
+    room.locator('.world-settings a[href="#help"]').click();room.locator('#quality-toggle').click()
+    expect(canvas).to_have_attribute('data-quality','low')
+    room.keyboard.press('Escape');room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    room.wait_for_timeout(200);renders=canvas.get_attribute('data-renders');room.wait_for_timeout(600)
+    assert canvas.get_attribute('data-renders')==renders, 'Idle baked scene kept rendering'
+    print('Passed: separate destinations, reduced/animated/repeated travel, reading suspension, short laptop.',flush=True)
     room_context.close()
     # A failed enhancement dependency exposes the ordinary portfolio, rather than
     # leaving the fixed loading image over otherwise functional HTML.
@@ -263,21 +287,21 @@ with sync_playwright() as p:
     expect(heading).to_be_in_viewport()
     assert heading.evaluate('(e)=>{const r=e.getBoundingClientRect();return document.elementFromPoint(r.left+10,r.top+10)===e;}')
     failed_module.close()
-    # Ordinary content survives no JavaScript, failed WebGL and missing furniture.
+    # Ordinary content survives no JavaScript, failed WebGL and missing desk artwork.
     nojs=browser.new_context(java_script_enabled=False,viewport={'width':1280,'height':800})
     plain=instrument(nojs.new_page());plain.goto(BASE,wait_until='networkidle')
     expect(plain.locator('#projects')).to_be_visible();expect(plain.locator('#experience')).to_be_visible()
     plain.screenshot(path=str(OUT/'no-javascript.png'))
     failing=browser.new_context(viewport={'width':1280,'height':800})
     failing.add_init_script('const get=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.includes("webgl")?null:get.call(this,type,...args)}')
-    fallback=instrument(failing.new_page());fallback.goto(BASE,wait_until='networkidle');fallback.locator('.world').hover()
+    fallback=instrument(failing.new_page());fallback.goto(BASE,wait_until='networkidle');fallback.locator('.world').dispatch_event('pointermove')
     fallback.wait_for_function('() => document.body.classList.contains("simple-view")')
     expect(fallback.locator('#main-content #projects')).to_be_visible()
     broken_context=browser.new_context(viewport={'width':1280,'height':720},reduced_motion='reduce')
-    broken=instrument(broken_context.new_page());broken.route('**/wooden_bookshelf_worn.gltf',lambda route:route.abort())
-    broken.goto(BASE,wait_until='networkidle');broken.locator('.world').hover();broken.locator('#world-canvas[data-ready=true]').wait_for(timeout=120000)
-    broken.locator('.main-nav a[href="#projects"]').click();expect(broken.locator('[data-window=projects]')).to_be_visible()
+    broken=instrument(broken_context.new_page());broken.route('**/desk/decor.glb',lambda route:route.abort())
+    broken.goto(BASE,wait_until='networkidle');broken.locator('.world').dispatch_event('pointermove');broken.wait_for_function('() => document.body.classList.contains("simple-view")')
+    expect(broken.locator('#main-content #projects')).to_be_visible()
     assert not errors, errors
     assert not missing, missing
-    print('Passed: production CSP, no-JS, failed WebGL, missing furniture; no runtime errors or unexpected missing assets.',flush=True)
+    print('Passed: production CSP, no-JS, failed WebGL, missing desk artwork; no runtime errors or unexpected missing assets.',flush=True)
     browser.close()

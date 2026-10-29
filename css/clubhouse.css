@@ -1099,3 +1099,208 @@ a {
     animation: none !important;
   }
 }
+/* Clean desk revision: a neutral stage closely follows the licensed reference. */
+:root {
+  --bg: #e7e7e5;
+  --bg-raised: #f7f7f4;
+  --border: #bdbfba;
+  --text: #222825;
+  --text-body: #353b37;
+  --text-secondary: #505752;
+  --accent: #252c28;
+  --accent-hover: #111613;
+}
+.world {
+  background: #b8b8ba;
+}
+.world:after {
+  display: none;
+}
+.js .site-header {
+  background: transparent;
+  border: 0;
+  top: 17px;
+  left: 26px;
+  right: 26px;
+  padding: 6px 3px;
+}
+.main-nav a {
+  border-radius: 2px;
+}
+.main-nav a:hover {
+  background: #dddeda99;
+  color: #111;
+}
+.main-nav .resume-link {
+  border-color: #777f77;
+  background: #e6e8df66;
+}
+.room-heading {
+  color: #252a27;
+  text-shadow: none;
+  bottom: 118px;
+}
+.room-heading h1 {
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+.room-heading p {
+  font-size: 13px;
+}
+.world-toolbar {
+  left: 28px;
+  right: 28px;
+  bottom: 32px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.exploration {
+  background: #e9eae4e8;
+  border: 1px solid #c4c6be;
+  border-radius: 2px;
+  gap: 5px;
+}
+.rooms-nav button[aria-pressed="true"] {
+  background: #cdd1c8;
+}
+.rooms-nav button:hover,
+.utility:hover,
+.world-settings a:hover {
+  background: #d3d7cc;
+}
+.world-settings {
+  position: static;
+  background: #e9eae4e8;
+  border: 1px solid #c4c6be;
+  border-radius: 2px;
+  gap: 0;
+  padding: 3px;
+}
+.rooms-nav button,
+.utility,
+.world-settings a {
+  font-size: 12px;
+  padding-inline: 10px;
+}
+.world-loading {
+  left: 34px;
+  bottom: 181px;
+  background: #e6e8dfeb;
+  border: 1px solid #c6cbc0;
+  color: #28322b;
+}
+.world:not(.is-ready) .room-heading {
+  bottom: 118px;
+}
+.scene-loading .world-loading {
+  bottom: 181px;
+}
+.enhanced:not(.simple-view) .clubhouse-footer {
+  color: #303832;
+  text-shadow: none;
+  font-size: 10px;
+  right: 31px;
+  bottom: 8px;
+}
+.simple-view .world-toolbar {
+  display: block;
+}
+.simple-view .site-header {
+  background: #e9eae4fa;
+}
+.simple-view .world-settings {
+  border: 0;
+}
+.button {
+  border-radius: 2px;
+}
+.button-primary {
+  background: #252c28;
+  border-color: #252c28;
+}
+.button-primary:hover {
+  background: #111613;
+}
+.scene-message {
+  background: #e4e7dc;
+}
+@media (max-width: 1100px) {
+  .world-toolbar {
+    flex-wrap: wrap;
+  }
+  .world-settings {
+    margin-left: auto;
+  }
+  .room-heading {
+    bottom: 178px;
+  }
+  .world:not(.is-ready) .room-heading {
+    bottom: 178px;
+  }
+  .world-loading,
+  .scene-loading .world-loading {
+    bottom: 242px;
+  }
+}
+@media (max-width: 767px) {
+  .enhanced:not(.simple-view) .site-header {
+    background: #e9eae4e8;
+    border: 1px solid #c4c6be;
+  }
+  .enhanced:not(.simple-view) .world-toolbar {
+    display: block;
+    bottom: 28px;
+    left: 12px;
+    right: 12px;
+  }
+  .enhanced:not(.simple-view) .world-settings {
+    position: static;
+    display: flex;
+    justify-content: space-between;
+    left: auto;
+    top: auto;
+    right: auto;
+    margin: 7px 0 0;
+    padding: 2px;
+    background: #e9eae4e8;
+  }
+  .enhanced:not(.simple-view) .room-heading,
+  .world:not(.is-ready) .room-heading {
+    bottom: 211px;
+    left: 20px;
+  }
+  .room-heading h1 {
+    font-size: 28px;
+  }
+  .world-loading,
+  .scene-loading .world-loading {
+    bottom: 271px;
+    left: 20px;
+  }
+  .enhanced:not(.simple-view) .world-settings a[href="#sound"] {
+    display: inline-flex;
+  }
+  .enhanced:not(.simple-view) .world-settings .utility,
+  .enhanced:not(.simple-view) .world-settings a {
+    font-size: 11px;
+    padding-inline: 8px;
+  }
+  .enhanced:not(.simple-view) .clubhouse-footer {
+    font-size: 9px;
+    right: 14px;
+  }
+  .js .world-toolbar {
+    display: block;
+  }
+  .simple-view .world-settings {
+    background: none;
+  }
+  .simple-view .site-header {
+    background: #e9eae4fa;
+  }
+}
+.world-canvas[data-traveling="true"] {
+  transition: none;
+}

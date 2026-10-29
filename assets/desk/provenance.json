@@ -1,0 +1,65 @@
+{
+  "author": "Henry Heffernan",
+  "repository": "https://github.com/henryjeff/portfolio-website",
+  "commit": "c53c5a50183655eb83d70048403a5084f5d1214c",
+  "license": "MIT",
+  "files": [
+    {
+      "file": "computer.glb",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Computer/computer_setup.glb",
+      "original_sha256": "5b7ecb5d0d1c21ab1253fc57b64f235f4040ba0751cfe0ff204141deb1dbc236",
+      "bytes": 113236,
+      "dimensions": null,
+      "modifications": "Unmodified source mesh"
+    },
+    {
+      "file": "world.glb",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/World/environment.glb",
+      "original_sha256": "817a3daf8da639268bcd57327277919888432e6e53a75a4201e7c2788b329672",
+      "bytes": 95452,
+      "dimensions": null,
+      "modifications": "Unmodified source mesh"
+    },
+    {
+      "file": "decor.glb",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Decor/decor.glb",
+      "original_sha256": "b25f99d3fbf42cb54009c398b61eed86b78679f426800237daa5077c7a46c832",
+      "bytes": 84540,
+      "dimensions": null,
+      "modifications": "Unmodified source mesh"
+    },
+    {
+      "file": "computer.webp",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Computer/baked_computer.jpg",
+      "original_sha256": "2ea48b3d9e135a1d901645925249643fd828d9d26af513281e659142f61e6376",
+      "bytes": 356392,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "modifications": "JPEG to WebP, full original pixel dimensions preserved"
+    },
+    {
+      "file": "world.webp",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/World/baked_environment.jpg",
+      "original_sha256": "63c353baf84c4f6d9665d5d2db030593a9e306d7730fdb8dad409a62b186a2b7",
+      "bytes": 249098,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "modifications": "JPEG to WebP, full original pixel dimensions preserved"
+    },
+    {
+      "file": "decor.webp",
+      "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/models/Decor/baked_decor_modified.jpg",
+      "original_sha256": "7d8fbbfa314a360905485f36ebfd2416e178c6e19925dd4ebd4f0a248197aa3d",
+      "bytes": 463272,
+      "dimensions": [
+        4096,
+        4096
+      ],
+      "modifications": "JPEG to WebP, full original pixel dimensions preserved"
+    }
+  ]
+}
