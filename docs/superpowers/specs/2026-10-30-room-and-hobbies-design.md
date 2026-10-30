@@ -1,0 +1,23 @@
+# Study room and hobbies hall
+
+Extend the personal desk the user likes into a clean, stylized study with a bookshelf, windows and a real clickable door labelled “Explore my hobbies.” The door opens and the camera approaches/passes through it into a hobbies hall: one badminton court, gym equipment alongside, and a partitioned card room. Existing desk interactions, mouse-follow movement and portfolio shortcuts stay intact. The user has already authorized autonomous completion, testing and publishing without questions or permission.
+
+## Design and existing-site audit
+
+Preserve the slate/teal/copper palette, cream hardware, VL identity, Grotesk/Plex type, square controls and playful object descriptions. The current desk floats on the source background; secondary destinations are disconnected vignettes. Replace that presentation with original procedural room geometry, retaining the licensed desk and exact notice. Keep all project/career facts, routes, forms, desktop windows, audio and no-JS/WebGL fallbacks. Existing reading-page SEO and social metadata stay stable except the new actual study capture.
+
+Builder decisions: use the existing static Three.js renderer. No framework, HDR, postprocessing, heavy room models, remote art or new dependencies. Use simple room shells, visible window openings with a small stylized outdoor view, original bookshelf/books, plank flooring, trim, soft procedural contact shadows and daylight patches. Batch static geometry by shared material to control draw calls. Preserve the six artwork requests and <2 MB budget. Use an open-front/cutaway composition so walls never hide the desk or court.
+
+The study and hobbies hall are separate culled room groups. Door traversal has an opening leaf, camera approach, a brief portal fade at the threshold, then a camera move from the incoming doorway into the composed room view. This avoids rendering two full rooms continuously and avoids a long corridor. Within the hobbies hall, Court/Gym/Card room buttons move the camera across the same furnished room. The card room has a real partition/opening and clickable table. A return door and Study/Home controls return to the study. Pointer, keyboard and touch have equivalent travel controls. Reduced motion changes views immediately without door/camera animation. Rapid choices, desktop entry, hidden tabs and resize must cancel safely; idle rendering still stops.
+
+## Badminton
+
+Replace the current retry-every-frame bot and overlapping repeated-swing windows with a deterministic, frame-rate-independent arcade simulation in a pure module. Keep first to seven. Move on the full player half with WASD/arrows or a speed-limited pointer destination. Show incoming landing position and a readable contact cue. A swing is one deliberate attempt with a short recovery; early/late/out-of-reach feedback explains misses. Good timing improves placement and shot speed.
+
+Use explicit aim (left/centre/right via Q/E/R, a labelled control, or tapping the opponent half), and three shots: clear (Space), drop (J), smash (K). Clears push deep, drops pull forward, and well-timed smashes travel faster. The bot has a reaction delay, bounded movement in both dimensions and one contact decision per incoming shot. It can be beaten by moving it front/back or side-to-side; success must not depend on a repeated random miss roll. Friendly is the default learning opponent; Club is a harder choice. Do not claim official badminton physics/rules beyond this arcade match.
+
+Keep scoring and input feedback in HTML, keyboard/touch controls at least 44px, canvas focus sensible, and prevent game keys only when the court owns focus. Pausing/minimizing/hiding stops simulation and clears held movement/pointer state. Resume is explicit for an interrupted rally. Closing/remounting removes listeners and resets state.
+
+## Evidence for completion
+
+Inspect screenshots at desktop, 1280×720, and phone sizes. Verify windows/bookshelf/door composition, real door and court/gym/card-room picks, door round trips and interruption, preserved prop inspection/desktop landing, reduced motion, idle/reading/hidden suspension and artwork budgets. Unit-test game timing, cooldown, reach, movement limits, all shot profiles, point/match/reset behavior, frame-rate independence and a full strategy-driven player win. Browser-play a win using the same visible landing/aim/contact information available to a person; verify a mistimed or stationary player can lose. Keep existing poker, forms, history and fallback coverage. Run validator, browser suite, Lighthouse/CI, independent review, then commit/push main and verify the live deployment.

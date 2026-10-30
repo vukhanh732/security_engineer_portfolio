@@ -1,5 +1,5 @@
 import { createAudio } from "./clubhouse-audio.js";
-import { createDesktop } from "./desktop.js?v=20261030-personal1";
+import { createDesktop } from "./desktop.js?v=20261030-rooms1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
 const audio = createAudio();
@@ -47,7 +47,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261030-personal1`);
+    const module = await import(`./games/${name}.js?v=20261030-rooms1`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -161,7 +161,15 @@ function showSection(requested, { push = true } = {}) {
     return;
   }
   if (
-    ["study", "gym", "corridor", "badminton-hall", "card-lounge"].includes(name)
+    [
+      "study",
+      "hobbies",
+      "gym",
+      "lounge",
+      "corridor",
+      "badminton-hall",
+      "card-lounge",
+    ].includes(name)
   ) {
     if (push) updateHash(name);
     setSimple(false);
@@ -254,7 +262,7 @@ async function loadScene() {
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261030-personal1"
+        "./clubhouse-scene.js?v=20261030-rooms1"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
@@ -284,42 +292,49 @@ async function loadScene() {
           if (isSimple()) setSimple(false, { load: false });
           navigate(name);
         },
-        onLocation(room) {
-          const labels = {
-            study: "The desk",
-            corridor: "The desk",
+        onLocation(room, node = room) {
+          const place = ["study", "desk", "screen", "corridor"].includes(node)
+            ? "study"
+            : node;
+          $("#place-name").textContent = {
+            study: "The study",
+            hobbies: "Explore my hobbies",
             gym: "The gym",
-            badminton: "The badminton hall",
-            lounge: "The card lounge",
-          };
-          $("#place-name").textContent = labels[room];
+            badminton: "The badminton court",
+            lounge: "The card room",
+          }[place];
           $("#room-description").textContent = {
-            study: "A few things I’ve built. A place to explore.",
-            corridor: "A few things I’ve built. A place to explore.",
+            study: "A few things I’ve built. A room to make more.",
+            hobbies: "A court, a little lifting, and one more hand.",
             gym: "A little movement. A clearer head.",
-            badminton: "A full court. Fancy a rally?",
+            badminton: "Move your opponent. Find the open court.",
             lounge: "Take a seat. Stay for a hand.",
-          }[room];
+          }[place];
           document
             .querySelectorAll("[data-room]")
             .forEach((button) =>
               button.setAttribute(
                 "aria-pressed",
-                String(button.dataset.room === room),
+                String(button.dataset.room === place),
               ),
             );
-          $("#room-action").hidden = !["badminton", "lounge", "gym"].includes(
-            room,
-          );
-          $("#room-action").dataset.app =
-            { badminton: "badminton", lounge: "poker", gym: "about" }[room] ||
-            "about";
-          $("#room-action").textContent =
+          const action = $("#room-action");
+          action.hidden = false;
+          action.dataset.destination = place === "study" ? "hobbies" : "";
+          action.dataset.app =
             {
-              badminton: "Play a match ↗",
-              lounge: "Deal a hand ↗",
-              gym: "Off the clock ↗",
-            }[room] || "";
+              hobbies: "badminton",
+              badminton: "badminton",
+              lounge: "poker",
+              gym: "about",
+            }[place] || "";
+          action.textContent = {
+            study: "Explore my hobbies →",
+            hobbies: "Play badminton ↗",
+            badminton: "Play a match ↗",
+            lounge: "Deal a hand ↗",
+            gym: "Off the clock ↗",
+          }[place];
         },
         onProgress(loaded, total) {
           $("#world-status").textContent =
@@ -398,9 +413,16 @@ document.querySelectorAll("[data-prop]").forEach((button) =>
     }
   }),
 );
-$("#room-action").addEventListener("click", (event) =>
-  navigate(event.currentTarget.dataset.app),
-);
+$("#room-action").addEventListener("click", async (event) => {
+  const destination = event.currentTarget.dataset.destination;
+  if (!destination) {
+    navigate(event.currentTarget.dataset.app);
+    return;
+  }
+  const version = ++routeVersion;
+  const world = await loadScene();
+  if (world && version === routeVersion) world.go(destination);
+});
 document.addEventListener("keydown", (event) => {
   if (
     event.key === "Escape" &&

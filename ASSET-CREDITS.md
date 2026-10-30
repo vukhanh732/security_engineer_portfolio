@@ -1,6 +1,6 @@
 # Portfolio asset credits
 
-The main retro desk uses Henry Heffernan's original MIT-licensed artwork, personalized for Vu with a slate/teal/copper palette, working drawer, custom books and object interactions. The source license and attribution are included with the self-hosted files. The HTML portfolio, desktop window manager, games, secondary gym/court/lounge scenes and VL favicon are built for Vu Luu.
+The main retro desk uses Henry Heffernan's original MIT-licensed artwork, personalized for Vu with a slate/teal/copper palette, working drawer, custom books and object interactions. The source license and attribution are included with the self-hosted files. The HTML portfolio, desktop window manager, games, study and hobbies architecture/furniture and VL favicon are built for Vu Luu.
 
 | Asset | Author / source | License | Use / modifications |
 | --- | --- | --- | --- |
@@ -16,6 +16,6 @@ The main retro desk uses Henry Heffernan's original MIT-licensed artwork, person
 
 The exact source commit, original download hashes, modifications, dimensions and output sizes are recorded in `assets/desk/provenance.json`. The six desk-artwork files total **1,361,990 bytes**. All production files are self-hosted; the site makes no third-party requests for its 3D scene.
 
-The gym, badminton court and card lounge are separate small scenes generated in code. Their geometry, shadow textures, card faces and materials make no additional artwork downloads. They do not appear in the desk scene.
+The study shell, bookshelf, windows, doors, hobbies hall, gym equipment, badminton court and partitioned card room are original geometry generated in code. Their shadow textures, card faces and materials make no additional artwork downloads. The gym/court/card furniture shares one hall beyond the study door.
 
-The loading/sharing image, `images/personal-desk-preview.webp`, is a sharp capture of the actual personalized desk. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.
+The loading/sharing image, `images/connected-study-20261031.webp`, is a sharp capture of the actual furnished study. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.

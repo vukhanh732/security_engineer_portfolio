@@ -842,3 +842,275 @@
     gap: 12px 20px;
   }
 }
+/* Skill-based arcade court: readable feedback and explicit shot/aim controls. */
+.badminton-match-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+}
+.badminton-match-settings label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  font-size: 14px;
+}
+.badminton-match-settings select {
+  min-height: 44px;
+  padding: 8px 32px 8px 12px;
+  font: inherit;
+  color: #29434d;
+  background: #f4f1e5;
+  border: 1px solid #9aaa9c;
+  border-radius: 0;
+}
+.badminton-contact {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: 175px 1fr;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #bdc7b7;
+  margin: 0 auto 16px;
+}
+.badminton-contact strong {
+  color: #355957;
+  font-size: 17px;
+}
+.badminton-contact[data-ready="true"] strong {
+  color: #914c29;
+}
+.os-window .badminton-contact p,
+.badminton-contact p {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+.badminton-aim {
+  max-width: 900px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 12px;
+}
+.badminton-aim > span {
+  margin-right: auto;
+  font-size: 14px;
+}
+.badminton-aim button {
+  min-height: 44px;
+  min-width: 104px;
+  padding: 8px 12px;
+  color: #29434d;
+  background: #e6eadd;
+  border: 1px solid #a8b5a4;
+}
+.badminton-aim button[aria-pressed="true"] {
+  background: #31595e;
+  border-color: #31595e;
+  color: #faf3e5;
+}
+.badminton-aim kbd {
+  margin-left: 8px;
+  opacity: 0.65;
+  font: 12px monospace;
+}
+.badminton-shots {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 auto 18px;
+}
+.badminton-shots .button {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  min-height: 64px;
+  color: #29434d;
+  border-color: #9aaa9c;
+  background: #e7e9df;
+}
+.badminton-shots strong {
+  font-weight: 600;
+  font-size: 17px;
+}
+.badminton-shots span {
+  font-size: 12px;
+}
+.badminton-shots .button:hover,
+.badminton-aim button:hover {
+  background: #d3dfd5;
+  color: #263e43;
+}
+.badminton-help {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.badminton-help summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+.os-window .badminton-help p,
+.badminton-help p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+.badminton-canvas:focus-visible {
+  outline: 3px solid #a35f3b;
+  outline-offset: 3px;
+}
+@media (max-width: 767px) {
+  .badminton-match-settings {
+    gap: 7px;
+  }
+  .badminton-match-settings label {
+    width: 100%;
+  }
+  .badminton-match-settings label select {
+    flex: 1;
+  }
+  .badminton-match-settings > button {
+    flex: 1;
+  }
+  .badminton-contact {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .badminton-contact strong {
+    font-size: 16px;
+  }
+  .os-window .badminton-contact p {
+    font-size: 13px;
+  }
+  .badminton-aim {
+    gap: 5px;
+  }
+  .badminton-aim button {
+    min-width: 0;
+    flex: 1;
+    padding: 8px;
+    font-size: 12px;
+  }
+  .badminton-aim kbd {
+    display: none;
+  }
+  .badminton-shots {
+    gap: 6px;
+  }
+  .badminton-shots .button {
+    padding: 9px 10px;
+  }
+  .badminton-shots span {
+    font-size: 10px;
+  }
+  .badminton-shots strong {
+    font-size: 15px;
+  }
+}
+/* Keep the whole court and shot controls visible together on a laptop. */
+.os-window #badminton {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.os-window #badminton h2 {
+  font-size: 32px;
+  margin: 0 0 8px;
+}
+#badminton .game-intro {
+  display: block;
+  margin-bottom: 12px;
+}
+.os-window #badminton .game-intro p,
+#badminton .game-intro p {
+  margin: 0 0 3px;
+  font-size: 17px;
+}
+#badminton .game-intro > span {
+  font-size: 12px;
+}
+.badminton-match-settings {
+  margin: 12px 0;
+}
+.badminton-play-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 248px;
+  gap: 24px;
+  align-items: start;
+}
+.badminton-board {
+  min-width: 0;
+}
+.badminton-canvas {
+  width: min(100%, max(320px, calc(150dvh - 630px)));
+  border-radius: 0;
+}
+.badminton-control-panel {
+  padding-top: 52px;
+}
+.badminton-control-panel .badminton-contact {
+  grid-template-columns: 1fr;
+  gap: 5px;
+  padding-top: 0;
+  margin-bottom: 12px;
+}
+.os-window .badminton-control-panel .badminton-contact p {
+  font-size: 14px;
+}
+.badminton-control-panel .badminton-aim {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.badminton-control-panel .badminton-aim > span {
+  grid-column: 1 / -1;
+}
+.badminton-control-panel .badminton-aim button {
+  min-width: 0;
+  padding: 8px 5px;
+  font-size: 12px;
+}
+.badminton-control-panel .badminton-aim kbd {
+  display: none;
+}
+.badminton-control-panel .badminton-shots {
+  gap: 6px;
+}
+.badminton-control-panel .badminton-shots .button {
+  align-items: center;
+  padding: 10px 5px;
+}
+.badminton-control-panel .badminton-shots strong {
+  font-size: 15px;
+}
+.badminton-help {
+  max-width: none;
+}
+@media (max-width: 767px) {
+  .badminton-play-area {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .badminton-canvas {
+    width: 100%;
+  }
+  .badminton-control-panel {
+    padding-top: 0;
+  }
+  .badminton-control-panel .badminton-aim {
+    display: flex;
+  }
+  .badminton-control-panel .badminton-shots .button {
+    align-items: flex-start;
+    padding: 9px 12px;
+  }
+  #badminton .game-intro > span {
+    font-size: 11px;
+  }
+}

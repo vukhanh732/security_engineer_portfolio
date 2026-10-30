@@ -102,21 +102,41 @@ with sync_playwright() as p:
     page.get_by_role('button',name='New hand',exact=True).click()
     page.screenshot(path=str(OUT/'poker-desktop.png'))
     page.keyboard.press('Escape')
-    # Badminton plays a real rally and pauses when its window is minimized.
+    # Win through the visible landing ring, deliberate aim and timed smashes.
     page.goto(BASE+'/#badminton', wait_until='networkidle')
     game=page.locator('.badminton-canvas');game.wait_for()
-    page.get_by_role('button',name='Serve / swing',exact=True).click()
+    for point in range(7):
+        game.focus();page.keyboard.press('Space')
+        page.wait_for_function('() => document.querySelector(".badminton-canvas").dataset.receiver === "player"')
+        x=float(game.get_attribute('data-target-x'));y=float(game.get_attribute('data-target-y'));bounds=game.bounding_box()
+        page.mouse.click(bounds['x']+(150+x*600)/900*bounds['width'],bounds['y']+(30+y*530)/600*bounds['height'])
+        page.keyboard.press('e' if float(game.get_attribute('data-bot-x')) < .5 else 'q')
+        page.wait_for_function('() => {const d=document.querySelector(".badminton-canvas").dataset;return d.receiver==="player" && Number(d.flightProgress)>=.925;}')
+        page.keyboard.press('k')
+        page.wait_for_function('() => document.querySelector(".badminton-canvas").dataset.phase!=="rally"')
+        expect(game).to_have_attribute('data-score',str(point+1)+':0')
+    expect(page.locator('#shot-feedback')).to_contain_text('You win')
+    page.screenshot(path=str(OUT/'badminton-player-win.png'),timeout=60000)
+    # Missed timing loses a point; minimized/hidden rallies stop and resume explicitly.
+    page.get_by_role('button',name='New match',exact=True).click()
+    page.locator('[data-shot=clear]').click()
+    page.wait_for_function('() => document.querySelector("#bot-score").textContent === "1"',timeout=10000)
+    page.locator('[data-shot=clear]').click()
     page.wait_for_function('() => document.querySelector(".badminton-canvas").dataset.receiver === "player"')
-    landing=float(game.get_attribute('data-target-x'));bounds=game.bounding_box()
-    page.mouse.click(bounds['x']+(150+landing*600)/900*bounds['width'],bounds['y']+(30+.87*530)/600*bounds['height'])
-    for _ in range(12):
-        page.keyboard.press('Space');page.wait_for_timeout(140)
-    assert int(game.get_attribute('data-rally')) >= 3, 'Player could not return the shuttle'
-    page.wait_for_function('() => document.querySelector("#bot-score").textContent !== "0"',timeout=12000)
     page.get_by_role('button',name='Minimize Badminton',exact=True).first.click()
-    score=page.locator('#bot-score').text_content();page.wait_for_timeout(300)
-    assert page.locator('#bot-score').text_content() == score
-    page.locator('[data-task=badminton]').click()
+    progress=game.get_attribute('data-flight-progress');page.wait_for_timeout(300)
+    assert game.get_attribute('data-flight-progress')==progress
+    page.locator('[data-task=badminton]').click();expect(game).to_have_attribute('data-paused','true')
+    page.get_by_role('button',name='Resume',exact=True).click()
+    page.wait_for_function('(before) => document.querySelector(".badminton-canvas").dataset.flightProgress!==before',arg=progress)
+    page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
+    progress=game.get_attribute('data-flight-progress');page.wait_for_timeout(250)
+    assert game.get_attribute('data-flight-progress')==progress
+    page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
+    expect(game).to_have_attribute('data-paused','true')
+    page.get_by_label('Opponent',exact=True).select_option('club')
+    expect(game).to_have_attribute('data-difficulty','club');expect(game).to_have_attribute('data-score','0:0')
+    page.get_by_label('Opponent',exact=True).select_option('friendly')
     page.get_by_role('button',name='New match',exact=True).click()
     expect(page.locator('#your-score')).to_have_text('0');expect(page.locator('#bot-score')).to_have_text('0')
     page.screenshot(path=str(OUT/'badminton-desktop.png'))
@@ -188,7 +208,7 @@ with sync_playwright() as p:
     mobile.goto(BASE,wait_until='networkidle')
     expect(mobile.locator('#main-content #projects')).to_be_visible()
     assert mobile.evaluate('document.documentElement.scrollWidth<=innerWidth')
-    assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/")||r.name.includes("desk-preview.webp"))')
+    assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/")||r.name.includes("desk-preview.webp")||r.name.includes("/images/connected-study-"))')
     mobile.screenshot(path=str(OUT/'home-mobile.png'),full_page=True)
     mobile.get_by_role('button',name='Computer',exact=True).click()
     expect_landing(mobile)
@@ -200,6 +220,16 @@ with sync_playwright() as p:
     mobile.keyboard.press('Escape')
     mobile.goto(BASE+'/#poker',wait_until='networkidle');mobile.locator('#your-hand button').first.wait_for()
     mobile.screenshot(path=str(OUT/'poker-mobile.png'),full_page=True)
+    # Landscape phones must keep a usable court when height-based sizing shrinks.
+    mobile.set_viewport_size({'width':844,'height':390})
+    mobile.goto(BASE+'/#badminton',wait_until='networkidle')
+    court=mobile.locator('.badminton-canvas');court.wait_for()
+    assert court.bounding_box()['width'] >= 300, 'Landscape court collapsed'
+    assert mobile.evaluate('document.documentElement.scrollWidth<=innerWidth')
+    mobile.locator('[data-shot=clear]').click()
+    expect(court).to_have_attribute('data-phase','rally')
+    mobile.screenshot(path=str(OUT/'badminton-landscape.png'))
+    mobile.set_viewport_size({'width':390,'height':844})
     mobile.goto(BASE+'/braintrain.html',wait_until='networkidle');mobile.get_by_role('button',name='Toggle menu',exact=True).click()
     expect(mobile.locator('.mobile-panel')).to_be_visible();mobile.screenshot(path=str(OUT/'inner-mobile.png'),full_page=True)
     print('Passed: desktop, history, games, audio, forms, aliases, simple/mobile views.',flush=True)
@@ -226,9 +256,9 @@ with sync_playwright() as p:
     assert sum(r['encodedBodySize'] for r in artwork)<2_000_000, 'Desk artwork exceeds 2 MB'
     assert not room.evaluate('performance.getEntriesByType("resource").some(r=>/HDRLoader|SSAOPass|EffectComposer|assets\/study/.test(r.name))'), 'Heavy rendering path was requested'
     assert canvas.evaluate('(c)=>c.width===Math.round(c.clientWidth*2)&&c.height===Math.round(c.clientHeight*2)'), 'Retina canvas was undersized'
-    for name in ['gym','badminton','lounge','study']:
+    for name in ['hobbies','gym','badminton','lounge','study']:
         room.locator('[data-room='+name+']').click()
-        expect(canvas).to_have_attribute('data-location',name)
+        expect(canvas).to_have_attribute('data-location','study' if name=='study' else 'hobbies')
         expect(canvas).to_have_attribute('data-traveling','false')
         room.wait_for_timeout(150);room.screenshot(path=str(OUT/('room-'+name+'.png')))
         if name == 'badminton':
@@ -241,7 +271,7 @@ with sync_playwright() as p:
     assert point, 'The computer/desk had no usable interaction surface'
     room.locator('[data-room=gym]').click();canvas.focus();room.keyboard.press('e')
     room.wait_for_timeout(100)
-    expect(canvas).to_have_attribute('data-location','gym')
+    expect(canvas).to_have_attribute('data-location','hobbies')
     expect(room.locator('#desktop')).not_to_be_visible()
     room.locator('[data-room=study]').click()
     room.mouse.click(point['x'],point['y'])
@@ -383,7 +413,7 @@ with sync_playwright() as p:
     room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
     room.wait_for_timeout(200)
     assert canvas.get_attribute('data-position')==position, 'Interrupted fade restored a stale camera pose'
-    expect(canvas).to_have_attribute('data-location','gym')
+    expect(canvas).to_have_attribute('data-location','hobbies')
     # Phone inspection fits around the header/panel, including short screens.
     room.emulate_media(reduced_motion='reduce')
     room.locator('[data-room=study]').click()

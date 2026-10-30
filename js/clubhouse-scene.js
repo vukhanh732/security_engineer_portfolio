@@ -1,13 +1,15 @@
 import * as THREE from "three";
-import { createDeskInteractions } from "./desk-interactions.js?v=20261030-personal1";
+import { createDeskInteractions } from "./desk-interactions.js?v=20261030-rooms1";
+import { buildDesk } from "./clubhouse-objects.js?v=20261030-rooms1";
 import {
-  buildDesk,
-  buildDestination,
-} from "./clubhouse-objects.js?v=20261030-personal1";
+  buildStudyRoom,
+  buildHobbiesRoom,
+} from "./clubhouse-rooms.js?v=20261030-rooms1";
 import {
   WAYPOINTS,
+  PORTALS,
   planView,
-} from "./study-navigation.mjs?v=20261030-personal1";
+} from "./study-navigation.mjs?v=20261030-rooms1";
 
 export async function createScene({
   canvas,
@@ -117,7 +119,7 @@ export async function createScene({
   function activateView(room) {
     clearHover();
     if (!views.has(room)) {
-      const view = buildDestination(room);
+      const view = buildHobbiesRoom();
       views.set(room, view);
       scene.add(view);
     }
@@ -129,6 +131,7 @@ export async function createScene({
     basePosition.copy(camera.position);
     baseAim.copy(aim);
     transition = null;
+    views.get(currentRoom)?.userData.portal?.setOpen(false, reduced.matches);
     canvas.style.removeProperty("opacity");
     state();
     onLocation?.(currentRoom, currentNode);
@@ -147,12 +150,13 @@ export async function createScene({
       baseAim.copy(aim);
     }
     transition = null;
+    for (const view of views.values()) view.userData.portal?.finishMotion();
     canvas.style.removeProperty("opacity");
     state();
   }
   function go(requested) {
     if (disposed || !ready) return Promise.resolve(false);
-    const view = planView(currentNode, requested);
+    const view = planView(currentNode, requested, currentRoom);
     deskInteractions?.reset();
     mouseTarget.set(0, 0);
     mouseCurrent.set(0, 0);
@@ -169,6 +173,9 @@ export async function createScene({
         invalidate();
         return;
       }
+      const portal = PORTALS[currentRoom];
+      if (view.switchScene)
+        views.get(currentRoom)?.userData.portal?.setOpen(true);
       transition = {
         name: view.name,
         room: view.room,
@@ -176,10 +183,16 @@ export async function createScene({
         fromAim: aim.clone(),
         to: fittedPosition(view.name),
         toAim: new THREE.Vector3(...view.target),
-        swap: currentRoom !== view.room,
+        swap: view.switchScene,
+        approach: new THREE.Vector3(...portal.approach.position),
+        approachAim: new THREE.Vector3(...portal.approach.target),
+        exit: new THREE.Vector3(...portal.exit.position),
+        exitAim: new THREE.Vector3(...portal.exit.target),
+        entry: new THREE.Vector3(...PORTALS[view.room].entry.position),
+        entryAim: new THREE.Vector3(...PORTALS[view.room].entry.target),
         swapped: false,
         start: performance.now(),
-        duration: currentRoom !== view.room ? 280 : 650,
+        duration: view.switchScene ? 1800 : 750,
       };
       state();
       invalidate();
@@ -192,16 +205,33 @@ export async function createScene({
       const t = Math.min(1, (now - transition.start) / transition.duration),
         ease = t * t * (3 - 2 * t);
       if (transition.swap) {
-        canvas.style.opacity = String(Math.abs(t * 2 - 1));
-        if (t >= 0.5 && !transition.swapped) {
-          activateView(transition.room);
-          currentNode = transition.name;
-          onLocation?.(currentRoom, currentNode);
-          camera.position.copy(transition.to);
-          aim.copy(transition.toAim);
-          camera.lookAt(aim);
-          transition.swapped = true;
+        if (t < 0.42) {
+          const p = t / 0.42,
+            e = p * p * (3 - 2 * p);
+          camera.position.lerpVectors(transition.from, transition.approach, e);
+          aim.lerpVectors(transition.fromAim, transition.approachAim, e);
+          canvas.style.opacity = "1";
+        } else if (t < 0.66) {
+          const p = (t - 0.42) / 0.24;
+          camera.position.lerpVectors(transition.approach, transition.exit, p);
+          aim.lerpVectors(transition.approachAim, transition.exitAim, p);
+          canvas.style.opacity = String(1 - p);
+        } else {
+          if (!transition.swapped) {
+            views.get(currentRoom)?.userData.portal?.setOpen(false, true);
+            activateView(transition.room);
+            views.get(currentRoom)?.userData.portal?.setOpen(true, true);
+            currentNode = transition.name;
+            onLocation?.(currentRoom, currentNode);
+            transition.swapped = true;
+          }
+          const p = (t - 0.66) / 0.34,
+            e = p * p * (3 - 2 * p);
+          camera.position.lerpVectors(transition.entry, transition.to, e);
+          aim.lerpVectors(transition.entryAim, transition.toAim, e);
+          canvas.style.opacity = String(Math.min(1, p * 3));
         }
+        camera.lookAt(aim);
       } else {
         camera.position.lerpVectors(transition.from, transition.to, ease);
         aim.lerpVectors(transition.fromAim, transition.toAim, ease);
@@ -234,10 +264,16 @@ export async function createScene({
       camera.lookAt(aim);
     }
     const propMoving = deskInteractions?.update(now) || false;
+    let doorMoving = false;
+    for (const view of views.values())
+      doorMoving = !!view.userData.portal?.update(now) || doorMoving;
+    for (const view of views.values())
+      for (const wall of view.userData.cutaways || [])
+        wall.group.visible = (camera.position.x - wall.x) * (wall.side || 1) > 0.05;
     state();
     renderer.render(scene, camera);
     canvas.dataset.renders = String(++renders);
-    if (transition || mouseMoving || propMoving) invalidate();
+    if (transition || mouseMoving || propMoving || doorMoving) invalidate();
   }
   const raycaster = new THREE.Raycaster(),
     pointer = new THREE.Vector2();
@@ -256,7 +292,12 @@ export async function createScene({
     view.updateWorldMatrix(true, true);
     const hit = raycaster
       .intersectObjects(view.children, true)
-      .find((h) => h.object.isMesh);
+      .find((h) => {
+        if (!h.object.isMesh) return false;
+        for (let object = h.object; object; object = object.parent)
+          if (!object.visible) return false;
+        return true;
+      });
     return hit?.object.userData.interaction || null;
   }
   function clearHover() {
@@ -295,6 +336,7 @@ export async function createScene({
     if (!item) return;
     if (item.type === "computer") api.useComputer();
     else if (item.type === "prop") api.activateProp(item.id);
+    else if (item.type === "travel") api.go(item.destination);
     else onInteract?.(item.destination);
   }
   const click = (event) => interact(pick(event));
@@ -326,6 +368,7 @@ export async function createScene({
   const reduceChange = () => {
     if (reduced.matches) {
       deskInteractions?.finishMotion();
+      for (const view of views.values()) view.userData.portal?.finishMotion();
       mouseTarget.set(0, 0);
       mouseCurrent.set(0, 0);
       invalidate();
@@ -431,6 +474,7 @@ export async function createScene({
       manager,
       Math.min(8, renderer.capabilities.getMaxAnisotropy()),
     );
+    buildStudyRoom(desk);
     views.set("study", desk);
     scene.add(desk);
     deskInteractions = createDeskInteractions({

@@ -15,10 +15,10 @@
     <link rel="canonical" href="https://security-vu.netlify.app/" />
     <link
       rel="icon"
-      href="/favicon.svg?v=20261030-personal1"
+      href="/favicon.svg?v=20261030-rooms1"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon.ico?v=20261030-personal1" sizes="any" />
+    <link rel="icon" href="/favicon.ico?v=20261030-rooms1" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -45,7 +45,7 @@
     <meta property="og:url" content="https://security-vu.netlify.app/" />
     <meta
       property="og:image"
-      content="https://security-vu.netlify.app/images/personal-desk-preview.webp"
+      content="https://security-vu.netlify.app/images/connected-study-20261031.webp"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vu Luu - The Desk" />
@@ -55,10 +55,10 @@
     />
     <meta
       name="twitter:image"
-      content="https://security-vu.netlify.app/images/personal-desk-preview.webp"
+      content="https://security-vu.netlify.app/images/connected-study-20261031.webp"
     />
-    <link rel="stylesheet" href="css/clubhouse.css?v=20261030-personal1" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261030-personal1" />
+    <link rel="stylesheet" href="css/clubhouse.css?v=20261030-rooms1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261030-rooms1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,7 +94,7 @@
     <header class="site-header">
       <a class="identity" href="index.html"
         ><img
-          src="favicon.svg?v=20261030-personal1"
+          src="favicon.svg?v=20261030-rooms1"
           class="identity-mark"
           alt=""
           width="38"
@@ -116,7 +116,7 @@
     <div class="world-shell">
       <section
         class="world"
-        aria-label="A retro computer desk and separate game destinations"
+        aria-label="A personal study with a door to the hobbies hall"
       >
         <picture class="world-preview"
           ><source
@@ -125,8 +125,8 @@
               data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
             " />
           <img
-            src="images/personal-desk-preview.webp"
-            alt="A clean retro computer desk with books, a plant and a working monitor"
+            src="images/connected-study-20261031.webp"
+            alt="A morning study with a retro computer, bookshelf, windows and a door to the hobbies hall"
             width="1440"
             height="900"
             fetchpriority="high"
@@ -135,7 +135,7 @@
           class="world-canvas"
           id="world-canvas"
           tabindex="0"
-          aria-label="Vu's desk. Move your mouse to look around. Click the computer, drawer, cup, textbook or plant, or use Desk objects. Escape puts an object back or returns home."
+          aria-label="Vu's study. Move your mouse to look around. Click the door to explore hobbies, or the computer, drawer, cup, textbook or plant. Desk objects offers the same controls. Escape puts an object back or returns home."
         ></canvas>
         <div
           class="world-loading"
@@ -146,30 +146,33 @@
           Use the computer, or choose a destination.
         </div>
         <div class="room-heading">
-          <h1 id="place-name">The desk</h1>
+          <h1 id="place-name">The study</h1>
           <p id="room-description">
-            A few things I’ve built. A place to explore.
+            A few things I’ve built. A room to make more.
           </p>
           <button
             class="button room-action"
             id="room-action"
-            data-app="about"
-            hidden
+            data-destination="hobbies"
           >
-            Off the clock ↗
+            Explore my hobbies →
           </button>
         </div>
       </section>
       <div class="world-toolbar">
         <div class="exploration">
           <nav class="rooms-nav" aria-label="Destinations">
-            <button data-room="study" aria-pressed="true">Desk</button
-            ><button data-room="gym" aria-pressed="false">Gym</button
-            ><button data-room="badminton" aria-pressed="false">
-              Badminton</button
-            ><button data-room="lounge" aria-pressed="false">
-              Card lounge
+            <button data-room="study" aria-pressed="true">Study</button>
+            <button data-room="hobbies" aria-pressed="false">Hobbies</button>
+            <button
+              data-room="badminton"
+              aria-pressed="false"
+              aria-label="Badminton court"
+            >
+              Court
             </button>
+            <button data-room="gym" aria-pressed="false">Gym</button>
+            <button data-room="lounge" aria-pressed="false">Card room</button>
           </nav>
           <button class="button button-primary" id="explore">
             Use computer ↗
@@ -693,8 +696,8 @@
           <h3>Off the clock</h3>
           <p>
             Badminton, poker, games, and fitness. The desk is for the work; the
-            gym, court, and card table each have their own space. Have a look
-            around, or stay for a quick game.
+            court, gym and card room share a hobbies hall through the study
+            door. Have a look around, or stay for a quick game.
           </p>
         </div>
         <p><a href="#play" class="text-link">Pick a game ↗</a></p>
@@ -893,8 +896,9 @@
           <div>
             <dt>Move</dt>
             <dd>
-              Choose Desk, Gym, Badminton or Card lounge. Each opens its own
-              clean scene. Click the computer to use the portfolio desktop.
+              Click the study door or Hobbies to enter the hall. Court, Gym and
+              Card room move around that shared space. Click the computer to use
+              the portfolio desktop.
             </dd>
           </div>
           <div>
@@ -1068,7 +1072,7 @@
           aria-controls="start-menu"
         >
           <img
-            src="favicon.svg?v=20261030-personal1"
+            src="favicon.svg?v=20261030-rooms1"
             alt=""
             width="20"
             height="20"
@@ -1091,7 +1095,7 @@
     </footer>
     <script
       type="module"
-      src="js/clubhouse.js?v=20261030-personal1"
+      src="js/clubhouse.js?v=20261030-rooms1"
       onerror="document.documentElement.classList.remove('js')"
     ></script>
   </body>

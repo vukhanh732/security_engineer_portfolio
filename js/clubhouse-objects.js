@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { personalizeDesk } from "./desk-props.js?v=20261030-personal1";
+import { personalizeDesk } from "./desk-props.js?v=20261030-rooms1";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
@@ -98,8 +98,7 @@ export async function buildDesk(manager, anisotropy = 8) {
   return group;
 }
 
-// Secondary destinations are independent, finished small scenes. None of their
-// equipment or game surfaces appears in the main desk composition.
+// Original furniture modules, placed together inside the hobbies hall.
 export function buildDestination(name) {
   const root = new THREE.Group();
   root.name = name;
@@ -154,13 +153,6 @@ export function buildDestination(name) {
     mesh.position.set(x, 0.005, z);
     root.add(mesh);
   }
-  const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(200, 200),
-    new THREE.MeshBasicMaterial({ color: "#b8b8ba" }),
-  );
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.015;
-  root.add(floor);
   if (name === "gym") {
     shadow(0, 0, 6, 5);
     box(4.6, 0.03, 3.8, 0, 0, 0, dark, 0.03);
@@ -238,17 +230,11 @@ export function buildDestination(name) {
       ),
     );
     box(6.45, 0.035, 0.025, 0, 1.57, 0, light, 0);
-    box(8.3, 3.5, 0.12, 0, 1.75, -7.85, material("#d4d1c9"), 0.03);
-    box(0.12, 3.5, 15.8, -4.2, 1.75, 0, material("#dedbd3"), 0.03);
     for (const z of [-3.8, 3.8]) {
       box(0.42, 0.1, 2.1, 3.7, 0.48, z, wood, 0.025);
       for (const dz of [-0.8, 0.8])
         box(0.08, 0.45, 0.08, 3.7, 0.23, z + dz, steel);
     }
-    const clock = cylinder(0.31, 0.035, 0, 2.6, -7.76, light);
-    clock.rotation.x = Math.PI / 2;
-    box(0.025, 0.19, 0.02, 0, 2.66, -7.73, dark, 0.004);
-    box(0.14, 0.025, 0.02, 0.065, 2.6, -7.73, dark, 0.004);
   } else if (name === "lounge") {
     shadow(0, 0, 5.5, 5);
     cylinder(0.52, 0.06, 0, 0.015, 0, wood);

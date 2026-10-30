@@ -1,247 +1,211 @@
+import { createBadminton } from "./badminton-engine.mjs?v=20261030-rooms1";
+
 export function mountBadminton(container, audio) {
-  container.innerHTML = `<div class="game-intro"><p>First to 7. Move into position, then time your swing as the shuttle comes down.</p><span>Move: WASD / arrows · Swing: Space</span></div><div class="badminton-score" aria-live="polite"><span>You <strong id="your-score">0</strong></span><span id="rally-status">Ready for a rally?</span><span><strong id="bot-score">0</strong> Clubhouse bot</span></div><canvas class="badminton-canvas" width="900" height="600" tabindex="0" aria-label="Playable badminton court. Move with arrow keys or pointer. Space or the Swing button serves and returns the shuttle."></canvas><div class="game-actions"><button class="button button-primary" id="swing">Serve / swing</button><button class="button" id="pause-match">Pause</button><button class="button" id="reset-match">New match</button></div><p class="game-tip">On touch: drag on your half to move, then tap Swing. Aim your return by moving left or right as you hit.</p>`;
+  container.innerHTML = `<div class="game-intro"><p>Move the bot. Find the open court.</p><span>First to 7 · Move: WASD / arrows · Clear: Space · Drop: J · Smash: K</span></div>
+    <div class="badminton-match-settings"><label>Opponent <select id="badminton-level" aria-label="Opponent"><option value="friendly">Friendly</option><option value="club">Club</option></select></label><button class="button" id="pause-match">Pause</button><button class="button" id="reset-match">New match</button></div>
+    <div class="badminton-play-area"><div class="badminton-board"><div class="badminton-score" role="group" aria-label="Match score"><span>You <strong id="your-score" aria-live="polite">0</strong></span><span id="rally-status">Your serve</span><span><strong id="bot-score" aria-live="polite">0</strong> <span id="opponent-name">Friendly bot</span></span></div>
+    <canvas class="badminton-canvas" width="1800" height="1200" tabindex="0" aria-label="Badminton court. Move with WASD or arrow keys. Aim with Q left, E right or R centre. Space serves or clears, J drops, K smashes. On touch, drag your half to move and tap the opponent half to aim."></canvas></div><aside class="badminton-control-panel" aria-label="Shot controls">
+    <div class="badminton-contact"><strong id="contact-cue">Your serve</strong><p id="shot-feedback" role="status">Pick a side, then serve with any shot button.</p></div>
+    <div class="badminton-aim" role="group" aria-label="Shot placement"><span>Aim</span><button data-aim="0.08" aria-pressed="false">Left <kbd>Q</kbd></button><button data-aim="0.5" aria-pressed="true">Centre <kbd>R</kbd></button><button data-aim="0.92" aria-pressed="false">Right <kbd>E</kbd></button></div>
+    <div class="badminton-shots" role="group" aria-label="Play a shot"><button class="button" data-shot="clear"><strong>Clear</strong><span>Space</span></button><button class="button" data-shot="drop"><strong>Drop</strong><span>J</span></button><button class="button" data-shot="smash"><strong>Smash</strong><span>K</span></button></div>
+    </aside></div><details class="badminton-help"><summary>How to win a point</summary><p>Follow the landing ring on your half. Swing as it closes and turns copper, with your player close to it. Early swings do not wait for the shuttle.</p><p>Aim away from the bot. A clear pushes it back; a drop brings it forward. A well-timed smash is fast, but an off-centre one gives it time to recover. Q / R / E or the aim buttons choose a side.</p><p>Touch / mouse: drag on your half to move. Tap the opponent half to aim, then use a shot button. Movement takes time, so start early. Choose Club when you want a tougher rally.</p></details>`;
   const canvas = container.querySelector("canvas"),
-    ctx = canvas.getContext("2d");
-  const status = container.querySelector("#rally-status"),
-    scoreNodes = [
-      container.querySelector("#your-score"),
-      container.querySelector("#bot-score"),
-    ];
-  const keys = new Set(),
-    player = { x: 0.5, y: 0.87 },
-    bot = { x: 0.5, y: 0.13 };
-  let scores = [0, 0],
-    phase = "ready",
-    flight = null,
-    time = 0,
-    swingUntil = 0,
-    lastSwing = -1,
-    frame,
+    ctx = canvas.getContext("2d"),
+    game = createBadminton();
+  const $ = (selector) => container.querySelector(selector),
+    keys = new Set();
+  const W = 900,
+    H = 600,
+    court = { x: 150, y: 30, w: 600, h: 530 };
+  let frame = null,
     previous = 0,
     paused = false,
     alive = true,
     surfaceActive = true,
-    pointer = false,
-    moveX = 0,
-    rally = 0;
-  const W = 900,
-    H = 600,
-    court = { x: 150, y: 30, w: 600, h: 530 };
-  const pos = (p) => [court.x + p.x * court.w, court.y + p.y * court.h];
+    pointerMode = null,
+    pointerTarget = null;
+  ctx.scale(2, 2);
   const clamp = (n, low, high) => Math.max(low, Math.min(high, n));
-  function reset() {
-    scores = [0, 0];
-    scoreNodes.forEach((n) => (n.textContent = "0"));
-    phase = "ready";
-    flight = null;
-    rally = 0;
-    paused = false;
-    player.x = bot.x = 0.5;
-    player.y = 0.87;
-    status.textContent = "Your serve. Space or Swing to start.";
-    container.querySelector("#pause-match").textContent = "Pause";
-    canvas.dataset.phase = phase;
+  const pos = (p) => [court.x + p.x * court.w, court.y + p.y * court.h];
+  function text(selector, value) {
+    const node = $(selector);
+    if (node.textContent !== value) node.textContent = value;
   }
-  function launch(from, to, receiver) {
-    flight = {
-      from: { ...from },
-      to,
-      receiver,
-      progress: 0,
-      duration: receiver === "player" ? 1.18 : 1.05,
-    };
-    phase = "rally";
-    rally++;
-    canvas.dataset.phase = phase;
-    canvas.dataset.rally = String(rally);
-    canvas.dataset.receiver = receiver;
-    canvas.dataset.targetX = to.x.toFixed(3);
-    canvas.dataset.targetY = to.y.toFixed(3);
+  function invalidate() {
+    if (alive && surfaceActive && !document.hidden && frame === null)
+      frame = requestAnimationFrame(tick);
   }
-  function serve() {
-    rally = 0;
-    launch(player, { x: 0.25 + Math.random() * 0.5, y: 0.13 }, "bot");
-    status.textContent = "Rally on. Watch the shuttle.";
-    audio.play("hit");
+  function flush() {
+    for (const event of game.takeEvents())
+      if (event.type === "hit") audio.play("hit");
+      else if (event.type === "point") audio.play(event.over ? "win" : "click");
   }
-  function swing() {
-    if (paused || phase === "over") return;
-    if (phase === "ready") {
-      serve();
-      return;
-    }
-    if (time - lastSwing > 0.22) {
-      swingUntil = time + 0.34;
-      lastSwing = time;
-      audio.play("hit");
+  function setAim(value) {
+    game.setAim(value);
+    const aim = game.getState().aim;
+    container
+      .querySelectorAll("[data-aim]")
+      .forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          String(Math.abs(Number(button.dataset.aim) - aim) < 0.2),
+        ),
+      );
+    invalidate();
+  }
+  function swing(kind) {
+    if (!paused) {
+      game.swing(kind);
+      flush();
+      invalidate();
     }
   }
-  function point(winner) {
-    scores[winner]++;
-    scoreNodes[winner].textContent = scores[winner];
-    flight = null;
-    canvas.dataset.score = scores.join(":");
-    if (scores[winner] >= 7) {
-      phase = "over";
-      status.textContent =
-        winner === 0
-          ? "You win the match. Good game!"
-          : "The bot wins. Rematch?";
-      audio.play("win");
-    } else {
-      phase = "ready";
-      status.textContent =
-        winner === 0
-          ? "Your point! Serve when ready."
-          : "Point to the bot. Your serve.";
-    }
-    canvas.dataset.phase = phase;
+  function clearInput() {
+    keys.clear();
+    pointerMode = null;
+    pointerTarget = null;
   }
   function keydown(event) {
-    if (document.activeElement !== canvas) return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const key = event.key.toLowerCase();
     if (
-      [
-        "ArrowLeft",
-        "ArrowRight",
-        "ArrowUp",
-        "ArrowDown",
-        " ",
+      ![
+        "arrowleft",
+        "arrowright",
+        "arrowup",
+        "arrowdown",
         "w",
         "a",
         "s",
         "d",
-        "W",
-        "A",
-        "S",
-        "D",
-      ].includes(event.key)
+        " ",
+        "j",
+        "k",
+        "q",
+        "r",
+        "e",
+      ].includes(key)
     )
-      event.preventDefault();
-    keys.add(event.key.toLowerCase());
-    if (event.key === " " && !event.repeat) swing();
+      return;
+    event.preventDefault();
+    keys.add(key);
+    if (
+      [
+        "w",
+        "a",
+        "s",
+        "d",
+        "arrowleft",
+        "arrowright",
+        "arrowup",
+        "arrowdown",
+      ].includes(key)
+    )
+      pointerTarget = null;
+    if (!event.repeat) {
+      if ([" ", "j", "k"].includes(key))
+        swing({ " ": "clear", j: "drop", k: "smash" }[key]);
+      if (["q", "r", "e"].includes(key))
+        setAim({ q: 0.08, r: 0.5, e: 0.92 }[key]);
+    }
+    invalidate();
+  }
+  function coordinates(event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (((event.clientX - rect.left) / rect.width) * W - court.x) / court.w,
+      y: (((event.clientY - rect.top) / rect.height) * H - court.y) / court.h,
+    };
   }
   function movePointer(event) {
-    if (!pointer) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * W,
-      y = ((event.clientY - rect.top) / rect.height) * H;
-    const oldX = player.x;
-    player.x = clamp((x - court.x) / court.w, 0.04, 0.96);
-    player.y = clamp((y - court.y) / court.h, 0.64, 0.94);
-    moveX = clamp((player.x - oldX) * 12, -0.24, 0.24);
+    if (!pointerMode || paused) return;
+    const point = coordinates(event);
+    if (pointerMode === "aim") setAim(point.x);
+    else
+      pointerTarget = {
+        x: clamp(point.x, 0.06, 0.94),
+        y: clamp(point.y, 0.57, 0.95),
+      };
+    invalidate();
   }
-  const down = (event) => {
-    pointer = true;
-    canvas.setPointerCapture(event.pointerId);
+  function down(event) {
+    if (paused || game.getState().phase === "over") return;
     canvas.focus({ preventScroll: true });
+    canvas.setPointerCapture(event.pointerId);
+    pointerMode = coordinates(event).y < 0.5 ? "aim" : "move";
     movePointer(event);
-  };
+  }
   const up = () => {
-    pointer = false;
-  };
-  const blur = () => keys.clear();
-  const visibility = () => {
-    if ((!surfaceActive || document.hidden) && phase === "rally") {
-      paused = true;
-      keys.clear();
-      container.querySelector("#pause-match").textContent = "Resume";
-      status.textContent = "Paused. Resume when you are ready.";
-    }
-    cancelAnimationFrame(frame);
-    frame = null;
-    if (!document.hidden && surfaceActive && alive) {
-      previous = 0;
-      frame = requestAnimationFrame(tick);
-    }
+    pointerMode = null;
   };
   canvas.addEventListener("pointerdown", down);
   canvas.addEventListener("pointermove", movePointer);
   canvas.addEventListener("pointerup", up);
-  canvas.addEventListener("pointercancel", up);
+  canvas.addEventListener("pointercancel", () => {
+    clearInput();
+  });
   canvas.addEventListener("keydown", keydown);
-  canvas.addEventListener("keyup", (event) =>
-    keys.delete(event.key.toLowerCase()),
+  canvas.addEventListener("keyup", (e) => {
+    keys.delete(e.key.toLowerCase());
+  });
+  canvas.addEventListener("blur", clearInput);
+  container.querySelectorAll("[data-shot]").forEach(
+    (button) =>
+      (button.onclick = () => {
+        swing(button.dataset.shot);
+        canvas.focus({ preventScroll: true });
+      }),
   );
-  canvas.addEventListener("blur", blur);
-  document.addEventListener("visibilitychange", visibility);
-  container.querySelector("#swing").onclick = () => {
-    swing();
-    canvas.focus({ preventScroll: true });
-  };
-  container.querySelector("#pause-match").onclick = (event) => {
+  container.querySelectorAll("[data-aim]").forEach(
+    (button) =>
+      (button.onclick = () => {
+        setAim(Number(button.dataset.aim));
+        canvas.focus({ preventScroll: true });
+      }),
+  );
+  $("#pause-match").onclick = () => {
     paused = !paused;
-    event.target.textContent = paused ? "Resume" : "Pause";
-    status.textContent = paused
-      ? "Paused. Take your time."
-      : phase === "ready"
-        ? "Your serve."
-        : "Rally on.";
+    clearInput();
+    previous = 0;
+    $("#pause-match").textContent = paused ? "Resume" : "Pause";
     if (!paused) canvas.focus({ preventScroll: true });
+    invalidate();
   };
-  container.querySelector("#reset-match").onclick = () => {
-    reset();
+  function reset() {
+    game.reset();
+    paused = false;
+    previous = 0;
+    clearInput();
+    $("#pause-match").textContent = "Pause";
+    setAim(0.5);
     canvas.focus({ preventScroll: true });
-  };
-  function update(dt) {
-    time += dt;
-    const dx =
-      Number(keys.has("d") || keys.has("arrowright")) -
-      Number(keys.has("a") || keys.has("arrowleft"));
-    const dy =
-      Number(keys.has("s") || keys.has("arrowdown")) -
-      Number(keys.has("w") || keys.has("arrowup"));
-    player.x = clamp(player.x + dx * dt * 0.68, 0.04, 0.96);
-    player.y = clamp(player.y + dy * dt * 0.52, 0.64, 0.94);
-    if (dx) moveX = dx * 0.22;
-    else moveX *= 0.97;
-    if (!flight) return;
-    flight.progress += dt / flight.duration;
-    const f = flight,
-      t = Math.min(f.progress, 1),
-      x = f.from.x + (f.to.x - f.from.x) * t,
-      y = f.from.y + (f.to.y - f.from.y) * t;
-    const targetX = f.receiver === "bot" ? f.to.x : 0.5;
-    bot.x += clamp(targetX - bot.x, -dt * 0.4, dt * 0.4);
-    if (
-      f.receiver === "player" &&
-      t > 0.72 &&
-      time < swingUntil &&
-      Math.abs(x - player.x) < 0.115 &&
-      Math.abs(y - player.y) < 0.15
-    ) {
-      launch(
-        { x, y },
-        {
-          x: clamp(
-            0.5 + (player.x - 0.5) * 0.5 + moveX + (Math.random() - 0.5) * 0.18,
-            0.05,
-            0.95,
-          ),
-          y: 0.13,
-        },
-        "bot",
-      );
-      swingUntil = 0;
-      status.textContent = `Nice return. ${rally} shots.`;
-      audio.play("hit");
-    } else if (
-      f.receiver === "bot" &&
-      t > 0.94 &&
-      Math.abs(x - bot.x) < 0.1 &&
-      Math.random() > 0.025
-    ) {
-      launch(
-        { x, y },
-        {
-          x: clamp(player.x + (Math.random() - 0.5) * 0.62, 0.09, 0.91),
-          y: 0.87,
-        },
-        "player",
-      );
-      audio.play("hit");
-    } else if (f.progress >= 1.12) point(f.receiver === "player" ? 1 : 0);
+    invalidate();
   }
-  function line(x1, y1, x2, y2, width = 2, color = "#e4ede0") {
+  $("#reset-match").onclick = reset;
+  $("#badminton-level").onchange = (event) => {
+    game.setDifficulty(event.target.value);
+    reset();
+    text(
+      "#opponent-name",
+      event.target.value === "club" ? "Club bot" : "Friendly bot",
+    );
+  };
+  function visibility() {
+    clearInput();
+    if (
+      (!surfaceActive || document.hidden) &&
+      game.getState().phase === "rally"
+    ) {
+      paused = true;
+      $("#pause-match").textContent = "Resume";
+    }
+    cancelAnimationFrame(frame);
+    frame = null;
+    previous = 0;
+    invalidate();
+  }
+  document.addEventListener("visibilitychange", visibility);
+  function line(x1, y1, x2, y2, width = 2, color = "#e8ecdf") {
     ctx.strokeStyle = color;
     ctx.lineWidth = width;
     ctx.beginPath();
@@ -249,40 +213,62 @@ export function mountBadminton(container, audio) {
     ctx.lineTo(x2, y2);
     ctx.stroke();
   }
-  function avatar(p, isPlayer) {
-    const [x, y] = pos(p);
-    ctx.fillStyle = "#102e2950";
+  function ellipse(x, y, rx, ry, color) {
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.ellipse(x, y + 12, 20, 8, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = isPlayer ? "#efc09e" : "#e8d9bb";
-    ctx.beginPath();
-    ctx.arc(x, y - 5, 12, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = isPlayer ? "#e2e9d9" : "#df7f5d";
-    ctx.fillRect(x - 13, y + 5, 26, 15);
-    ctx.strokeStyle = "#e0d7bb";
+  }
+  function avatar(p, isPlayer, state) {
+    const [x, y] = pos(p),
+      swinging = isPlayer && state.swingTime > 0;
+    ellipse(x, y + 17, 22, 9, "#102b3060");
+    ctx.fillStyle = isPlayer ? "#dfe6db" : "#c2835d";
+    ctx.fillRect(x - 13, y - 1, 26, 23);
+    line(x - 7, y + 21, x - 11, y + 30, 5, "#223b40");
+    line(x + 7, y + 21, x + 11, y + 30, 5, "#223b40");
+    ellipse(x, y - 10, 13, 13, isPlayer ? "#e8bd99" : "#b9825e");
+    ctx.strokeStyle = "#e8d6ae";
     ctx.lineWidth = 3;
-    const swinging = isPlayer && time < swingUntil;
     ctx.beginPath();
     ctx.ellipse(
-      x + (swinging ? 32 : 23),
-      y - (swinging ? 17 : 2),
-      8,
-      12,
+      x + (swinging ? 36 : 25),
+      y - (swinging ? 26 : 8),
+      9,
+      13,
       -0.4,
       0,
       Math.PI * 2,
     );
     ctx.stroke();
-    line(x + 12, y + 8, x + 24, y - 1, 3, "#c9a97e");
+    line(
+      x + 11,
+      y + 7,
+      x + (swinging ? 31 : 22),
+      y - (swinging ? 15 : 0),
+      4,
+      "#c49b71",
+    );
+    if (swinging) {
+      ctx.strokeStyle = "#e5bd7d90";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, y, 44, -1.4, -0.3);
+      ctx.stroke();
+    }
   }
-  function draw() {
-    ctx.fillStyle = "#e3e5db";
+  function draw(state, canHit) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#cbd4ce";
     ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = "#244e43";
-    ctx.fillRect(court.x - 25, court.y - 15, court.w + 50, court.h + 30);
-    ctx.strokeStyle = "#dce6d6";
+    ctx.fillStyle = "#af9b7d";
+    ctx.fillRect(80, 0, 740, H);
+    for (let x = 90; x < 820; x += 32) line(x, 0, x, H, 1, "#735d421c");
+    ctx.fillStyle = "#365e58";
+    ctx.fillRect(court.x - 24, court.y - 16, court.w + 48, court.h + 32);
+    ctx.fillStyle = "#3c6861";
+    ctx.fillRect(court.x, court.y + court.h * 0.5, court.w, court.h * 0.5);
+    ctx.strokeStyle = "#f0eedb";
     ctx.lineWidth = 3;
     ctx.strokeRect(court.x, court.y, court.w, court.h);
     for (const factor of [0.09, 0.91])
@@ -301,74 +287,184 @@ export function mountBadminton(container, audio) {
       );
     line(W / 2, court.y, W / 2, court.y + court.h * 0.34);
     line(W / 2, court.y + court.h * 0.66, W / 2, court.y + court.h);
+    // The chosen placement is visible on the opponent half before the shot.
+    const [ax, ay] = pos({ x: state.aim, y: 0.22 });
+    ctx.strokeStyle = "#e0b781a0";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(ax, ay, 17, 0, Math.PI * 2);
+    ctx.stroke();
+    line(ax - 24, ay, ax + 24, ay, 1, "#e0b78170");
+    line(ax, ay - 24, ax, ay + 24, 1, "#e0b78170");
+    avatar(state.bot, false, state);
     for (let x = court.x - 10; x <= court.x + court.w + 10; x += 14)
-      line(x, 281, x, 302, 1, "#a6baa680");
+      line(x, 281, x, 302, 1, "#d4ded290");
     for (let y = 281; y <= 302; y += 7)
-      line(court.x - 10, y, court.x + court.w + 10, y, 1, "#a6baa680");
-    line(court.x - 13, 280, court.x + court.w + 13, 280, 4, "#f0f0dc");
-    avatar(bot, false);
-    avatar(player, true);
-    if (flight) {
-      const t = Math.min(flight.progress, 1),
+      line(court.x - 10, y, court.x + court.w + 10, y, 1, "#d4ded290");
+    line(court.x - 13, 280, court.x + court.w + 13, 280, 4, "#f1ecd5");
+    const f = state.flight;
+    if (f) {
+      const t = Math.min(f.progress, 1),
         p = {
-          x: flight.from.x + (flight.to.x - flight.from.x) * t,
-          y: flight.from.y + (flight.to.y - flight.from.y) * t,
+          x: f.from.x + (f.to.x - f.from.x) * t,
+          y: f.from.y + (f.to.y - f.from.y) * t,
         };
-      const [x, y] = pos(p);
-      const h = Math.sin(t * Math.PI) * 66;
-      const [lx, ly] = pos(flight.to);
-      ctx.strokeStyle = "#f0e6bc";
-      ctx.lineWidth = 2;
+      const [x, y] = pos(p),
+        [lx, ly] = pos(f.to),
+        height = Math.sin(t * Math.PI) * f.arc;
+      ctx.strokeStyle =
+        f.receiver === "player"
+          ? canHit
+            ? "#eac083"
+            : "#d5e5d9"
+          : "#c2cfc080";
+      ctx.lineWidth = canHit ? 4 : 2;
       ctx.beginPath();
-      ctx.ellipse(lx, ly, 15, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(lx, ly, 19, 10, 0, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.fillStyle = "#092e2b65";
+      if (f.receiver === "player") {
+        const radius = 18 + Math.max(0, 0.95 - f.progress) * 60;
+        ctx.strokeStyle = canHit ? "#eac083" : "#e5e9df85";
+        ctx.beginPath();
+        ctx.ellipse(lx, ly, radius, radius * 0.52, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ellipse(x, y + 5, 7, 3, "#092e2b75");
+      ctx.fillStyle = "#fff9dd";
       ctx.beginPath();
-      ctx.ellipse(x, y + 5, 6, 3, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#faf7e8";
-      ctx.beginPath();
-      ctx.moveTo(x, y - h + 5);
-      ctx.lineTo(x - 5, y - h - 9);
-      ctx.lineTo(x + 5, y - h - 9);
+      ctx.moveTo(x, y - height + 5);
+      ctx.lineTo(x - 6, y - height - 11);
+      ctx.lineTo(x + 6, y - height - 11);
       ctx.closePath();
       ctx.fill();
-      ctx.beginPath();
-      ctx.arc(x, y - h + 4, 3, 0, Math.PI * 2);
-      ctx.fill();
+      ellipse(x, y - height + 4, 3, 3, "#fff9dd");
     }
-    if (paused) {
-      ctx.fillStyle = "#18382bcc";
+    avatar(state.player, true, state);
+    if (paused || state.phase === "over") {
+      ctx.fillStyle = "#173a3ac9";
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#fff";
-      ctx.font = "32px sans-serif";
+      ctx.fillStyle = "#faf4df";
       ctx.textAlign = "center";
-      ctx.fillText("Paused", W / 2, H / 2);
+      ctx.font = "600 34px Arial";
+      ctx.fillText(
+        paused
+          ? "Paused"
+          : state.scores[0] >= 7
+            ? "Good game. Your match!"
+            : "Good game. One more?",
+        W / 2,
+        H / 2 - 8,
+      );
+      ctx.font = "20px Arial";
+      ctx.fillText(
+        paused
+          ? "Choose Resume when you're ready."
+          : "New match gives you a fresh court.",
+        W / 2,
+        H / 2 + 31,
+      );
     }
   }
   function tick(now) {
-    if (!alive || !surfaceActive || document.hidden) {
-      frame = null;
-      return;
-    }
-    const dt = Math.min((now - previous) / 1000 || 0, 0.035);
+    frame = null;
+    if (!alive || !surfaceActive || document.hidden) return;
+    const dt = Math.min((now - previous) / 1000 || 0, 0.05);
     previous = now;
-    if (!paused && !document.hidden) update(dt);
-    draw();
-    frame = requestAnimationFrame(tick);
+    const dx =
+      Number(keys.has("d") || keys.has("arrowright")) -
+      Number(keys.has("a") || keys.has("arrowleft"));
+    const dy =
+      Number(keys.has("s") || keys.has("arrowdown")) -
+      Number(keys.has("w") || keys.has("arrowup"));
+    if (!paused) game.step(dt, { dx, dy, target: pointerTarget });
+    flush();
+    const state = game.getState(),
+      f = state.flight;
+    const p = f
+      ? {
+          x: f.from.x + (f.to.x - f.from.x) * Math.min(f.progress, 1),
+          y: f.from.y + (f.to.y - f.from.y) * Math.min(f.progress, 1),
+        }
+      : null;
+    const canHit = !!(
+      f?.receiver === "player" &&
+      f.progress >= 0.77 &&
+      f.progress <= 1.055 &&
+      Math.hypot(
+        (p.x - state.player.x) / 0.145,
+        (p.y - state.player.y) / 0.16,
+      ) <= 1 &&
+      state.cooldown === 0
+    );
+    const sweetSpot = canHit && f.progress >= 0.9 && f.progress <= 1.01;
+    const cue = paused
+      ? "Paused"
+      : state.phase === "over"
+        ? "Match finished"
+        : !f
+          ? "Your serve"
+          : f.receiver === "bot"
+            ? "Recover for the return"
+            : sweetSpot
+              ? "Swing now"
+              : f.progress > 0.68
+                ? canHit
+                  ? "Get ready"
+                  : "Move to the ring"
+                : "Watch the landing ring";
+    text("#contact-cue", cue);
+    $(".badminton-contact").dataset.ready = String(sweetSpot && !paused);
+    text(
+      "#shot-feedback",
+      paused ? "Take your time. Choose Resume to continue." : state.feedback,
+    );
+    text("#your-score", String(state.scores[0]));
+    text("#bot-score", String(state.scores[1]));
+    text(
+      "#rally-status",
+      state.phase === "rally"
+        ? `Rally · ${state.rally} shots`
+        : state.phase === "over"
+          ? "Match finished"
+          : "Your serve",
+    );
+    Object.assign(canvas.dataset, {
+      phase: state.phase,
+      score: state.scores.join(":"),
+      rally: String(state.rally),
+      receiver: f?.receiver || "",
+      targetX: f?.to.x.toFixed(3) || "",
+      targetY: f?.to.y.toFixed(3) || "",
+      flightProgress: f?.progress.toFixed(3) || "",
+      playerX: state.player.x.toFixed(3),
+      playerY: state.player.y.toFixed(3),
+      botX: state.bot.x.toFixed(3),
+      quality: state.quality || "",
+      difficulty: state.difficulty,
+      paused: String(paused),
+    });
+    draw(state, sweetSpot);
+    if (
+      !paused &&
+      (state.phase === "rally" ||
+        dx ||
+        dy ||
+        state.moving ||
+        state.swingTime > 0 ||
+        state.cooldown > 0)
+    )
+      invalidate();
   }
-  reset();
-  frame = requestAnimationFrame(tick);
+  invalidate();
   const cleanup = () => {
     alive = false;
     cancelAnimationFrame(frame);
-    keys.clear();
+    clearInput();
     document.removeEventListener("visibilitychange", visibility);
     container.replaceChildren();
   };
   cleanup.setActive = (value) => {
     surfaceActive = value;
-    keys.clear();
     visibility();
   };
   return cleanup;
