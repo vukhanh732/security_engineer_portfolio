@@ -18,4 +18,4 @@ The exact source commit, original download hashes, modifications, dimensions and
 
 The study shell, bookshelf, windows, doors, hobbies hall, gym equipment, badminton court and partitioned card room are original geometry generated in code. Their shadow textures, card faces and materials make no additional artwork downloads. The gym/court/card furniture shares one hall beyond the study door.
 
-The loading/sharing image, `images/connected-study-20261031.webp`, is a sharp capture of the actual furnished study. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.
+The loading/sharing image, `images/connected-study-20261031b.webp`, is a sharp capture of the actual furnished study. The previous photogrammetry/HDR study and its artificial weather cycle have been removed from the active implementation. The desktop is an independent retro-inspired interface, with Vu's own content and existing form, games and audio behavior.

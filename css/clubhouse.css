@@ -1330,6 +1330,7 @@ a {
   font-size: 12px;
 }
 .desk-objects summary {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1472,5 +1473,216 @@ a {
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
+  }
+}
+
+/* Room affordances stay outside the 3D artwork and remain readable at any zoom. */
+.view-controls {
+  position: absolute;
+  right: 30px;
+  bottom: 108px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  background: #f4f2e7f2;
+  border: 1px solid #c1c8bc;
+  color: #263e43;
+}
+.world:not(.is-ready) .view-controls {
+  visibility: hidden;
+}
+.view-controls button {
+  min-width: 44px;
+  padding: 8px 10px;
+}
+.view-controls button[aria-pressed="true"] {
+  background: #d3dfd8;
+}
+.view-controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.view-controls output {
+  min-width: 48px;
+  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.activity-markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.activity-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  text-align: left;
+  min-width: 142px;
+  min-height: 58px;
+  padding: 9px 13px;
+  border: 1px solid #f8f0d4;
+  border-bottom: 3px solid #b67450;
+  background: #f4f2e7f5;
+  color: #263e43;
+  box-shadow: 0 5px 14px #253b3824;
+  cursor: pointer;
+}
+.activity-marker:after {
+  content: "";
+  position: absolute;
+  height: 17px;
+  width: 1px;
+  bottom: -20px;
+  left: 50%;
+  background: #f4f2e7;
+}
+.activity-marker strong {
+  display: block;
+  font: 600 15px/1.25 var(--font-head);
+}
+.activity-marker span {
+  display: block;
+  font-size: 11px;
+  margin-top: 3px;
+}
+.activity-marker:hover,
+.activity-marker:focus-visible {
+  background: #fff9e9;
+  border-color: #b67450;
+}
+.world-hint {
+  position: absolute;
+  top: 104px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: none;
+  margin: 0;
+  padding: 8px 14px;
+  background: #273f42ee;
+  color: #fff8e7;
+  font-size: 13px;
+}
+.world-hint[hidden],
+.activity-marker[hidden] {
+  display: none;
+}
+.desktop-open .activity-markers,
+.desktop-open .view-controls,
+.desktop-open .world-hint,
+.inspecting-object .activity-markers,
+.inspecting-object .view-controls,
+.inspecting-object .world-hint {
+  visibility: hidden;
+}
+@media (max-width: 767px) {
+  .view-controls {
+    right: 16px;
+    top: 100px;
+    bottom: auto;
+  }
+  .view-controls #mouse-look {
+    display: none;
+  }
+  .activity-marker {
+    min-width: 108px;
+    min-height: 52px;
+    padding: 7px 9px;
+  }
+  .activity-marker strong {
+    font-size: 13px;
+  }
+  .activity-marker span {
+    font-size: 10px;
+  }
+  .world-hint {
+    top: 154px;
+    max-width: calc(100% - 32px);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 1100px), (max-height: 650px) {
+  .view-controls {
+    right: 16px;
+    top: calc(var(--room-header-bottom, 80px) + 10px);
+    bottom: auto;
+  }
+  .activity-markers {
+    inset: calc(var(--room-header-bottom, 80px) + 74px) 16px auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .activity-marker {
+    position: static !important;
+    transform: none;
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+  }
+  .activity-marker:after,
+  .world-hint {
+    display: none;
+  }
+  .world[data-current-room="hobbies"] .room-heading,
+  .world[data-current-room="gym"] .room-heading,
+  .world[data-current-room="badminton"] .room-heading,
+  .world[data-current-room="lounge"] .room-heading {
+    visibility: hidden;
+  }
+}
+@media (min-width: 768px) and (max-height: 650px) {
+  .activity-markers {
+    top: calc(var(--room-header-bottom, 80px) + 10px);
+    right: 256px;
+  }
+  .activity-marker {
+    padding: 8px 10px;
+  }
+  .activity-marker strong {
+    font-size: 13px;
+  }
+  .activity-marker span {
+    font-size: 10px;
+  }
+  .enhanced:not(.simple-view) .world-toolbar {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    flex-wrap: nowrap;
+    align-items: end;
+    gap: 8px;
+  }
+  .enhanced:not(.simple-view) .exploration {
+    flex: 1;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .enhanced:not(.simple-view) .rooms-nav {
+    flex-shrink: 0;
+  }
+  .enhanced:not(.simple-view) .world-settings {
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .enhanced:not(.simple-view) .world-settings a[href="#sound"],
+  .enhanced:not(.simple-view) #open-desktop {
+    display: none;
+  }
+}
+@media (max-height: 650px) {
+  .enhanced:not(.simple-view) .clubhouse-footer {
+    display: none;
+  }
+  .enhanced:not(.simple-view) .world-toolbar {
+    bottom: 12px;
+  }
+  .world .room-heading {
+    visibility: hidden;
   }
 }

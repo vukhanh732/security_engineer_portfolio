@@ -20,6 +20,7 @@ export function createDesktop({
   onChange,
   onExit,
   onVisibility,
+  onWindowClosed,
 }) {
   const desktop = document.querySelector("#desktop"),
     area = document.querySelector("#desktop-windows"),
@@ -129,6 +130,7 @@ export function createDesktop({
       else start.focus({ preventScroll: true });
     }
     changed();
+    onWindowClosed?.(name, state());
   }
   function show() {
     if (!desktop.open) {

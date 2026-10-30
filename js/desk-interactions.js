@@ -128,7 +128,9 @@ export function createDeskInteractions({
       if (frame && frame.width < 768) {
         // Fit the object into the space between the phone header and its
         // description instead of letting a close-up extend behind either.
-        const halfFov = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const halfFov = Math.tan(
+          THREE.MathUtils.degToRad(camera.getEffectiveFOV() / 2),
+        );
         const space = Math.max(80, frame.bottom - frame.top);
         const height = name === "book" ? 1.02 : 1.2;
         const distance = (height * frame.height) / (2 * halfFov * space * 0.85);

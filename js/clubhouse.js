@@ -1,5 +1,5 @@
 import { createAudio } from "./clubhouse-audio.js";
-import { createDesktop } from "./desktop.js?v=20261030-rooms1";
+import { createDesktop } from "./desktop.js?v=20261031-roomview1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
 const audio = createAudio();
@@ -20,6 +20,10 @@ let scene = null,
   lowQuality = false,
   routeVersion = 0,
   restoring = false;
+let desktopReturnView = null,
+  pendingReturnView = null,
+  returnOnClose = false,
+  routedURL = null;
 const isSimple = () => body.classList.contains("simple-view");
 function currentHash() {
   const fragment = location.hash.slice(1);
@@ -47,7 +51,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261030-rooms1`);
+    const module = await import(`./games/${name}.js?v=20261031-roomview1`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -64,6 +68,15 @@ async function mountGame(name, section) {
 const desktop = createDesktop({
   onOpen: mountGame,
   onClose: stopGame,
+  onWindowClosed(_name, state) {
+    if (
+      !restoring &&
+      returnOnClose &&
+      state.visible &&
+      !state.windows.some((item) => !item.minimized)
+    )
+      exitDesktop();
+  },
   onVisibility(name, active) {
     const entry = games.get(name);
     if (entry) {
@@ -112,6 +125,7 @@ updateAudio();
 function updateHash(name, replace = false) {
   const hash = name ? "#" + name : "";
   if (location.hash === hash) return;
+  routedURL = null;
   history[replace ? "replaceState" : "pushState"](
     null,
     "",
@@ -133,14 +147,33 @@ function setSimple(value, { load = true } = {}) {
     if (load) loadScene();
   }
 }
-function exitDesktop() {
+function exitDesktop({ updateRoute = true } = {}) {
   ++routeVersion;
   audio.play("close");
   restoring = true;
   desktop.hide({ restore: isSimple() });
   restoring = false;
-  updateHash("");
-  if (!isSimple() && scene?.getState().node === "screen") scene.go("desk");
+  const view = desktopReturnView;
+  desktopReturnView = null;
+  returnOnClose = false;
+  if (updateRoute)
+    updateHash(
+      view
+        ? {
+            badminton: "badminton-hall",
+            lounge: "card-lounge",
+            desk: "study",
+            screen: "study",
+          }[view.node] || (view.node === "study" ? "" : view.node)
+        : "",
+    );
+  if (!isSimple() && view) scene?.restoreView(view);
+}
+function rememberRoom(directApp = false) {
+  if (desktop.getState().visible) return;
+  desktopReturnView = pendingReturnView || scene?.captureView?.() || null;
+  pendingReturnView = null;
+  returnOnClose = directApp && !isSimple();
 }
 function showSection(requested, { push = true } = {}) {
   const name = aliases[requested] || requested;
@@ -154,6 +187,7 @@ function showSection(requested, { push = true } = {}) {
     return;
   }
   if (name === "computer") {
+    rememberRoom();
     ++routeVersion;
     if (push) updateHash(name);
     desktop.land();
@@ -185,6 +219,7 @@ function showSection(requested, { push = true } = {}) {
   }
   const section = document.getElementById(name);
   if (!section?.classList.contains("portfolio-section")) return;
+  rememberRoom(true);
   ++routeVersion;
   if (push) updateHash(requested);
   if (isSimple() && !desktop.getState().visible) {
@@ -197,6 +232,7 @@ function showSection(requested, { push = true } = {}) {
     mountGame(name, section);
     return;
   }
+  if (!desktop.getState().visible) desktop.land();
   desktop.open(name);
   scene?.setActive(false);
   if (requested !== name) {
@@ -230,6 +266,26 @@ document.addEventListener("click", (event) => {
   }
 });
 function route() {
+  if (routedURL === location.href) return;
+  routedURL = location.href;
+  const name = currentHash();
+  if (
+    desktop.getState().visible &&
+    (!name ||
+      [
+        "study",
+        "desk",
+        "hobbies",
+        "gym",
+        "lounge",
+        "corridor",
+        "badminton-hall",
+        "card-lounge",
+      ].includes(name))
+  ) {
+    exitDesktop({ updateRoute: false });
+    return;
+  }
   if (location.hash) showSection(currentHash(), { push: false });
   else desktop.hide({ restore: isSimple(), focus: false });
 }
@@ -240,6 +296,7 @@ $("#simple-view").addEventListener("click", () => {
   setSimple(!isSimple());
 });
 function openDesktop() {
+  rememberRoom();
   ++routeVersion;
   if (isSimple()) stopGames();
   updateHash("computer");
@@ -262,7 +319,7 @@ async function loadScene() {
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261030-rooms1"
+        "./clubhouse-scene.js?v=20261031-roomview1"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
@@ -288,14 +345,36 @@ async function loadScene() {
           $("#object-inspector").hidden = true;
           body.classList.remove("inspecting-object");
         },
-        onInteract(name) {
+        onInteract(name, returnView) {
+          pendingReturnView = returnView || null;
           if (isSimple()) setSimple(false, { load: false });
           navigate(name);
+        },
+        onCameraChange(state) {
+          $("#zoom-level").textContent = Math.round(state.zoom * 100) + "%";
+          $("#zoom-out").disabled = state.zoom <= 0.801;
+          $("#zoom-in").disabled = state.zoom >= 1.649;
+          $("#mouse-look").setAttribute("aria-pressed", String(state.look));
+        },
+        onHover(label) {
+          $("#world-hint").textContent = label || "";
+          $("#world-hint").hidden = !label;
+        },
+        onMarkers(markers) {
+          for (const marker of markers) {
+            const button = $(`[data-room-activity="${marker.name}"]`);
+            button.hidden = !marker.visible;
+            if (marker.visible) {
+              button.style.left = marker.x + "px";
+              button.style.top = marker.y + "px";
+            }
+          }
         },
         onLocation(room, node = room) {
           const place = ["study", "desk", "screen", "corridor"].includes(node)
             ? "study"
             : node;
+          $(".world").dataset.currentRoom = place;
           $("#place-name").textContent = {
             study: "The study",
             hobbies: "Explore my hobbies",
@@ -393,7 +472,26 @@ $("#home-camera").addEventListener("click", async () => {
   ++routeVersion;
   const version = routeVersion;
   const world = await loadScene();
-  if (version === routeVersion) world?.go("study");
+  if (version === routeVersion) {
+    world?.resetZoom();
+    world?.go("study");
+  }
+});
+for (const [id, amount] of [
+  ["#zoom-in", 0.15],
+  ["#zoom-out", -0.15],
+])
+  $(id).addEventListener("click", () => scene?.zoomBy(amount));
+$("#mouse-look").addEventListener("click", () => scene?.toggleLook());
+document.querySelectorAll("[data-room-activity]").forEach((button) => {
+  const name = button.dataset.roomActivity;
+  button.addEventListener("click", () =>
+    navigate(name === "gym" ? "about" : name),
+  );
+  for (const type of ["mouseenter", "focus"])
+    button.addEventListener(type, () => scene?.highlightActivity(name));
+  for (const type of ["mouseleave", "blur"])
+    button.addEventListener(type, () => scene?.highlightActivity(null));
 });
 $("#put-back").addEventListener("click", () => {
   scene?.dismissInspection();
@@ -442,6 +540,13 @@ document.addEventListener("keydown", (event) => {
 body.classList.add("enhanced");
 if (matchMedia("(max-width: 767px)").matches) setSimple(true, { load: false });
 const world = $(".world");
+const headerSize = new ResizeObserver(() => {
+  world.style.setProperty(
+    "--room-header-bottom",
+    $(".site-header").getBoundingClientRect().bottom + "px",
+  );
+});
+headerSize.observe($(".site-header"));
 world.addEventListener(
   "pointerdown",
   () => {
@@ -449,13 +554,16 @@ world.addEventListener(
   },
   { once: true, passive: true },
 );
-world.addEventListener(
-  "pointermove",
-  () => {
-    if (!isSimple()) loadScene();
-  },
-  { once: true, passive: true },
-);
+function prepareOnMovement(event) {
+  // Browsers also emit a stationary pointer event as the page appears.
+  // Wait for actual movement so opening a reading shortcut stays lightweight.
+  if (event.isTrusted && !event.movementX && !event.movementY) return;
+  if (!isSimple()) {
+    world.removeEventListener("pointermove", prepareOnMovement);
+    loadScene();
+  }
+}
+world.addEventListener("pointermove", prepareOnMovement, { passive: true });
 $("#world-canvas").addEventListener(
   "focus",
   () => {

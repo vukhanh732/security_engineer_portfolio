@@ -15,10 +15,10 @@
     <link rel="canonical" href="https://security-vu.netlify.app/" />
     <link
       rel="icon"
-      href="/favicon.svg?v=20261030-rooms1"
+      href="/favicon.svg?v=20261031-roomview1"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon.ico?v=20261030-rooms1" sizes="any" />
+    <link rel="icon" href="/favicon.ico?v=20261031-roomview1" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -45,7 +45,7 @@
     <meta property="og:url" content="https://security-vu.netlify.app/" />
     <meta
       property="og:image"
-      content="https://security-vu.netlify.app/images/connected-study-20261031.webp"
+      content="https://security-vu.netlify.app/images/connected-study-20261031b.webp"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vu Luu - The Desk" />
@@ -55,10 +55,10 @@
     />
     <meta
       name="twitter:image"
-      content="https://security-vu.netlify.app/images/connected-study-20261031.webp"
+      content="https://security-vu.netlify.app/images/connected-study-20261031b.webp"
     />
-    <link rel="stylesheet" href="css/clubhouse.css?v=20261030-rooms1" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261030-rooms1" />
+    <link rel="stylesheet" href="css/clubhouse.css?v=20261031-roomview1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261031-roomview1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,7 +94,7 @@
     <header class="site-header">
       <a class="identity" href="index.html"
         ><img
-          src="favicon.svg?v=20261030-rooms1"
+          src="favicon.svg?v=20261031-roomview1"
           class="identity-mark"
           alt=""
           width="38"
@@ -125,7 +125,7 @@
               data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
             " />
           <img
-            src="images/connected-study-20261031.webp"
+            src="images/connected-study-20261031b.webp"
             alt="A morning study with a retro computer, bookshelf, windows and a door to the hobbies hall"
             width="1440"
             height="900"
@@ -137,6 +137,29 @@
           tabindex="0"
           aria-label="Vu's study. Move your mouse to look around. Click the door to explore hobbies, or the computer, drawer, cup, textbook or plant. Desk objects offers the same controls. Escape puts an object back or returns home."
         ></canvas>
+        <div
+          class="activity-markers"
+          aria-label="Things to try in the hobbies hall"
+        >
+          <button class="activity-marker" data-room-activity="badminton" hidden>
+            <strong>Badminton</strong><span>Play a match ↗</span>
+          </button>
+          <button class="activity-marker" data-room-activity="gym" hidden>
+            <strong>The gym</strong><span>Off the clock ↗</span>
+          </button>
+          <button class="activity-marker" data-room-activity="poker" hidden>
+            <strong>Poker</strong><span>Deal a hand ↗</span>
+          </button>
+        </div>
+        <p class="world-hint" id="world-hint" role="status" hidden></p>
+        <div class="view-controls" role="group" aria-label="Room view">
+          <button class="utility" id="mouse-look" aria-pressed="true">
+            Mouse look
+          </button>
+          <button class="utility" id="zoom-out" aria-label="Zoom out">−</button>
+          <output id="zoom-level" aria-label="Zoom level">100%</output>
+          <button class="utility" id="zoom-in" aria-label="Zoom in">+</button>
+        </div>
         <div
           class="world-loading"
           id="world-status"
@@ -904,8 +927,9 @@
           <div>
             <dt>Look around</dt>
             <dd>
-              Move your mouse for a gentle change of angle. Home returns to the
-              desk. Reduced motion skips camera and object animation.
+              Move your mouse to look around, and scroll over the room or use +
+              / − to zoom. Mouse look turns cursor movement on or off. Home
+              resets the view. Reduced motion starts with mouse look off.
             </dd>
           </div>
           <div>
@@ -927,8 +951,10 @@
           <div>
             <dt>Leave a game</dt>
             <dd>
-              Back to the room or Escape leaves the computer. Closing a game
-              ends it; minimizing pauses badminton until you choose Resume.
+              Closing an activity opened from the room returns you to that view,
+              including your zoom. Back to the room or Escape also returns you
+              there. Apps opened inside the computer close to its desktop.
+              Minimizing pauses badminton until you choose Resume.
             </dd>
           </div>
         </dl>
@@ -1072,7 +1098,7 @@
           aria-controls="start-menu"
         >
           <img
-            src="favicon.svg?v=20261030-rooms1"
+            src="favicon.svg?v=20261031-roomview1"
             alt=""
             width="20"
             height="20"
@@ -1095,7 +1121,7 @@
     </footer>
     <script
       type="module"
-      src="js/clubhouse.js?v=20261030-rooms1"
+      src="js/clubhouse.js?v=20261031-roomview1"
       onerror="document.documentElement.classList.remove('js')"
     ></script>
   </body>

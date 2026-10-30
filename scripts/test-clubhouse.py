@@ -346,6 +346,7 @@ with sync_playwright() as p:
     room.locator('#put-back').click()
     # With normal motion the camera follows, settles, and stops rendering.
     room.emulate_media(reduced_motion='no-preference')
+    expect(room.locator('#mouse-look')).to_have_attribute('aria-pressed','true')
     room.mouse.move(1200,200)
     room.wait_for_function('(before) => document.querySelector("#world-canvas").dataset.position !== before',arg=neutral)
     room.wait_for_timeout(1500)
