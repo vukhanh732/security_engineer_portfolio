@@ -1778,3 +1778,21 @@ body:not(.office-entered) .world[data-current-room="study"] .room-action {
     font-size: 11px;
   }
 }
+
+@media (max-width: 767px) and (max-height: 700px) {
+  .object-inspector .object-turn {
+    grid-column: 1 / -1;
+  }
+  .object-inspector .object-turn .button {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: stretch;
+  }
+  .inspecting-object .world-toolbar {
+    visibility: hidden;
+  }
+  .object-inspector {
+    bottom: 20px;
+    max-height: calc(100dvh - 220px);
+  }
+}

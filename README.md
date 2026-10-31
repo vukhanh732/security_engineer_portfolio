@@ -12,7 +12,7 @@ The office centres the computer on its original baked-light backdrop. Ground con
 
 Hold and drag to orbit the desk through 360 degrees, staying above the floor. Scroll or + / − zooms from 80% to 165%; Home restores the composed view. Arrow keys rotate the camera when the canvas has focus. Pick up the coffee cup or Field Notes book, then drag to rotate the object independently; its arrow controls and keyboard also work. Put back/Escape restores the original object transform. Dragging never opens objects on release, including after Escape cancels a held drag. User orbit and zoom survive reading apps and adapt on resize. Reduced motion removes automatic parallax/sway/transitions but permits direct manipulation.
 
-Enter with sound runs a short typed name introduction with licensed typing samples, quiet office ambience and the existing music. Enter quietly stays silent; recruiter shortcuts work immediately. Sound volumes/mute and hidden-tab suspension cover all audio layers. Text completes immediately for reduced motion or when leaving/hiding the introduction.
+Enter office starts the typed name introduction, typing sounds, quiet office ambience and music by default. There is no sound-choice prompt. The browser requires the initial tap/click; mute and volume controls remain available, and recruiter shortcuts work immediately. Sound volumes/mute and hidden-tab suspension cover all audio layers. Text completes immediately for reduced motion or when leaving/hiding the introduction.
 
 Poker is five-card draw. Badminton is first to seven with bounded movement, deliberate contact timing and left/centre/right aiming. Clear, drop and smash have different depths and speeds. Friendly and Club opponents react and move to reach each shuttle, rather than retrying random misses. Keyboard, pointer and touch controls use the same simulation. Minimizing badminton pauses it; closing a game ends it. Sound starts only after Enable sound. Music/effects volumes are independently remembered; mute and hidden tabs pause playback.
 
@@ -35,6 +35,7 @@ node scripts/test-badminton.mjs
 python3 scripts/test-clubhouse.py
 python3 scripts/test-room-view.py
 python3 scripts/test-office.py
+python3 scripts/test-responsive-entry.py
 ```
 
 Browser checks require Python Playwright and Chromium. Set `CLUBHOUSE_TEST_URL` for another local origin. Screenshots go to ignored `.superpowers/build/`. The suite covers the 2 MB artwork budget, six-request limit, retina canvas dimensions, connected rooms, mouse parallax, actual prop picking/inspection/return, interruption after fade swaps, reduced-motion changes, repeated/canceled camera movement, reading suspension, wallpaper-first entry with restorable windows, desktop/focus/history, a complete badminton win, game suspension, landscape court sizing, poker, audio, contact without submission, mobile/short laptops, failed modules/artwork, no JS and no WebGL.

@@ -1,5 +1,5 @@
 import { createAudio } from "./clubhouse-audio.js?v=20261031-office1";
-import { createOfficeIntro } from "./office-intro.js?v=20261031-office1";
+import { createOfficeIntro } from "./office-intro.js?v=20261031-entry2";
 import { createDesktop } from "./desktop.js?v=20261031-office1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
@@ -303,8 +303,10 @@ function route() {
 addEventListener("popstate", route);
 addEventListener("hashchange", route);
 $("#simple-view").addEventListener("click", () => {
+  const entering = isSimple();
   updateHash("");
-  setSimple(!isSimple());
+  setSimple(!entering);
+  if (entering) introduction.enter();
 });
 function openDesktop() {
   rememberRoom();

@@ -5,7 +5,7 @@ BASE=os.environ.get("CLUBHOUSE_TEST_URL","http://127.0.0.1:4173").rstrip("/")
 with sync_playwright() as p:
  b=p.chromium.launch(headless=True,args=['--enable-webgl','--use-angle=swiftshader','--enable-unsafe-swiftshader'])
  page=b.new_page(viewport={'width':1440,'height':900},reduced_motion='reduce');errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
- page.goto(BASE+'/',wait_until='networkidle');page.locator('[data-enter=quiet]').click();c=page.locator('#world-canvas[data-ready=true]');c.wait_for(timeout=90000)
+ page.goto(BASE+'/',wait_until='networkidle');page.locator('[data-enter=sound]').click();c=page.locator('#world-canvas[data-ready=true]');c.wait_for(timeout=90000)
  page.screenshot(path='.superpowers/build/open-office-front.png');before=c.get_attribute('data-position')
  page.mouse.move(1120,420);page.mouse.down();page.mouse.move(650,510,steps=16);page.mouse.up();page.wait_for_timeout(100)
  assert c.get_attribute('data-position')!=before

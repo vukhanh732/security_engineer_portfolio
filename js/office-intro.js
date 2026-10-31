@@ -32,17 +32,15 @@ export function createOfficeIntro({ heading, controls, audio, onEnter }) {
       text[index - 1] === "," ? 190 : 65 + (index % 3) * 18,
     );
   }
-  async function enter(sound) {
+  async function enter() {
     if (started) return;
     const version = ++generation;
     started = true;
     controls.hidden = true;
     // Call play synchronously from the click to retain browser audio activation.
-    const activation = sound
-      ? audio.enable()
-      : (audio.mute(), Promise.resolve(false));
+    const activation = audio.enable();
     onEnter();
-    if (sound) await activation;
+    await activation;
     if (version !== generation || document.hidden || reduced.matches) return;
     running = true;
     heading.dataset.introducing = "true";
@@ -50,12 +48,7 @@ export function createOfficeIntro({ heading, controls, audio, onEnter }) {
     heading.innerHTML = '<span aria-hidden="true"></span>';
     tick();
   }
-  controls
-    .querySelector("[data-enter=sound]")
-    .addEventListener("click", () => enter(true));
-  controls
-    .querySelector("[data-enter=quiet]")
-    .addEventListener("click", () => enter(false));
+  controls.querySelector("[data-enter=sound]").addEventListener("click", enter);
   const hidden = () => {
     if (document.hidden) complete();
   };
@@ -65,6 +58,7 @@ export function createOfficeIntro({ heading, controls, audio, onEnter }) {
   document.addEventListener("visibilitychange", hidden);
   reduced.addEventListener("change", motion);
   return {
+    enter,
     complete,
     get started() {
       return started;
