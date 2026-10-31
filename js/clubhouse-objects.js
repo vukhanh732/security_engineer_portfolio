@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { personalizeDesk } from "./desk-props.js?v=20261031-roomview1";
+import { personalizeDesk } from "./desk-props.js?v=20261031-office1";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 

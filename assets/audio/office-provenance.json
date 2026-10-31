@@ -1,0 +1,30 @@
+[
+  {
+    "file": "typing-1.mp3",
+    "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/audio/keyboard/key_1.mp3",
+    "sha256": "4a413b3a0d4e0f95a60a0b76e9cb7a43ad756f744fadcfcf64b53b723dc854da",
+    "bytes": 14400,
+    "license": "MIT; Henry Heffernan portfolio source"
+  },
+  {
+    "file": "typing-2.mp3",
+    "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/audio/keyboard/key_2.mp3",
+    "sha256": "d8663f1577d8a3b68fc3ca1a85fe67f1f346c5b8fe461ff10f81db5d4eb0d172",
+    "bytes": 4800,
+    "license": "MIT; Henry Heffernan portfolio source"
+  },
+  {
+    "file": "typing-3.mp3",
+    "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/audio/keyboard/key_3.mp3",
+    "sha256": "31997a19d9b0147d24199aaa4bd243e6faea7dd710ab2490c8cc0d66df5c7090",
+    "bytes": 14400,
+    "license": "MIT; Henry Heffernan portfolio source"
+  },
+  {
+    "file": "office.ogg",
+    "source": "https://raw.githubusercontent.com/henryjeff/portfolio-website/c53c5a50183655eb83d70048403a5084f5d1214c/static/audio/atmosphere/office.ogg",
+    "sha256": "7353f25131fb3aad0351b2ddc3de417e77436bbc8031f9f84dd5ca380712e938",
+    "bytes": 293200,
+    "license": "MIT; Henry Heffernan portfolio source"
+  }
+]

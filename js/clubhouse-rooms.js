@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { buildDestination } from "./clubhouse-objects.js?v=20261031-roomview1";
+import { buildDestination } from "./clubhouse-objects.js?v=20261031-office1";
 
 // Original room architecture. Everything here is geometry or a small canvas
 // texture, so the licensed desk's six artwork downloads remain the full budget.
@@ -264,46 +264,6 @@ function windowLight(root, x, width, wallZ, floorY, length, skew) {
       );
     }
 }
-function bookshelf(b) {
-  const x = -4.65,
-    z = -4.95,
-    floorY = -3,
-    w = 3.2;
-  b.box(w, 5.7, 0.12, x, floorY + 2.85, z - 0.27, COLORS.wood);
-  for (const side of [-1, 1])
-    b.box(0.14, 5.8, 0.72, x + (side * w) / 2, floorY + 2.9, z, COLORS.wood);
-  for (let row = 0; row <= 4; row++) {
-    const y = floorY + 0.12 + row * 1.36;
-    b.box(w + 0.16, 0.14, 0.76, x, y, z, COLORS.wood);
-    if (row === 4) continue;
-    for (let i = 0; i < 8; i++) {
-      const width = 0.17 + ((i + row) % 3) * 0.03,
-        height = 0.72 + ((i * 3 + row) % 4) * 0.1;
-      const bx = x - 1.33 + i * 0.33;
-      const book = b.box(
-        width,
-        height,
-        0.48,
-        bx,
-        y + 0.075 + height / 2,
-        z + 0.05,
-        [COLORS.teal, COLORS.copper, COLORS.paper, COLORS.dark, "#7e8970"][
-          (i + row) % 5
-        ],
-      );
-      if (i === 7) book.rotation.z = -0.12;
-      b.box(
-        width * 0.7,
-        0.035,
-        0.014,
-        bx,
-        y + height * 0.7,
-        z + 0.298,
-        COLORS.trim,
-      );
-    }
-  }
-}
 function doorway(root, b, { x, z, floorY, destination, label, side }) {
   const leaf = new THREE.Group();
   leaf.name = destination + "-door";
@@ -374,48 +334,16 @@ function doorway(root, b, { x, z, floorY, destination, label, side }) {
 }
 
 export function buildStudyRoom(desk) {
-  desk.getObjectByName("Background")?.removeFromParent();
+  // The licensed cyclorama already carries the office's baked contact and
+  // directional shadows. Keep it intact: a floor/light field suggests the room.
   const root = new THREE.Group();
-  root.name = "study-architecture";
+  root.name = "office-wayfinding";
   const b = builder(root);
-  floor(root, b, { x: 0.5, z: 0.3, w: 14, d: 11.6, y: -3.01 });
-  // North wall is built around two actual openings, rather than covered with a picture.
-  b.box(14, 2.7, 0.18, 0.5, -1.65, -5.5, COLORS.wall);
-  b.box(14, 1.5, 0.18, 0.5, 3.45, -5.5, COLORS.wall);
-  for (const [left, right] of [
-    [-6.5, -2.4],
-    [1.4, 2.85],
-    [5.35, 7.5],
-  ])
-    b.box(right - left, 3, 0.18, (left + right) / 2, 1.2, -5.5, COLORS.wall);
-  windowPane(b, -0.5, -0.3, 3.8, 3, -5.38);
-  windowPane(b, 4.1, -0.3, 2.5, 3, -5.38);
-  b.box(0.18, 7.2, 6.9, 7.5, 0.6, -2.05, COLORS.side);
-  b.box(0.18, 7.2, 2.3, 7.5, 0.6, 4.95, COLORS.side);
-  b.box(0.18, 2.6, 2.4, 7.5, 2.9, 2.6, COLORS.side);
-  b.box(14, 0.16, 0.2, 0.5, -2.87, -5.35, COLORS.trim);
-  for (const [depth, z] of [
-    [6.9, -2.05],
-    [2.3, 4.95],
-  ])
-    b.box(0.2, 0.16, depth, 7.35, -2.87, z, COLORS.trim);
-  bookshelf(b);
-  windowLight(root, -0.5, 3.8, -5.2, -2.982, 8.5, -0.28);
-  windowLight(root, 4.1, 2.5, -5.2, -2.981, 7.6, -0.28);
-  shadow(root, -0.6, 0.7, 9.2, 5.6, -2.975);
-  shadow(root, 0.8, 2.7, 3.5, 3.6, -2.974);
-  shadow(root, 3.7, 0.1, 2.8, 2.8, -2.973);
-  root.userData.portal = doorway(root, b, {
-    x: 7.4,
-    z: 1.4,
-    floorY: -3,
-    destination: "hobbies",
-    label: "Explore my hobbies",
-    side: -1,
-  });
-  batchStatic(root);
+  const sign = b.sign("Hobbies →", 1.9, 0.5, 4.8, -1.65, -0.65, -0.15);
+  travel(sign, "hobbies", "Explore my hobbies");
+  b.box(0.12, 1.15, 0.12, 4.8, -2.35, -0.7, COLORS.wood);
+  b.box(0.65, 0.08, 0.45, 4.8, -2.93, -0.7, COLORS.wood);
   desk.add(root);
-  desk.userData.portal = root.userData.portal;
   return desk;
 }
 

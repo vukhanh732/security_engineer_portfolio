@@ -15,10 +15,10 @@
     <link rel="canonical" href="https://security-vu.netlify.app/" />
     <link
       rel="icon"
-      href="/favicon.svg?v=20261031-roomview1"
+      href="/favicon.svg?v=20261031-office1"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon.ico?v=20261031-roomview1" sizes="any" />
+    <link rel="icon" href="/favicon.ico?v=20261031-office1" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -45,7 +45,7 @@
     <meta property="og:url" content="https://security-vu.netlify.app/" />
     <meta
       property="og:image"
-      content="https://security-vu.netlify.app/images/connected-study-20261031b.webp"
+      content="https://security-vu.netlify.app/images/open-office-20261031.webp"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vu Luu - The Desk" />
@@ -55,10 +55,10 @@
     />
     <meta
       name="twitter:image"
-      content="https://security-vu.netlify.app/images/connected-study-20261031b.webp"
+      content="https://security-vu.netlify.app/images/open-office-20261031.webp"
     />
-    <link rel="stylesheet" href="css/clubhouse.css?v=20261031-roomview1" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261031-roomview1" />
+    <link rel="stylesheet" href="css/clubhouse.css?v=20261031-office1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261031-office1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,7 +94,7 @@
     <header class="site-header">
       <a class="identity" href="index.html"
         ><img
-          src="favicon.svg?v=20261031-roomview1"
+          src="favicon.svg?v=20261031-office1"
           class="identity-mark"
           alt=""
           width="38"
@@ -116,7 +116,7 @@
     <div class="world-shell">
       <section
         class="world"
-        aria-label="A personal study with a door to the hobbies hall"
+        aria-label="An open office centred on Vu's computer desk"
       >
         <picture class="world-preview"
           ><source
@@ -125,8 +125,8 @@
               data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
             " />
           <img
-            src="images/connected-study-20261031b.webp"
-            alt="A morning study with a retro computer, bookshelf, windows and a door to the hobbies hall"
+            src="images/open-office-20261031.webp"
+            alt="A centred retro computer desk with soft office lighting and grounded shadows"
             width="1440"
             height="900"
             fetchpriority="high"
@@ -135,7 +135,7 @@
           class="world-canvas"
           id="world-canvas"
           tabindex="0"
-          aria-label="Vu's study. Move your mouse to look around. Click the door to explore hobbies, or the computer, drawer, cup, textbook or plant. Desk objects offers the same controls. Escape puts an object back or returns home."
+          aria-label="Vu's office. Hold and drag to orbit the desk, or to rotate a picked-up object. Scroll to zoom. Click the computer, drawer, cup, book, plant or hobbies sign. Desk objects offers keyboard controls. Escape puts an object back."
         ></canvas>
         <div
           class="activity-markers"
@@ -169,9 +169,18 @@
           Use the computer, or choose a destination.
         </div>
         <div class="room-heading">
-          <h1 id="place-name">The study</h1>
+          <h1 id="place-name">Hi, I'm Vu Luu.</h1>
           <p id="room-description">
-            A few things I’ve built. A room to make more.
+            Software developer in Sydney. Make yourself at home.
+          </p>
+          <div id="office-entry" class="office-entry">
+            <button class="button button-primary" data-enter="sound">
+              Enter with sound ↗
+            </button>
+            <button class="button" data-enter="quiet">Enter quietly</button>
+          </div>
+          <p class="orbit-instruction">
+            Hold and drag to look around · Scroll to zoom
           </p>
           <button
             class="button room-action"
@@ -185,7 +194,7 @@
       <div class="world-toolbar">
         <div class="exploration">
           <nav class="rooms-nav" aria-label="Destinations">
-            <button data-room="study" aria-pressed="true">Study</button>
+            <button data-room="study" aria-pressed="true">Office</button>
             <button data-room="hobbies" aria-pressed="false">Hobbies</button>
             <button
               data-room="badminton"
@@ -239,6 +248,31 @@
       <span class="object-kicker">A closer look</span>
       <h2 id="object-title"></h2>
       <p id="object-description" role="status"></p>
+      <div id="object-turn" class="object-turn" hidden>
+        <p>Hold and drag to turn it. Arrow keys work too.</p>
+        <div role="group" aria-label="Rotate the held object">
+          <button
+            class="button"
+            data-turn="-35,0"
+            aria-label="Rotate object left"
+          >
+            ←
+          </button>
+          <button
+            class="button"
+            data-turn="35,0"
+            aria-label="Rotate object right"
+          >
+            →
+          </button>
+          <button class="button" data-turn="0,-35" aria-label="Tilt object up">
+            ↑
+          </button>
+          <button class="button" data-turn="0,35" aria-label="Tilt object down">
+            ↓
+          </button>
+        </div>
+      </div>
       <button class="button" id="put-back">Put back</button>
     </aside>
     <p class="scene-message" id="scene-message" role="status" hidden>
@@ -919,26 +953,29 @@
           <div>
             <dt>Move</dt>
             <dd>
-              Click the study door or Hobbies to enter the hall. Court, Gym and
-              Card room move around that shared space. Click the computer to use
-              the portfolio desktop.
+              Click the Hobbies sign or navigation to enter the hall. Court, Gym
+              and Card room move around that shared space. Click the computer to
+              use the portfolio desktop.
             </dd>
           </div>
           <div>
             <dt>Look around</dt>
             <dd>
-              Move your mouse to look around, and scroll over the room or use +
-              / − to zoom. Mouse look turns cursor movement on or off. Home
-              resets the view. Reduced motion starts with mouse look off.
+              Hold and drag to orbit the desk. Arrow keys also rotate the view
+              when the room has focus. Scroll over the room or use + / − to
+              zoom. Mouse look turns cursor movement on or off. Home resets the
+              view. Reduced motion starts with mouse look off.
             </dd>
           </div>
           <div>
             <dt>Interact</dt>
             <dd>
               Open the drawer, pick up the cup or textbook, or nudge the plant.
-              Desk objects provides the same controls by keyboard or touch. Put
-              back or Escape ends an inspection. Click the computer to reach its
-              desktop; header shortcuts open the work directly.
+              Hold and drag a picked-up object to turn it in 3D; its arrow
+              controls work too. Desk objects provides the same controls by
+              keyboard or touch. Put back or Escape ends an inspection. Click
+              the computer to reach its desktop; header shortcuts open the work
+              directly.
             </dd>
           </div>
           <div>
@@ -978,8 +1015,9 @@
               >Retro desk artwork · Henry Heffernan</a
             ><span
               >Base desk, computer, chair, plant and baked lighting, adapted
-              under the MIT license. Vu's drawer, books, palette and
-              interactions are custom additions.</span
+              under the MIT license. Typing samples and quiet office ambience
+              also come from the same MIT source. Vu's drawer, books, palette
+              and interactions are custom additions.</span
             ><a href="assets/desk/LICENSE-Henry-Heffernan.txt"
               >Original license ↗</a
             >
@@ -1098,7 +1136,7 @@
           aria-controls="start-menu"
         >
           <img
-            src="favicon.svg?v=20261031-roomview1"
+            src="favicon.svg?v=20261031-office1"
             alt=""
             width="20"
             height="20"
@@ -1121,7 +1159,7 @@
     </footer>
     <script
       type="module"
-      src="js/clubhouse.js?v=20261031-roomview1"
+      src="js/clubhouse.js?v=20261031-office1"
       onerror="document.documentElement.classList.remove('js')"
     ></script>
   </body>

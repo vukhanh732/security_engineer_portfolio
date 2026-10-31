@@ -205,17 +205,39 @@ export function createDeskInteractions({
     props.sway.value = 0;
     invalidate();
   }
+  function rotate(dx, dy) {
+    if (!["coffee", "book"].includes(inspection)) return;
+    finishMotion();
+    const object = props[inspection];
+    const parent = object.parent.getWorldQuaternion(new THREE.Quaternion());
+    const world = object.getWorldQuaternion(new THREE.Quaternion());
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+    world.premultiply(new THREE.Quaternion().setFromAxisAngle(up, dx * 0.009));
+    world.premultiply(
+      new THREE.Quaternion().setFromAxisAngle(right, dy * 0.009),
+    );
+    object.quaternion.copy(parent.invert().multiply(world));
+    invalidate();
+  }
   return {
     activate,
     dismiss,
     update,
     reset,
     finishMotion,
+    rotate,
     getState: () => ({
       inspection,
       drawerOpen,
       moving: !!(tweens.size || wave),
       plantMoving: !!wave,
+      rotation: ["coffee", "book"].includes(inspection)
+        ? props[inspection].quaternion
+            .toArray()
+            .map((v) => v.toFixed(4))
+            .join(",")
+        : "",
     }),
   };
 }

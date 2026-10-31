@@ -1,8 +1,18 @@
-import { createAudio } from "./clubhouse-audio.js";
-import { createDesktop } from "./desktop.js?v=20261031-roomview1";
+import { createAudio } from "./clubhouse-audio.js?v=20261031-office1";
+import { createOfficeIntro } from "./office-intro.js?v=20261031-office1";
+import { createDesktop } from "./desktop.js?v=20261031-office1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
 const audio = createAudio();
+const introduction = createOfficeIntro({
+  heading: $("#place-name"),
+  controls: $("#office-entry"),
+  audio,
+  onEnter: () => {
+    body.classList.add("office-entered");
+    loadScene();
+  },
+});
 const aliases = {
   skills: "about",
   education: "experience",
@@ -51,7 +61,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261031-roomview1`);
+    const module = await import(`./games/${name}.js?v=20261031-office1`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -176,6 +186,7 @@ function rememberRoom(directApp = false) {
   returnOnClose = directApp && !isSimple();
 }
 function showSection(requested, { push = true } = {}) {
+  introduction.complete();
   const name = aliases[requested] || requested;
   if (name === "main-content") {
     setSimple(true);
@@ -319,7 +330,7 @@ async function loadScene() {
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261031-roomview1"
+        "./clubhouse-scene.js?v=20261031-office1"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
@@ -330,6 +341,7 @@ async function loadScene() {
           body.classList.add("inspecting-object");
           $("#object-title").textContent = item.title;
           $("#object-description").textContent = item.description;
+          $("#object-turn").hidden = !["coffee", "book"].includes(item.id);
           $("#put-back").textContent = item.action;
           $("#put-back").focus({ preventScroll: true });
           const rect = $("#world-canvas").getBoundingClientRect();
@@ -371,19 +383,20 @@ async function loadScene() {
           }
         },
         onLocation(room, node = room) {
+          introduction.complete();
           const place = ["study", "desk", "screen", "corridor"].includes(node)
             ? "study"
             : node;
           $(".world").dataset.currentRoom = place;
           $("#place-name").textContent = {
-            study: "The study",
+            study: "Hi, I'm Vu Luu.",
             hobbies: "Explore my hobbies",
             gym: "The gym",
             badminton: "The badminton court",
             lounge: "The card room",
           }[place];
           $("#room-description").textContent = {
-            study: "A few things I’ve built. A room to make more.",
+            study: "Software developer in Sydney. Make yourself at home.",
             hobbies: "A court, a little lifting, and one more hand.",
             gym: "A little movement. A clearer head.",
             badminton: "Move your opponent. Find the open court.",
@@ -460,6 +473,7 @@ $("#explore").addEventListener("click", async () => {
 });
 document.querySelectorAll("[data-room]").forEach((button) =>
   button.addEventListener("click", async () => {
+    introduction.complete();
     ++routeVersion;
     const version = routeVersion;
     const world = await loadScene();
@@ -497,6 +511,12 @@ $("#put-back").addEventListener("click", () => {
   scene?.dismissInspection();
   $("#world-canvas").focus({ preventScroll: true });
 });
+document.querySelectorAll("[data-turn]").forEach((button) =>
+  button.addEventListener("click", () => {
+    const [x, y] = button.dataset.turn.split(",").map(Number);
+    scene?.rotateInspection(x, y);
+  }),
+);
 document.querySelectorAll("[data-prop]").forEach((button) =>
   button.addEventListener("click", async () => {
     ++routeVersion;

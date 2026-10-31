@@ -1,7 +1,7 @@
 // Composed room views. Court, gym and card room share one furnished hall.
 export const WAYPOINTS = Object.freeze({
-  study: { position: [-16.8, 11.7, 22.4], target: [0, -0.5, 0], room: "study" },
-  desk: { position: [-8, 5.8, 10.5], target: [0, -0.7, 0], room: "study" },
+  study: { position: [-9.4, 5.2, 13.6], target: [0, -0.6, 0.4], room: "study" },
+  desk: { position: [-6.4, 3.7, 8.4], target: [0, -0.35, 0.3], room: "study" },
   screen: { position: [0, 1.04, 1.9], target: [0, 0.95, 0.255], room: "study" },
   hobbies: {
     position: [22, 18, 27],

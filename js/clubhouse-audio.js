@@ -11,6 +11,10 @@ export function createAudio() {
     /* Storage is optional. */
   }
   const music = new Audio("assets/audio/sunset-walk.ogg");
+  const office = new Audio("assets/audio/office.ogg");
+  office.loop = true;
+  office.preload = "none";
+  office.volume = settings.music * 0.22;
   music.loop = true;
   music.preload = "none";
   music.volume = settings.music;
@@ -23,6 +27,8 @@ export function createAudio() {
     win: "cardPlace3.ogg",
   };
   const voices = new Set();
+  let key = 0,
+    activation = 0;
   const broadcast = () =>
     document.dispatchEvent(
       new CustomEvent("clubhouse-audio", { detail: api.getState() }),
@@ -33,21 +39,34 @@ export function createAudio() {
   }
   const api = {
     async enable() {
+      const version = ++activation;
       music.volume = settings.music;
       try {
         await music.play();
+        if (version !== activation) return false;
         enabled = true;
+        if (document.hidden) {
+          suspended = true;
+          music.pause();
+          broadcast();
+          return true;
+        }
+        office.volume = settings.music * 0.22;
+        office.play().catch(() => {});
         broadcast();
         return true;
       } catch {
+        if (version !== activation) return false;
         enabled = false;
         broadcast();
         return false;
       }
     },
     mute() {
+      activation++;
       enabled = false;
       music.pause();
+      office.pause();
       pauseEffects();
       broadcast();
     },
@@ -59,8 +78,14 @@ export function createAudio() {
         voices.size >= 5
       )
         return;
-      const sound = new Audio("assets/audio/" + (paths[name] || paths.click));
-      sound.volume = settings.effects * (name === "step" ? 0.18 : 0.65);
+      const file =
+        name === "type"
+          ? `typing-${(++key % 3) + 1}.mp3`
+          : paths[name] || paths.click;
+      const sound = new Audio("assets/audio/" + file);
+      sound.volume =
+        settings.effects *
+        (name === "type" ? 0.32 : name === "step" ? 0.18 : 0.65);
       voices.add(sound);
       sound.onended = sound.onerror = () => voices.delete(sound);
       sound.play().catch(() => voices.delete(sound));
@@ -69,6 +94,8 @@ export function createAudio() {
       if (!(kind in settings)) return;
       settings[kind] = Math.max(0, Math.min(1, value));
       music.volume = settings.music;
+      office.volume = settings.music * 0.22;
+      if (kind === "effects" && settings.effects === 0) pauseEffects();
       try {
         localStorage.setItem("clubhouse-audio", JSON.stringify(settings));
       } catch {
@@ -84,6 +111,7 @@ export function createAudio() {
     if (document.hidden) {
       suspended = enabled;
       music.pause();
+      office.pause();
       pauseEffects();
     } else if (suspended && enabled) {
       suspended = false;
@@ -91,6 +119,7 @@ export function createAudio() {
         enabled = false;
         broadcast();
       });
+      office.play().catch(() => {});
     }
   });
   return api;

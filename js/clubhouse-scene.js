@@ -1,15 +1,16 @@
 import * as THREE from "three";
-import { createDeskInteractions } from "./desk-interactions.js?v=20261031-roomview1";
-import { buildDesk } from "./clubhouse-objects.js?v=20261031-roomview1";
+import { createDragView } from "./drag-view.js?v=20261031-office1";
+import { createDeskInteractions } from "./desk-interactions.js?v=20261031-office1";
+import { buildDesk } from "./clubhouse-objects.js?v=20261031-office1";
 import {
   buildStudyRoom,
   buildHobbiesRoom,
-} from "./clubhouse-rooms.js?v=20261031-roomview1";
+} from "./clubhouse-rooms.js?v=20261031-office1";
 import {
   WAYPOINTS,
   PORTALS,
   planView,
-} from "./study-navigation.mjs?v=20261031-roomview1";
+} from "./study-navigation.mjs?v=20261031-office1";
 
 export async function createScene({
   canvas,
@@ -32,7 +33,7 @@ export async function createScene({
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color("#b6c5ca");
+  scene.background = new THREE.Color("#b9b9b6");
   const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 250),
     aim = new THREE.Vector3(...WAYPOINTS.study.target);
   camera.position.fromArray(WAYPOINTS.study.position);
@@ -61,7 +62,10 @@ export async function createScene({
   const views = new Map(),
     reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let lookEnabled = !reduced.matches,
-    zoomTarget = 1;
+    zoomTarget = 1,
+    manuallyOrbited = false,
+    dragMode = null,
+    gestures = null;
   const hoverMaterials = new Map();
   const markerPoints = [
     { name: "badminton", point: new THREE.Vector3(-2, 2.1, -3.1) },
@@ -90,10 +94,12 @@ export async function createScene({
     canvas.dataset.quality = qualityLow ? "low" : "full";
     canvas.dataset.zoom = zoomTarget.toFixed(3);
     canvas.dataset.look = String(lookEnabled);
+    canvas.dataset.dragging = dragMode || "";
     const props = deskInteractions?.getState();
     canvas.dataset.inspection = props?.inspection || "";
     canvas.dataset.drawer = String(props?.drawerOpen || false);
     canvas.dataset.plantMotion = String(props?.plantMoving || false);
+    canvas.dataset.objectRotation = props?.rotation || "";
   }
   function fittedPosition(name) {
     const view = WAYPOINTS[name];
@@ -106,6 +112,7 @@ export async function createScene({
       .add(target);
   }
   function resize() {
+    gestures?.cancel();
     // A viewport/orientation change ends a close-up before reframing the desk.
     if (deskInteractions?.getState().inspection) deskInteractions.reset();
     const r = canvas.getBoundingClientRect();
@@ -115,14 +122,24 @@ export async function createScene({
     camera.updateProjectionMatrix();
     if (transition) transition.to.copy(fittedPosition(destination));
     else {
-      camera.position.copy(fittedPosition(currentNode));
-      aim.fromArray(WAYPOINTS[currentNode].target);
+      const oldAspect = Number(canvas.dataset.aspect) || camera.aspect;
+      if (manuallyOrbited) {
+        const ratio =
+          Math.max(1, 1.15 / camera.aspect) / Math.max(1, 1.15 / oldAspect);
+        basePosition.sub(baseAim).multiplyScalar(ratio).add(baseAim);
+        camera.position.copy(basePosition);
+        aim.copy(baseAim);
+      } else {
+        camera.position.copy(fittedPosition(currentNode));
+        aim.fromArray(WAYPOINTS[currentNode].target);
+      }
       camera.lookAt(aim);
       basePosition.copy(camera.position);
       baseAim.copy(aim);
       mouseCurrent.set(0, 0);
       mouseTarget.set(0, 0);
     }
+    canvas.dataset.aspect = String(camera.aspect);
     invalidate();
   }
   const observer = new ResizeObserver(resize);
@@ -169,6 +186,8 @@ export async function createScene({
   function go(requested) {
     if (disposed || !ready) return Promise.resolve(false);
     const view = planView(currentNode, requested, currentRoom);
+    gestures?.cancel();
+    manuallyOrbited = false;
     if (view.name === "screen") setZoom(1, true);
     deskInteractions?.reset();
     mouseTarget.set(0, 0);
@@ -258,7 +277,8 @@ export async function createScene({
     let mouseMoving = false;
     if (!transition) {
       if (!deskInteractions?.getState().inspection) {
-        if (!lookEnabled || canvas.clientWidth < 768) mouseTarget.set(0, 0);
+        if (!lookEnabled || manuallyOrbited || canvas.clientWidth < 768)
+          mouseTarget.set(0, 0);
         mouseCurrent.lerp(mouseTarget, 1 - Math.exp(-dt * 9));
         if (mouseCurrent.distanceToSquared(mouseTarget) < 0.000001)
           mouseCurrent.copy(mouseTarget);
@@ -364,6 +384,7 @@ export async function createScene({
       target: (transition ? aim : baseAim).toArray(),
       zoom: zoomTarget,
       aspect: camera.aspect,
+      manuallyOrbited,
     };
   }
   const raycaster = new THREE.Raycaster(),
@@ -435,9 +456,11 @@ export async function createScene({
     invalidate();
   }
   function pointermove(event) {
+    if (gestures?.active()) return;
     if (
       !transition &&
       lookEnabled &&
+      !manuallyOrbited &&
       event.pointerType !== "touch" &&
       canvas.clientWidth >= 768 &&
       !deskInteractions?.getState().inspection
@@ -474,6 +497,56 @@ export async function createScene({
   };
   const keydown = (event) => {
     if (
+      deskInteractions?.getState().inspection &&
+      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
+    ) {
+      event.preventDefault();
+      deskInteractions.rotate(
+        event.key === "ArrowLeft" ? -35 : event.key === "ArrowRight" ? 35 : 0,
+        event.key === "ArrowUp" ? -35 : event.key === "ArrowDown" ? 35 : 0,
+      );
+      invalidate();
+      return;
+    }
+    if (
+      !transition &&
+      !deskInteractions?.getState().inspection &&
+      ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
+    ) {
+      event.preventDefault();
+      if (!manuallyOrbited) {
+        basePosition.copy(camera.position);
+        baseAim.copy(aim);
+      }
+      manuallyOrbited = true;
+      mouseTarget.set(0, 0);
+      mouseCurrent.set(0, 0);
+      const orbit = new THREE.Spherical().setFromVector3(
+        basePosition.clone().sub(baseAim),
+      );
+      orbit.theta +=
+        event.key === "ArrowLeft"
+          ? 0.18
+          : event.key === "ArrowRight"
+            ? -0.18
+            : 0;
+      orbit.phi = THREE.MathUtils.clamp(
+        orbit.phi +
+          (event.key === "ArrowUp"
+            ? -0.12
+            : event.key === "ArrowDown"
+              ? 0.12
+              : 0),
+        0.12,
+        Math.PI / 2 - 0.04,
+      );
+      basePosition
+        .copy(baseAim)
+        .add(new THREE.Vector3().setFromSpherical(orbit));
+      invalidate();
+      return;
+    }
+    if (
       !transition &&
       (event.key === "Enter" || event.key.toLowerCase() === "e") &&
       hovered
@@ -506,6 +579,7 @@ export async function createScene({
     cancelAnimationFrame(frame);
     frame = null;
     if (document.hidden) {
+      gestures?.cancel();
       deskInteractions?.reset();
       mouseTarget.set(0, 0);
       mouseCurrent.set(0, 0);
@@ -548,10 +622,59 @@ export async function createScene({
     onReady?.(false);
   }
   canvas.addEventListener("webglcontextlost", contextLost);
+  gestures = createDragView({
+    canvas,
+    canStart: () =>
+      ready &&
+      visible() &&
+      !transition &&
+      (!deskInteractions?.getState().inspection ||
+        ["coffee", "book"].includes(deskInteractions.getState().inspection)),
+    onStart() {
+      clearHover();
+      dragMode = deskInteractions?.getState().inspection ? "object" : "camera";
+      if (dragMode === "object") deskInteractions.finishMotion();
+      else {
+        mouseTarget.set(0, 0);
+        mouseCurrent.set(0, 0);
+        basePosition.copy(camera.position);
+        baseAim.copy(aim);
+        manuallyOrbited = true;
+      }
+      canvas.style.cursor = "grabbing";
+      state();
+    },
+    onMove(dx, dy) {
+      if (dragMode === "object") deskInteractions.rotate(dx, dy);
+      else {
+        const orbit = new THREE.Spherical().setFromVector3(
+          basePosition.clone().sub(baseAim),
+        );
+        orbit.theta -= dx * 0.006;
+        orbit.phi = THREE.MathUtils.clamp(
+          orbit.phi - dy * 0.006,
+          0.12,
+          Math.PI / 2 - 0.04,
+        );
+        basePosition
+          .copy(baseAim)
+          .add(new THREE.Vector3().setFromSpherical(orbit));
+      }
+      invalidate();
+    },
+    onEnd() {
+      dragMode = null;
+      canvas.style.cursor = "grab";
+      state();
+      invalidate();
+    },
+  });
   const api = {
     go,
     captureView,
     restoreView(view) {
+      gestures.cancel();
+      manuallyOrbited = !!view.manuallyOrbited;
       cancel();
       deskInteractions?.reset();
       activateView(view.room);
@@ -610,10 +733,16 @@ export async function createScene({
     activateProp(name) {
       if (!ready || currentRoom !== "study" || transition) return;
       clearHover();
+      gestures.cancel();
       deskInteractions?.activate(name);
       invalidate();
     },
+    rotateInspection(dx, dy) {
+      deskInteractions?.rotate(dx, dy);
+      invalidate();
+    },
     dismissInspection() {
+      gestures.cancel();
       deskInteractions?.dismiss();
       mouseTarget.set(0, 0);
       invalidate();
@@ -621,6 +750,7 @@ export async function createScene({
     setActive(value) {
       active = value;
       if (!value) {
+        gestures.cancel();
         clearHover();
         deskInteractions?.reset();
         mouseTarget.set(0, 0);
@@ -651,6 +781,7 @@ export async function createScene({
       cancel();
       cancelAnimationFrame(frame);
       observer.disconnect();
+      gestures.dispose();
       canvas.removeEventListener("pointermove", pointermove);
       canvas.removeEventListener("click", click);
       canvas.removeEventListener("pointerleave", pointerleave);

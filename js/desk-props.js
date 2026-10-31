@@ -68,7 +68,7 @@ export function personalizeDesk(root) {
     const mesh = named.get(name);
     if (mesh) {
       mesh.material = mesh.material.clone();
-      mesh.material.color.set("#d8e7ee");
+      mesh.material.color.set(name === "Background" ? "#f4f1e9" : "#e0e5e3");
     }
   }
   for (const name of ["computer", "monitor_base", "keyboard", "mouse"]) {
@@ -78,7 +78,6 @@ export function personalizeDesk(root) {
       mesh.material.color.set("#fff0d8");
     }
   }
-  duotone(named.get("chair_seat"), "#213b43", "#7c9c9a");
   duotone(named.get("coffee"), "#753e2f", "#e4a27a");
   // Replace the source paper-tray composition with our own original books.
   for (const name of [
