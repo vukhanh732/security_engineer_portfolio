@@ -6,3 +6,4 @@ Thumbs.db
 .claude/
 skills-lock.json
 .superpowers/
+__pycache__/

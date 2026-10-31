@@ -1796,3 +1796,196 @@ body:not(.office-entered) .world[data-current-room="study"] .room-action {
     max-height: calc(100dvh - 220px);
   }
 }
+
+/* Quiet scene chrome. Secondary controls only appear when requested. */
+.scene-menu {
+  position: fixed;
+  right: 24px;
+  bottom: 20px;
+  z-index: 20;
+  color: #263e43;
+}
+.scene-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  list-style: none;
+  font-size: 28px;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+}
+.scene-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.scene-menu > summary:hover {
+  color: #80553e;
+}
+.scene-menu > summary:focus-visible {
+  outline: 2px solid #29434d;
+  outline-offset: 2px;
+}
+.scene-menu-panel {
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 140px);
+  overflow-y: auto;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid #b8c0b8;
+  background: #f4f2e7;
+  box-shadow: 0 12px 34px #263e431a;
+}
+.scene-menu:not([open]) .scene-menu-panel {
+  display: none;
+}
+.scene-menu .world-toolbar {
+  position: static !important;
+  inset: auto !important;
+  display: block !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.scene-menu .exploration {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+}
+.scene-menu .rooms-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  width: 100%;
+  border: 0;
+}
+.scene-menu .world-settings {
+  position: static;
+  inset: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.scene-menu .view-controls {
+  position: static;
+  inset: auto;
+  display: flex;
+  justify-content: center;
+  visibility: visible;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.scene-menu .desk-objects > div {
+  position: static;
+  margin-top: 6px;
+  box-shadow: none;
+}
+.scene-menu #room-action {
+  margin: 0;
+}
+.scene-menu .room-action {
+  display: inline-flex;
+}
+.desktop-open .scene-menu {
+  visibility: hidden;
+}
+.enhanced:not(.simple-view) .clubhouse-footer {
+  display: none;
+}
+.room-heading #room-description[hidden] {
+  display: none;
+}
+.room-heading h1 {
+  font-size: clamp(25px, 3vw, 36px);
+}
+.world[data-current-room="hobbies"] .room-heading,
+.world[data-current-room="gym"] .room-heading,
+.world[data-current-room="badminton"] .room-heading,
+.world[data-current-room="lounge"] .room-heading {
+  display: none;
+}
+.activity-marker span,
+.activity-marker:after {
+  display: none;
+}
+.activity-marker {
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #c7c9ba;
+  box-shadow: none;
+}
+.mobile-office-entry {
+  display: none;
+}
+.simple-view .mobile-office-entry {
+  display: inline-flex;
+  margin-top: 10px;
+}
+@media (max-width: 767px) {
+  .scene-menu {
+    right: 14px;
+    bottom: 12px;
+  }
+  .scene-menu .world-settings a,
+  .scene-menu .world-settings .utility {
+    padding-inline: 6px;
+  }
+  .simple-view .scene-menu .exploration {
+    display: none;
+  }
+  .object-inspector {
+    bottom: 24px;
+    max-height: calc(100dvh - 250px);
+  }
+  .room-heading {
+    bottom: 82px !important;
+  }
+}
+.simple-view .scene-menu .view-controls {
+  display: none;
+}
+.object-inspector .object-kicker,
+#object-description,
+.object-turn p {
+  display: none;
+}
+.object-inspector {
+  padding: 16px 18px;
+}
+.object-inspector h2 {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+.scene-menu[open] {
+  z-index: 30;
+}
+.scene-menu-panel {
+  max-height: calc(100dvh - var(--room-header-bottom, 80px) - 90px);
+}
+@media (max-width: 767px) {
+  .object-inspector {
+    bottom: 84px;
+  }
+}
+.inspecting-object .scene-menu .world-toolbar {
+  visibility: visible;
+}

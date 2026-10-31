@@ -22,9 +22,9 @@ export const WAYPOINTS = Object.freeze({
 });
 export const PORTALS = Object.freeze({
   study: {
-    approach: { position: [4.8, -0.6, 2.55], target: [8.3, -0.6, 2.55] },
-    exit: { position: [7.8, -0.6, 2.55], target: [11, -0.6, 2.55] },
-    entry: { position: [6, -0.6, 2.55], target: [0, -0.6, 1.5] },
+    approach: { position: [6.5, 0.7, 1.1], target: [6.5, 0.7, -2.3] },
+    exit: { position: [6.5, 0.7, -3.4], target: [6.5, 0.7, -6] },
+    entry: { position: [6.5, 0.7, -0.7], target: [1.6, 0.1, 0.4] },
   },
   hobbies: {
     approach: { position: [-4.8, 2.4, 3.15], target: [-8, 2.4, 3.15] },

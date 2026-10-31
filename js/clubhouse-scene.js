@@ -1,16 +1,16 @@
 import * as THREE from "three";
-import { createDragView } from "./drag-view.js?v=20261031-office1";
-import { createDeskInteractions } from "./desk-interactions.js?v=20261031-office1";
-import { buildDesk } from "./clubhouse-objects.js?v=20261031-office1";
+import { createDragView } from "./drag-view.js?v=20261031-door1";
+import { createDeskInteractions } from "./desk-interactions.js?v=20261031-door1";
+import { buildDesk } from "./clubhouse-objects.js?v=20261031-door1";
 import {
   buildStudyRoom,
   buildHobbiesRoom,
-} from "./clubhouse-rooms.js?v=20261031-office1";
+} from "./clubhouse-rooms.js?v=20261031-door1";
 import {
   WAYPOINTS,
   PORTALS,
   planView,
-} from "./study-navigation.mjs?v=20261031-office1";
+} from "./study-navigation.mjs?v=20261031-door1";
 
 export async function createScene({
   canvas,

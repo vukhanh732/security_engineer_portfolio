@@ -1,4 +1,5 @@
 """Open-office drag/inspection and explicit intro-audio acceptance checks."""
+from browser_controls import control, control_button
 from playwright.sync_api import sync_playwright,expect
 import os
 BASE=os.environ.get("CLUBHOUSE_TEST_URL","http://127.0.0.1:4173").rstrip("/")
@@ -10,13 +11,13 @@ with sync_playwright() as p:
  page.mouse.move(1120,420);page.mouse.down();page.mouse.move(650,510,steps=16);page.mouse.up();page.wait_for_timeout(100)
  assert c.get_attribute('data-position')!=before
  expect(page.locator('#desktop')).not_to_be_visible();page.screenshot(path='.superpowers/build/open-office-orbit.png')
- page.locator('#home-camera').click();page.locator('.desk-objects summary').click();page.locator('[data-prop=coffee]').click()
+ control(page,'#home-camera').click();control(page,'.desk-objects summary').click();control(page,'[data-prop=coffee]').click()
  expect(c).to_have_attribute('data-inspection','coffee');q=c.get_attribute('data-object-rotation');position=c.get_attribute('data-position')
  page.mouse.move(620,360);page.mouse.down();page.mouse.move(900,480,steps=16);page.mouse.up();page.wait_for_timeout(100)
  assert c.get_attribute('data-object-rotation')!=q;assert c.get_attribute('data-position')==position
  page.screenshot(path='.superpowers/build/open-office-coffee.png')
  page.locator('#put-back').click();expect(c).to_have_attribute('data-inspection','')
- page.locator('.desk-objects summary').click();page.locator('[data-prop=coffee]').click();expect(c).to_have_attribute('data-object-rotation',q)
+ control(page,'.desk-objects summary').click();control(page,'[data-prop=coffee]').click();expect(c).to_have_attribute('data-object-rotation',q)
  page.locator('[data-turn="35,0"]').click();expect(c).not_to_have_attribute('data-object-rotation',q)
  # Cancel while the pointer is still held, then release over the monitor.
  page.mouse.move(600,350);page.mouse.down();page.mouse.move(750,260,steps=10)
@@ -26,17 +27,17 @@ with sync_playwright() as p:
  sound.goto(BASE+'/',wait_until='networkidle');assert sound.evaluate('__sounds.length')==0
  sound.locator('[data-enter=sound]').click();expect(sound.locator('#place-name')).to_have_attribute('data-introducing','true');expect(sound.locator('#place-name')).to_have_text("Hi, I'm Vu Luu.",timeout=10000)
  assert sound.evaluate('__sounds.some(a=>a.src.includes("typing-"))');assert sound.evaluate('__sounds.some(a=>a.src.includes("office.ogg"))')
- sound.locator('#enable-audio').click();assert sound.evaluate('__sounds.every(a=>a.paused||a.ended)')
+ control(sound,'#enable-audio').click();assert sound.evaluate('__sounds.every(a=>a.paused||a.ended)')
  # Normal mouse-look pose must stay frozen when a held object is dragged.
- sound.locator('#home-camera').click();sound.locator('#world-canvas[data-ready=true]').wait_for(timeout=90000)
+ control(sound,'#home-camera').click();sound.locator('#world-canvas[data-ready=true]').wait_for(timeout=90000)
  normal=sound.locator('#world-canvas');sound.mouse.move(1050,300);sound.wait_for_timeout(1200)
- sound.locator('.desk-objects summary').click();sound.locator('[data-prop=book]').click();sound.wait_for_timeout(700)
+ control(sound,'.desk-objects summary').click();control(sound,'[data-prop=book]').click();sound.wait_for_timeout(700)
  position=normal.get_attribute('data-position');q=normal.get_attribute('data-object-rotation')
  sound.mouse.move(600,370);sound.mouse.down();sound.mouse.move(850,440,steps=12);sound.mouse.up();sound.wait_for_timeout(100)
  assert normal.get_attribute('data-position')==position,'Object drag moved the camera'
  assert normal.get_attribute('data-object-rotation')!=q
  sound.locator('#put-back').click()
- sound.locator('#home-camera').click();expect(normal).to_have_attribute('data-traveling','false',timeout=10000)
+ control(sound,'#home-camera').click();expect(normal).to_have_attribute('data-traveling','false',timeout=10000)
  normal.focus();position=normal.get_attribute('data-position');sound.keyboard.press('ArrowRight')
  sound.wait_for_function('(p)=>document.querySelector("#world-canvas").dataset.position!==p',arg=position)
  # A manipulated camera pose survives opening a portfolio app and closing it.

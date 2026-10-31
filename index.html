@@ -15,10 +15,10 @@
     <link rel="canonical" href="https://security-vu.netlify.app/" />
     <link
       rel="icon"
-      href="/favicon.svg?v=20261031-entry2"
+      href="/favicon.svg?v=20261031-door1"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon.ico?v=20261031-entry2" sizes="any" />
+    <link rel="icon" href="/favicon.ico?v=20261031-door1" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link
       rel="preload"
@@ -45,7 +45,7 @@
     <meta property="og:url" content="https://security-vu.netlify.app/" />
     <meta
       property="og:image"
-      content="https://security-vu.netlify.app/images/open-office-20261031.webp"
+      content="https://security-vu.netlify.app/images/office-door-20261031.webp"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vu Luu - The Desk" />
@@ -55,10 +55,10 @@
     />
     <meta
       name="twitter:image"
-      content="https://security-vu.netlify.app/images/open-office-20261031.webp"
+      content="https://security-vu.netlify.app/images/office-door-20261031.webp"
     />
-    <link rel="stylesheet" href="css/clubhouse.css?v=20261031-entry2" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261031-entry2" />
+    <link rel="stylesheet" href="css/clubhouse.css?v=20261031-door1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261031-door1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -94,7 +94,7 @@
     <header class="site-header">
       <a class="identity" href="index.html"
         ><img
-          src="favicon.svg?v=20261031-entry2"
+          src="favicon.svg?v=20261031-door1"
           class="identity-mark"
           alt=""
           width="38"
@@ -125,8 +125,8 @@
               data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
             " />
           <img
-            src="images/open-office-20261031.webp"
-            alt="A centred retro computer desk with soft office lighting and grounded shadows"
+            src="images/office-door-20261031.webp"
+            alt="A retro computer desk with soft shadows and a freestanding Hobbies door"
             width="1440"
             height="900"
             fetchpriority="high"
@@ -135,7 +135,7 @@
           class="world-canvas"
           id="world-canvas"
           tabindex="0"
-          aria-label="Vu's office. Hold and drag to orbit the desk, or to rotate a picked-up object. Scroll to zoom. Click the computer, drawer, cup, book, plant or hobbies sign. Desk objects offers keyboard controls. Escape puts an object back."
+          aria-label="Vu's office. Hold and drag to orbit the desk, or to rotate a picked-up object. Scroll to zoom. Click the computer, drawer, cup, book, plant or hobbies door. Room options offers keyboard controls. Escape puts an object back."
         ></canvas>
         <div
           class="activity-markers"
@@ -152,14 +152,6 @@
           </button>
         </div>
         <p class="world-hint" id="world-hint" role="status" hidden></p>
-        <div class="view-controls" role="group" aria-label="Room view">
-          <button class="utility" id="mouse-look" aria-pressed="true">
-            Mouse look
-          </button>
-          <button class="utility" id="zoom-out" aria-label="Zoom out">−</button>
-          <output id="zoom-level" aria-label="Zoom level">100%</output>
-          <button class="utility" id="zoom-in" aria-label="Zoom in">+</button>
-        </div>
         <div
           class="world-loading"
           id="world-status"
@@ -170,7 +162,7 @@
         </div>
         <div class="room-heading">
           <h1 id="place-name">Hi, I'm Vu Luu.</h1>
-          <p id="room-description">
+          <p id="room-description" hidden>
             Software developer in Sydney. Make yourself at home.
           </p>
           <div id="office-entry" class="office-entry">
@@ -178,9 +170,74 @@
               Enter office ↗
             </button>
           </div>
-          <p class="orbit-instruction">
-            Hold and drag to look around · Scroll to zoom
-          </p>
+        </div>
+      </section>
+      <details class="scene-menu" id="scene-menu">
+        <summary aria-label="Room options">
+          <span aria-hidden="true">⋯</span>
+        </summary>
+        <div class="scene-menu-panel">
+          <div class="view-controls" role="group" aria-label="Room view">
+            <button class="utility" id="mouse-look" aria-pressed="true">
+              Mouse look
+            </button>
+            <button class="utility" id="zoom-out" aria-label="Zoom out">
+              −
+            </button>
+            <output id="zoom-level" aria-label="Zoom level">100%</output>
+            <button class="utility" id="zoom-in" aria-label="Zoom in">+</button>
+          </div>
+          <div class="world-toolbar">
+            <div class="exploration">
+              <nav class="rooms-nav" aria-label="Destinations">
+                <button data-room="study" aria-pressed="true">Office</button>
+                <button data-room="hobbies" aria-pressed="false">
+                  Hobbies
+                </button>
+                <button
+                  data-room="badminton"
+                  aria-pressed="false"
+                  aria-label="Badminton court"
+                >
+                  Court
+                </button>
+                <button data-room="gym" aria-pressed="false">Gym</button>
+                <button data-room="lounge" aria-pressed="false">
+                  Card room
+                </button>
+              </nav>
+              <button class="button button-primary" id="explore">
+                Use computer ↗
+              </button>
+              <details class="desk-objects">
+                <summary>Desk objects</summary>
+                <div>
+                  <button data-prop="drawer">Open / close drawer</button
+                  ><button data-prop="coffee">Pick up coffee cup</button
+                  ><button data-prop="book">Pick up textbook</button
+                  ><button data-prop="plant">Nudge the plant</button>
+                </div>
+              </details>
+              <button
+                class="utility"
+                id="home-camera"
+                aria-label="Home, return to the desk"
+              >
+                Home
+              </button>
+            </div>
+            <div class="world-settings">
+              <button class="utility" id="enable-audio" aria-pressed="false">
+                Enable sound</button
+              ><a href="#sound">Sound settings</a
+              ><button class="utility" id="open-desktop">Computer</button
+              ><button class="utility" id="simple-view" aria-pressed="false">
+                Simple view</button
+              ><a class="help-link" href="#help" aria-label="Controls and help"
+                >?</a
+              >
+            </div>
+          </div>
           <button
             class="button room-action"
             id="room-action"
@@ -189,59 +246,13 @@
             Explore my hobbies →
           </button>
         </div>
-      </section>
-      <div class="world-toolbar">
-        <div class="exploration">
-          <nav class="rooms-nav" aria-label="Destinations">
-            <button data-room="study" aria-pressed="true">Office</button>
-            <button data-room="hobbies" aria-pressed="false">Hobbies</button>
-            <button
-              data-room="badminton"
-              aria-pressed="false"
-              aria-label="Badminton court"
-            >
-              Court
-            </button>
-            <button data-room="gym" aria-pressed="false">Gym</button>
-            <button data-room="lounge" aria-pressed="false">Card room</button>
-          </nav>
-          <button class="button button-primary" id="explore">
-            Use computer ↗
-          </button>
-          <details class="desk-objects">
-            <summary>Desk objects</summary>
-            <div>
-              <button data-prop="drawer">Open / close drawer</button
-              ><button data-prop="coffee">Pick up coffee cup</button
-              ><button data-prop="book">Pick up textbook</button
-              ><button data-prop="plant">Nudge the plant</button>
-            </div>
-          </details>
-          <button
-            class="utility"
-            id="home-camera"
-            aria-label="Home, return to the desk"
-          >
-            Home
-          </button>
-        </div>
-        <div class="world-settings">
-          <button class="utility" id="enable-audio" aria-pressed="false">
-            Enable sound</button
-          ><a href="#sound">Sound settings</a
-          ><button class="utility" id="open-desktop">Computer</button
-          ><button class="utility" id="simple-view" aria-pressed="false">
-            Simple view</button
-          ><a class="help-link" href="#help" aria-label="Controls and help"
-            >?</a
-          >
-        </div>
-      </div>
+      </details>
     </div>
     <aside
       id="object-inspector"
       class="object-inspector"
       aria-labelledby="object-title"
+      aria-describedby="object-description"
       hidden
     >
       <span class="object-kicker">A closer look</span>
@@ -285,6 +296,12 @@
           Software developer, UNSW Computer Science graduate, and security
           enthusiast. Here's what I've been working on.
         </p>
+        <button
+          id="mobile-enter"
+          class="button button-primary mobile-office-entry"
+        >
+          Enter office ↗
+        </button>
         <a href="#projects">Explore my projects ↓</a>
       </div>
       <section id="projects" class="portfolio-section">
@@ -1135,7 +1152,7 @@
           aria-controls="start-menu"
         >
           <img
-            src="favicon.svg?v=20261031-entry2"
+            src="favicon.svg?v=20261031-door1"
             alt=""
             width="20"
             height="20"
@@ -1158,7 +1175,7 @@
     </footer>
     <script
       type="module"
-      src="js/clubhouse.js?v=20261031-entry2"
+      src="js/clubhouse.js?v=20261031-door1"
       onerror="document.documentElement.classList.remove('js')"
     ></script>
   </body>

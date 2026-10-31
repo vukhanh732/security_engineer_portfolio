@@ -1,9 +1,17 @@
-import { createAudio } from "./clubhouse-audio.js?v=20261031-office1";
-import { createOfficeIntro } from "./office-intro.js?v=20261031-entry2";
-import { createDesktop } from "./desktop.js?v=20261031-office1";
+import { createAudio } from "./clubhouse-audio.js?v=20261031-door1";
+import { createOfficeIntro } from "./office-intro.js?v=20261031-door1";
+import { createDesktop } from "./desktop.js?v=20261031-door1";
 const $ = (selector) => document.querySelector(selector),
   body = document.body;
 const audio = createAudio();
+const roomOptions = $("#scene-menu");
+function closeRoomOptions() {
+  roomOptions.open = false;
+}
+document.addEventListener("pointerdown", (event) => {
+  if (roomOptions.open && !roomOptions.contains(event.target))
+    closeRoomOptions();
+});
 const introduction = createOfficeIntro({
   heading: $("#place-name"),
   controls: $("#office-entry"),
@@ -61,7 +69,7 @@ async function mountGame(name, section) {
   mount.innerHTML =
     '<p class="game-tip" role="status">Getting the game ready...</p>';
   try {
-    const module = await import(`./games/${name}.js?v=20261031-office1`);
+    const module = await import(`./games/${name}.js?v=20261031-door1`);
     if (games.get(name) !== entry) return;
     entry.cleanup = (
       name === "badminton" ? module.mountBadminton : module.mountPoker
@@ -178,6 +186,10 @@ function exitDesktop({ updateRoute = true } = {}) {
         : "",
     );
   if (!isSimple() && view) scene?.restoreView(view);
+  if (!isSimple())
+    (scene ? $("#world-canvas") : $(".main-nav a[href='#projects']")).focus({
+      preventScroll: true,
+    });
 }
 function rememberRoom(directApp = false) {
   if (desktop.getState().visible) return;
@@ -186,6 +198,7 @@ function rememberRoom(directApp = false) {
   returnOnClose = directApp && !isSimple();
 }
 function showSection(requested, { push = true } = {}) {
+  closeRoomOptions();
   introduction.complete();
   const name = aliases[requested] || requested;
   if (name === "main-content") {
@@ -303,12 +316,20 @@ function route() {
 addEventListener("popstate", route);
 addEventListener("hashchange", route);
 $("#simple-view").addEventListener("click", () => {
+  closeRoomOptions();
   const entering = isSimple();
   updateHash("");
   setSimple(!entering);
   if (entering) introduction.enter();
 });
+$("#mobile-enter").addEventListener("click", () => {
+  closeRoomOptions();
+  updateHash("");
+  setSimple(false);
+  introduction.enter();
+});
 function openDesktop() {
+  closeRoomOptions();
   rememberRoom();
   ++routeVersion;
   if (isSimple()) stopGames();
@@ -332,7 +353,7 @@ async function loadScene() {
   scenePromise = (async () => {
     try {
       const { createScene } = await import(
-        "./clubhouse-scene.js?v=20261031-office1"
+        "./clubhouse-scene.js?v=20261031-door1"
       );
       scene = await createScene({
         canvas: $("#world-canvas"),
@@ -461,6 +482,7 @@ async function loadScene() {
   return scenePromise;
 }
 $("#explore").addEventListener("click", async () => {
+  closeRoomOptions();
   // Reading the computer never waits for artwork or a graphics context.
   if (!scene) {
     openDesktop();
@@ -475,6 +497,7 @@ $("#explore").addEventListener("click", async () => {
 });
 document.querySelectorAll("[data-room]").forEach((button) =>
   button.addEventListener("click", async () => {
+    closeRoomOptions();
     introduction.complete();
     ++routeVersion;
     const version = routeVersion;
@@ -485,6 +508,7 @@ document.querySelectorAll("[data-room]").forEach((button) =>
   }),
 );
 $("#home-camera").addEventListener("click", async () => {
+  closeRoomOptions();
   ++routeVersion;
   const version = routeVersion;
   const world = await loadScene();
@@ -497,8 +521,14 @@ for (const [id, amount] of [
   ["#zoom-in", 0.15],
   ["#zoom-out", -0.15],
 ])
-  $(id).addEventListener("click", () => scene?.zoomBy(amount));
-$("#mouse-look").addEventListener("click", () => scene?.toggleLook());
+  $(id).addEventListener("click", async () => {
+    const world = await loadScene();
+    world?.zoomBy(amount);
+  });
+$("#mouse-look").addEventListener("click", async () => {
+  const world = await loadScene();
+  world?.toggleLook();
+});
 document.querySelectorAll("[data-room-activity]").forEach((button) => {
   const name = button.dataset.roomActivity;
   button.addEventListener("click", () =>
@@ -523,6 +553,7 @@ document.querySelectorAll("[data-prop]").forEach((button) =>
   button.addEventListener("click", async () => {
     ++routeVersion;
     button.closest("details").open = false;
+    closeRoomOptions();
     const version = routeVersion;
     const world = await loadScene();
     if (world && version === routeVersion) {
@@ -534,6 +565,7 @@ document.querySelectorAll("[data-prop]").forEach((button) =>
   }),
 );
 $("#room-action").addEventListener("click", async (event) => {
+  closeRoomOptions();
   const destination = event.currentTarget.dataset.destination;
   if (!destination) {
     navigate(event.currentTarget.dataset.app);
@@ -544,6 +576,16 @@ $("#room-action").addEventListener("click", async (event) => {
   if (world && version === routeVersion) world.go(destination);
 });
 document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Escape" &&
+    roomOptions.open &&
+    !desktop.getState().visible
+  ) {
+    closeRoomOptions();
+    roomOptions.querySelector("summary").focus();
+    event.preventDefault();
+    return;
+  }
   if (
     event.key === "Escape" &&
     !desktop.getState().visible &&
@@ -563,6 +605,10 @@ body.classList.add("enhanced");
 if (matchMedia("(max-width: 767px)").matches) setSimple(true, { load: false });
 const world = $(".world");
 const headerSize = new ResizeObserver(() => {
+  roomOptions.style.setProperty(
+    "--room-header-bottom",
+    $(".site-header").getBoundingClientRect().bottom + "px",
+  );
   world.style.setProperty(
     "--room-header-bottom",
     $(".site-header").getBoundingClientRect().bottom + "px",

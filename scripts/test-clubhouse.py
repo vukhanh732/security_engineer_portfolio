@@ -3,6 +3,7 @@
 Requires Python Playwright + Chromium. Never submits the contact form.
 Set CLUBHOUSE_TEST_URL to override http://127.0.0.1:4173.
 """
+from browser_controls import control, control_button
 import os
 import re
 from pathlib import Path
@@ -38,7 +39,7 @@ with sync_playwright() as p:
     assert page.evaluate('window.__played.length') == 0, 'Audio started without activation'
     assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))'), 'Heavy scene loaded before intent'
     # The primary computer works immediately, before 3D has initialized.
-    page.locator('#explore').click()
+    control(page,'#explore').click()
     expect_landing(page)
     assert not page.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/"))')
     page.keyboard.press('Escape')
@@ -144,9 +145,9 @@ with sync_playwright() as p:
     assert page.locator('.badminton-canvas').count() == 0
     page.keyboard.press('Escape')
     # Audio activation, remembered independent volumes, mute and hidden-tab pause.
-    page.get_by_role('button',name='Enable sound',exact=True).first.click()
+    control_button(page,'Enable sound').first.click()
     page.wait_for_function('() => window.__played.some(a=>a.src.includes("sunset-walk")&&!a.paused&&a.currentTime>0)')
-    page.locator('.world-settings a[href="#sound"]').click()
+    control(page,'.world-settings a[href="#sound"]').click()
     page.get_by_label('Background music').fill('8');page.get_by_label('Sound effects').fill('0')
     assert page.evaluate('window.__played.find(a=>a.src.includes("sunset-walk")).volume') == .08
     page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
@@ -171,19 +172,19 @@ with sync_playwright() as p:
     page.goto(BASE+'/#skills',wait_until='networkidle')
     expect(page.locator('[data-window=about] #skills')).to_be_visible()
     page.keyboard.press('Escape')
-    page.get_by_role('button',name='Simple view',exact=True).click()
+    control_button(page,'Simple view').click()
     expect(page.locator('#main-content #projects')).to_be_visible()
     expect(page.locator('#main-content #experience')).to_be_visible()
     expect(page.locator('#badminton-mount a[href="#badminton"]')).to_be_visible()
     expect(page.locator('#poker-mount a[href="#poker"]')).to_be_visible()
     assert page.locator('#main-content [data-project-file][hidden]').count() == 0
-    page.get_by_role('button',name='Computer',exact=True).click()
+    control_button(page,'Computer').click()
     expect_landing(page)
     page.locator('.desktop-icons [data-app=projects]').click()
     expect(page.locator('[data-window=projects]')).to_be_visible()
     page.locator('[data-window=projects] a[href="#experience"]').click()
     expect(page.locator('[data-window=experience]')).to_be_visible()
-    page.get_by_role('button',name='Back to the room ↙',exact=True).click()
+    control_button(page,'Back to the room ↙').click()
     expect(page.locator('#main-content #projects')).to_be_visible()
     expect(page.locator('#main-content #experience')).to_be_visible()
     # Escape also cancels destinations queued before createScene resolves.
@@ -193,9 +194,9 @@ with sync_playwright() as p:
         pending.route('**/js/clubhouse-scene.js*',lambda route:route.fulfill(status=200,content_type='text/javascript',body=scene_stub))
         pending.goto(BASE,wait_until='networkidle');pending.locator('.world').dispatch_event('pointermove')
         pending.wait_for_function('() => typeof window.__releaseScene === "function"')
-        pending.locator(selector).click()
+        control(pending,selector).click()
         if open_desktop:
-            pending.get_by_role('button',name='Computer',exact=True).click()
+            control_button(pending,'Computer').click()
             expect_landing(pending)
         pending.keyboard.press('Escape');pending.evaluate('window.__releaseScene()')
         pending.locator('#world-canvas[data-ready=true]').wait_for()
@@ -210,7 +211,7 @@ with sync_playwright() as p:
     assert mobile.evaluate('document.documentElement.scrollWidth<=innerWidth')
     assert not mobile.evaluate('performance.getEntriesByType("resource").some(r=>r.name.includes("/assets/desk/")||r.name.includes("desk-preview.webp")||r.name.includes("/images/connected-study-"))')
     mobile.screenshot(path=str(OUT/'home-mobile.png'),full_page=True)
-    mobile.get_by_role('button',name='Computer',exact=True).click()
+    control_button(mobile,'Computer').click()
     expect_landing(mobile)
     mobile.screenshot(path=str(OUT/'computer-landing-mobile.png'))
     mobile.locator('.desktop-icons [data-app=projects]').click()
@@ -257,27 +258,27 @@ with sync_playwright() as p:
     assert not room.evaluate('performance.getEntriesByType("resource").some(r=>/HDRLoader|SSAOPass|EffectComposer|assets\/study/.test(r.name))'), 'Heavy rendering path was requested'
     assert canvas.evaluate('(c)=>c.width===Math.round(c.clientWidth*2)&&c.height===Math.round(c.clientHeight*2)'), 'Retina canvas was undersized'
     for name in ['hobbies','gym','badminton','lounge','study']:
-        room.locator('[data-room='+name+']').click()
+        control(room,'[data-room='+name+']').click()
         expect(canvas).to_have_attribute('data-location','study' if name=='study' else 'hobbies')
         expect(canvas).to_have_attribute('data-traveling','false')
         room.wait_for_timeout(150);room.screenshot(path=str(OUT/('room-'+name+'.png')))
         if name == 'badminton':
-            room.get_by_role('button',name='Play a match ↗',exact=True).click()
+            control_button(room,'Play a match ↗').click()
             expect(room.locator('[data-window=badminton]')).to_be_visible()
             room.keyboard.press('Escape')
             expect(canvas).to_have_attribute('data-node','badminton')
     # Actual desk/computer picking opens the desktop, as well as its text control.
     point=room.evaluate('''() => {const c=document.querySelector('#world-canvas');for(let y=330;y<650;y+=30)for(let x=400;x<1000;x+=30){c.dispatchEvent(new PointerEvent('pointermove',{clientX:x,clientY:y}));if(c.dataset.hover==='Use the computer')return {x,y};}return null;}''')
     assert point, 'The computer/desk had no usable interaction surface'
-    room.locator('[data-room=gym]').click();canvas.focus();room.keyboard.press('e')
+    control(room,'[data-room=gym]').click();canvas.focus();room.keyboard.press('e')
     room.wait_for_timeout(100)
     expect(canvas).to_have_attribute('data-location','hobbies')
     expect(room.locator('#desktop')).not_to_be_visible()
-    room.locator('[data-room=study]').click()
+    control(room,'[data-room=study]').click()
     room.mouse.click(point['x'],point['y'])
     expect_landing(room)
     room.keyboard.press('Escape')
-    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    control_button(room,'Home, return to the desk').click()
     room.locator('.main-nav a[href="#experience"]').click();room.wait_for_timeout(300)
     renders=canvas.get_attribute('data-renders');room.wait_for_timeout(700)
     assert canvas.get_attribute('data-renders') == renders, 'Room rendered while reading'
@@ -287,41 +288,41 @@ with sync_playwright() as p:
     style.evaluate('(e)=>e.remove()')
     room.set_viewport_size({'width':1280,'height':720});room.wait_for_timeout(250)
     room.screenshot(path=str(OUT/'room-laptop.png'))
-    room.get_by_role('button',name='Use computer ↗',exact=True).click()
+    control_button(room,'Use computer ↗').click()
     expect_landing(room)
     room.screenshot(path=str(OUT/'desktop-laptop.png'))
     room.keyboard.press('Escape')
     # Real animated travel can be interrupted and reversed without stale actions.
     room.emulate_media(reduced_motion='no-preference')
-    room.locator('[data-room=gym]').click();room.wait_for_timeout(300)
-    room.locator('[data-room=badminton]').click();room.wait_for_timeout(300)
-    room.locator('[data-room=study]').click()
+    control(room,'[data-room=gym]').click();room.wait_for_timeout(300)
+    control(room,'[data-room=badminton]').click();room.wait_for_timeout(300)
+    control(room,'[data-room=study]').click()
     expect(canvas).to_have_attribute('data-node','study',timeout=30000)
     expect(canvas).to_have_attribute('data-traveling','false',timeout=30000)
-    room.locator('[data-room=gym]').click();room.wait_for_timeout(200)
+    control(room,'[data-room=gym]').click();room.wait_for_timeout(200)
     room.locator('.main-nav a[href="#projects"]').click();room.keyboard.press('Escape')
     room.wait_for_timeout(1200)
     expect(room.locator('#desktop')).not_to_be_visible()
     # Changing accessibility preferences during a computer approach preserves intent.
-    room.get_by_role('button',name='Use computer ↗',exact=True).click()
+    control_button(room,'Use computer ↗').click()
     expect(canvas).to_have_attribute('data-traveling','true')
     room.emulate_media(reduced_motion='reduce')
     expect_landing(room)
     room.keyboard.press('Escape')
-    room.locator('.world-settings a[href="#help"]').click();room.locator('#quality-toggle').click()
+    control(room,'.world-settings a[href="#help"]').click();room.locator('#quality-toggle').click()
     expect(canvas).to_have_attribute('data-quality','low')
     room.keyboard.press('Escape')
     before=int(canvas.get_attribute('data-renders'))
-    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    control_button(room,'Home, return to the desk').click()
     room.wait_for_function('(before) => Number(document.querySelector("#world-canvas").dataset.renders)>before',arg=before)
     renders=canvas.get_attribute('data-renders');room.wait_for_timeout(600)
     assert canvas.get_attribute('data-renders')==renders, 'Idle baked scene kept rendering'
     # Props work from keyboard-friendly controls and from the actual meshes.
     room.set_viewport_size({'width':1440,'height':900})
-    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    control_button(room,'Home, return to the desk').click()
     def prop(name):
-        room.locator('.desk-objects summary').click()
-        room.locator('[data-prop='+name+']').click()
+        control(room,'.desk-objects summary').click()
+        control(room,'[data-prop='+name+']').click()
         expect(canvas).to_have_attribute('data-inspection', name)
         expect(room.locator('#put-back')).to_be_focused()
     for name, label in [('drawer','Open or close the drawer'),('coffee','Pick up the coffee cup'),('book','Pick up the textbook'),('plant','Give the plant a nudge')]:
@@ -346,7 +347,7 @@ with sync_playwright() as p:
     room.locator('#put-back').click()
     # With normal motion the camera follows, settles, and stops rendering.
     room.emulate_media(reduced_motion='no-preference')
-    expect(room.locator('#mouse-look')).to_have_attribute('aria-pressed','true')
+    expect(control(room,'#mouse-look')).to_have_attribute('aria-pressed','true')
     room.mouse.move(1200,200)
     room.wait_for_function('(before) => document.querySelector("#world-canvas").dataset.position !== before',arg=neutral)
     room.wait_for_timeout(1500)
@@ -372,42 +373,42 @@ with sync_playwright() as p:
     assert canvas.get_attribute('data-renders')==renders
     room.locator('#put-back').click()
     # Leaving the scene or hiding the tab safely returns held objects.
-    prop('book');room.locator('[data-room=gym]').click()
+    prop('book');control(room,'[data-room=gym]').click()
     expect(room.locator('#object-inspector')).not_to_be_visible()
-    room.locator('[data-room=study]').click();prop('coffee')
+    control(room,'[data-room=study]').click();prop('coffee')
     room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
     expect(room.locator('#object-inspector')).not_to_be_visible()
     renders=canvas.get_attribute('data-renders');room.wait_for_timeout(350)
     assert canvas.get_attribute('data-renders')==renders
     room.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
     # An open drawer survives a visit away, and can then be closed by clicking.
-    prop('drawer');room.locator('[data-room=gym]').click();room.locator('[data-room=study]').click()
+    prop('drawer');control(room,'[data-room=gym]').click();control(room,'[data-room=study]').click()
     expect(canvas).to_have_attribute('data-drawer','true')
-    room.locator('.desk-objects summary').click();room.locator('[data-prop=drawer]').click()
+    control(room,'.desk-objects summary').click();control(room,'[data-prop=drawer]').click()
     expect(canvas).to_have_attribute('data-drawer','false')
     # Re-entering the computer lands on wallpaper even with existing windows.
     room.locator('.main-nav a[href="#projects"]').click()
     room.locator('[data-project=wazuh]').click();room.keyboard.press('Escape')
-    room.get_by_role('button',name='Computer',exact=True).click();expect_landing(room)
+    control_button(room,'Computer').click();expect_landing(room)
     room.locator('[data-task=projects]').click()
     expect(room.locator('[data-window=projects] [data-project-file=wazuh]')).to_be_visible()
     room.screenshot(path=str(OUT/'projects-personal.png'))
     room.keyboard.press('Escape')
-    room.get_by_role('button',name='Home, return to the desk',exact=True).click()
+    control_button(room,'Home, return to the desk').click()
     room.emulate_media(reduced_motion='no-preference')
     # A prop chosen during travel cancels the old destination, including a
     # pending computer approach. The last explicit selection wins.
     for destination in ['#explore','[data-room=gym]']:
-        room.locator(destination).click()
+        control(room,destination).click()
         expect(canvas).to_have_attribute('data-traveling','true')
-        room.evaluate('document.querySelector(".desk-objects").open=true;document.querySelector("[data-prop=coffee]").click()')
+        control(room,".desk-objects summary").click();control(room,"[data-prop=coffee]").click()
         expect(canvas).to_have_attribute('data-inspection','coffee',timeout=5000)
         expect(canvas).to_have_attribute('data-location','study')
         expect(room.locator('#desktop')).not_to_be_visible()
         room.locator('#put-back').click()
     # Cancel after a fade has already revealed its destination. Resuming must
     # preserve that composition rather than restoring the prior scene's pose.
-    room.locator('[data-room=gym]').click()
+    control(room,'[data-room=gym]').click()
     room.wait_for_function('() => {const c=document.querySelector("#world-canvas");return c.dataset.node==="gym"&&c.dataset.traveling==="true";}')
     position=room.evaluate('''() => {const c=document.querySelector('#world-canvas');const position=c.dataset.position;Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'));return position;}''')
     room.wait_for_timeout(150)
@@ -417,7 +418,7 @@ with sync_playwright() as p:
     expect(canvas).to_have_attribute('data-location','hobbies')
     # Phone inspection fits around the header/panel, including short screens.
     room.emulate_media(reduced_motion='reduce')
-    room.locator('[data-room=study]').click()
+    control(room,'[data-room=study]').click()
     for height in [844,568]:
         room.set_viewport_size({'width':390,'height':height})
         prop('book')

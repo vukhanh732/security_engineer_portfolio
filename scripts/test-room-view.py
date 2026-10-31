@@ -1,4 +1,5 @@
 """Room return, zoom, mouse look and activity affordance acceptance checks."""
+from browser_controls import control, control_button
 import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
@@ -12,11 +13,11 @@ with sync_playwright() as p:
     page.goto(BASE,wait_until='networkidle');page.locator('.world').hover()
     canvas=page.locator('#world-canvas[data-ready=true]');canvas.wait_for(timeout=90000)
     page.screenshot(path=str(OUT/'refined-study.png'))
-    page.locator('#zoom-in').click();page.locator('#zoom-in').click()
+    control(page,'#zoom-in').click();control(page,'#zoom-in').click()
     expect(canvas).to_have_attribute('data-zoom','1.300')
     page.mouse.move(700,450);page.mouse.wheel(0,120)
     expect(canvas).to_have_attribute('data-zoom','1.180')
-    page.locator('[data-room=hobbies]').click();expect(canvas).to_have_attribute('data-node','hobbies')
+    control(page,'[data-room=hobbies]').click();expect(canvas).to_have_attribute('data-node','hobbies')
     assert page.locator('[data-room]').evaluate_all('(items)=>items.every(e=>e.tagName==="BUTTON")'), 'Room state leaked into destination controls'
     expect(page.locator('.activity-marker:visible')).to_have_count(3)
     page.screenshot(path=str(OUT/'refined-hobbies.png'))
@@ -32,23 +33,23 @@ with sync_playwright() as p:
     expect(canvas).to_have_attribute('data-position',before)
     expect(canvas).to_have_attribute('data-zoom','1.180')
     # Closing from a closer destination, and Escape from poker, keep that destination.
-    page.locator('[data-room=badminton]').click()
-    page.get_by_role('button',name='Play a match ↗',exact=True).click()
+    control(page,'[data-room=badminton]').click()
+    control_button(page,'Play a match ↗').click()
     page.get_by_role('button',name='Close Badminton',exact=True).click()
     expect(canvas).to_have_attribute('data-node','badminton')
     expect(page.locator('#desktop')).not_to_be_visible()
-    page.locator('[data-room=lounge]').click()
-    page.get_by_role('button',name='Deal a hand ↗',exact=True).click()
+    control(page,'[data-room=lounge]').click()
+    control_button(page,'Deal a hand ↗').click()
     page.keyboard.press('Escape')
     expect(canvas).to_have_attribute('data-node','lounge')
     expect(canvas).to_have_attribute('data-zoom','1.180')
     # Computer-launched apps close to the desktop; leaving it restores the gym.
-    page.locator('[data-room=gym]').click()
-    page.locator('#explore').click();expect(page.locator('#desktop')).to_be_visible()
+    control(page,'[data-room=gym]').click()
+    control(page,'#explore').click();expect(page.locator('#desktop')).to_be_visible()
     page.locator('.desktop-icons [data-app=projects]').click()
     page.get_by_role('button',name='Close My Projects',exact=True).click()
     expect(page.locator('#desktop')).to_be_visible()
-    page.get_by_role('button',name='Back to the room ↙',exact=True).click()
+    control_button(page,'Back to the room ↙').click()
     expect(canvas).to_have_attribute('data-node','gym')
     expect(canvas).to_have_attribute('data-zoom','1.180')
     page.locator('.main-nav a[href="#experience"]').click()
@@ -56,31 +57,31 @@ with sync_playwright() as p:
     expect(page.locator('#desktop')).not_to_be_visible()
     expect(canvas).to_have_attribute('data-node','gym')
     # Mouse look responds visibly, can be disabled, and stops rendering after settling.
-    page.locator('#home-camera').click();expect(canvas).to_have_attribute('data-zoom','1.000')
+    control(page,'#home-camera').click();expect(canvas).to_have_attribute('data-zoom','1.000')
     # History uses the same return snapshot as Escape, including computer zoom reset.
-    page.locator('[data-room=hobbies]').click()
-    page.locator('#zoom-in').click()
-    page.locator('#explore').click();expect(page.locator('#desktop')).to_be_visible()
+    control(page,'[data-room=hobbies]').click()
+    control(page,'#zoom-in').click()
+    control(page,'#explore').click();expect(page.locator('#desktop')).to_be_visible()
     page.go_back()
     expect(page.locator('#desktop')).not_to_be_visible()
     expect(canvas).to_have_attribute('data-node','hobbies')
     expect(canvas).to_have_attribute('data-zoom','1.150')
     # Returning after orientation/viewport changes adapts the saved framing.
     before=[float(n) for n in canvas.get_attribute('data-position').split(',')]
-    page.locator('#explore').click();expect(page.locator('#desktop')).to_be_visible()
+    control(page,'#explore').click();expect(page.locator('#desktop')).to_be_visible()
     page.set_viewport_size({'width':390,'height':844})
-    page.get_by_role('button',name='Back to the room ↙',exact=True).click()
+    control_button(page,'Back to the room ↙').click()
     expect(canvas).to_have_attribute('data-node','hobbies')
     expect(canvas).to_have_attribute('data-zoom','1.150')
     after=[float(n) for n in canvas.get_attribute('data-position').split(',')]
     assert after[0]>before[0]*1.5,'Restored framing did not adapt to a narrow screen'
     page.set_viewport_size({'width':1440,'height':900})
-    page.locator('#home-camera').click();expect(canvas).to_have_attribute('data-node','study')
+    control(page,'#home-camera').click();expect(canvas).to_have_attribute('data-node','study')
     original=canvas.get_attribute('data-position')
     page.mouse.move(200,300);page.wait_for_timeout(150)
     assert canvas.get_attribute('data-position')==original,'Reduced motion moved the view'
     page.emulate_media(reduced_motion='no-preference')
-    expect(page.locator('#mouse-look')).to_have_attribute('aria-pressed','true')
+    expect(control(page,'#mouse-look')).to_have_attribute('aria-pressed','true')
     page.mouse.move(300,300);page.wait_for_timeout(1500)
     left=[float(n) for n in canvas.get_attribute('data-position').split(',')]
     page.mouse.move(1200,300);page.wait_for_timeout(1500)
@@ -88,31 +89,31 @@ with sync_playwright() as p:
     assert sum((a-b)**2 for a,b in zip(left,right))>.8,'Mouse orbit was imperceptible'
     renders=canvas.get_attribute('data-renders');page.wait_for_timeout(350)
     assert canvas.get_attribute('data-renders')==renders,'Mouse look never settled'
-    page.locator('#mouse-look').click();page.wait_for_timeout(1500)
+    control(page,'#mouse-look').click();page.wait_for_timeout(1500)
     still=canvas.get_attribute('data-position')
     page.mouse.move(500,400);page.wait_for_timeout(150)
     assert canvas.get_attribute('data-position')==still
     page.emulate_media(reduced_motion='reduce')
     for _ in range(12):
-        if page.locator('#zoom-in').is_disabled():break
-        page.locator('#zoom-in').click()
+        if control(page,'#zoom-in').is_disabled():break
+        control(page,'#zoom-in').click()
     expect(canvas).to_have_attribute('data-zoom','1.650')
-    page.locator('.desk-objects summary').click();page.locator('[data-prop=book]').click()
+    control(page,'.desk-objects summary').click();control(page,'[data-prop=book]').click()
     expect(page.locator('#object-inspector')).to_be_visible()
     page.screenshot(path=str(OUT/'refined-inspection-zoom.png'))
     page.locator('#put-back').click()
     for _ in range(12):
-        if page.locator('#zoom-out').is_disabled():break
-        page.locator('#zoom-out').click()
+        if control(page,'#zoom-out').is_disabled():break
+        control(page,'#zoom-out').click()
     expect(canvas).to_have_attribute('data-zoom','0.800')
-    page.locator('#home-camera').click();expect(canvas).to_have_attribute('data-zoom','1.000')
+    control(page,'#home-camera').click();expect(canvas).to_have_attribute('data-zoom','1.000')
     # Labels stay usable in the optional phone scene.
     mobile=context.new_page();mobile.set_viewport_size({'width':390,'height':844})
     mobile.on('pageerror',lambda e:errors.append(str(e)))
     mobile.goto(BASE,wait_until='networkidle')
-    mobile.get_by_role('button',name='Explore 3D desk',exact=True).click()
+    mobile.locator('#mobile-enter').click()
     mobile.locator('#world-canvas[data-ready=true]').wait_for(timeout=90000)
-    mobile.locator('[data-room=hobbies]').click()
+    control(mobile,'[data-room=hobbies]').click()
     expect(mobile.locator('.activity-marker:visible')).to_have_count(3)
     boxes=mobile.locator('.activity-marker:visible').all()
     for item in boxes:
@@ -127,7 +128,9 @@ with sync_playwright() as p:
         mobile.set_viewport_size({'width':width,'height':height})
         mobile.wait_for_timeout(200)
         for selector in ['#zoom-in','#zoom-out','[data-room-activity=badminton]','[data-room-activity=gym]','[data-room-activity=poker]']:
-            item=mobile.locator(selector)
+            item=control(mobile,selector) if selector.startswith('#zoom') else mobile.locator(selector)
+            if not selector.startswith('#zoom') and mobile.locator('#scene-menu').evaluate('(e)=>e.open'):
+                mobile.locator('#scene-menu > summary').click()
             assert item.evaluate('''(e)=>{const r=e.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return e===hit||e.contains(hit);}'''), 'Control covered by chrome: '+selector+' at '+str((width,height))
         mobile.screenshot(path=str(OUT/('refined-controls-'+str(width)+'-'+str(height)+'.png')))
     assert mobile.evaluate('document.documentElement.scrollWidth<=innerWidth')

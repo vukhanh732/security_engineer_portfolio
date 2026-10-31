@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
-import { buildDestination } from "./clubhouse-objects.js?v=20261031-office1";
+import { buildDestination } from "./clubhouse-objects.js?v=20261031-door1";
 
 // Original room architecture. Everything here is geometry or a small canvas
 // texture, so the licensed desk's six artwork downloads remain the full budget.
@@ -31,7 +31,17 @@ function builder(root) {
     parent.add(mesh);
     return mesh;
   }
-  function sign(text, w, h, x, y, z, rotation = 0, parent = root) {
+  function sign(
+    text,
+    w,
+    h,
+    x,
+    y,
+    z,
+    rotation = 0,
+    parent = root,
+    fontSize = 62,
+  ) {
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = 256;
@@ -39,7 +49,7 @@ function builder(root) {
     ctx.fillStyle = COLORS.trim;
     ctx.fillRect(0, 0, 1024, 256);
     ctx.fillStyle = COLORS.dark;
-    ctx.font = "600 62px Arial";
+    ctx.font = `600 ${fontSize}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(text, 512, 132, 950);
@@ -264,7 +274,11 @@ function windowLight(root, x, width, wallZ, floorY, length, skew) {
       );
     }
 }
-function doorway(root, b, { x, z, floorY, destination, label, side }) {
+function doorway(
+  root,
+  b,
+  { x, z, floorY, destination, label, side, insetLabel = false },
+) {
   const leaf = new THREE.Group();
   leaf.name = destination + "-door";
   leaf.userData.dynamic = true;
@@ -288,19 +302,36 @@ function doorway(root, b, { x, z, floorY, destination, label, side }) {
     destination,
     label,
   );
-  travel(
-    b.sign(
+  if (insetLabel) {
+    travel(
+      b.sign(
+        "Hobbies",
+        1.65,
+        0.38,
+        side * 0.1,
+        4.0,
+        1.125,
+        (side * Math.PI) / 2,
+        leaf,
+        160,
+      ),
+      destination,
       label,
-      3.25,
-      0.64,
-      x + side * 0.18,
-      floorY + 5.45,
-      z + 1.15,
-      (side * Math.PI) / 2,
-    ),
-    destination,
-    label,
-  );
+    );
+  } else
+    travel(
+      b.sign(
+        label,
+        3.25,
+        0.64,
+        x + side * 0.18,
+        floorY + 5.45,
+        z + 1.15,
+        (side * Math.PI) / 2,
+      ),
+      destination,
+      label,
+    );
   let motion = null,
     angle = 0;
   function setOpen(open, immediate = false) {
@@ -337,13 +368,26 @@ export function buildStudyRoom(desk) {
   // The licensed cyclorama already carries the office's baked contact and
   // directional shadows. Keep it intact: a floor/light field suggests the room.
   const root = new THREE.Group();
-  root.name = "office-wayfinding";
+  root.name = "office-hobbies-door";
   const b = builder(root);
-  const sign = b.sign("Hobbies →", 1.9, 0.5, 4.8, -1.65, -0.65, -0.15);
-  travel(sign, "hobbies", "Explore my hobbies");
-  b.box(0.12, 1.15, 0.12, 4.8, -2.35, -0.7, COLORS.wood);
-  b.box(0.65, 0.08, 0.45, 4.8, -2.93, -0.7, COLORS.wood);
+  const frame = new THREE.Group();
+  frame.rotation.y = Math.PI / 2;
+  frame.position.set(5.4, 0, -2.3);
+  root.add(frame);
+  const fb = builder(frame);
+  root.userData.portal = doorway(frame, fb, {
+    x: 0,
+    z: 0,
+    floorY: -2.98,
+    destination: "hobbies",
+    label: "Explore my hobbies",
+    side: -1,
+    insetLabel: true,
+  });
+  for (const z of [-0.1, 2.4]) fb.box(0.65, 0.1, 0.4, 0, -2.93, z, COLORS.dark);
+  shadow(root, 6.5, -1.4, 3.6, 3.4, -2.978);
   desk.add(root);
+  desk.userData.portal = root.userData.portal;
   return desk;
 }
 
