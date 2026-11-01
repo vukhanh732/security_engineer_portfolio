@@ -1,130 +1,200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SentryNode - Vu Luu</title>
-<meta name="description" content="A deployed phase-one detection API that turns SSH and web events into alerts, with IP-reputation context and tested input limits.">
-<meta name="theme-color" content="#f0f1e9">
-<link rel="canonical" href="https://security-vu.netlify.app/sentrynode.html">
-<link rel="icon" href="/favicon.svg?v=20261029-study1" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico?v=20261029-study1" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vu Luu">
-<meta property="og:title" content="SentryNode - log detection API">
-<meta property="og:description" content="Stateful detection, URL-decoded matching, threat intelligence, and a hardened public API backed by 800+ lines of tests.">
-<meta property="og:url" content="https://security-vu.netlify.app/sentrynode.html">
-<meta property="og:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SentryNode - log detection API">
-<meta name="twitter:description" content="Stateful detection and a hardened public API backed by 800+ lines of tests.">
-<meta name="twitter:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/editorial.css">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"SentryNode","description":"A phase-one log-detection API for SSH brute force and suspicious web requests, with IP-reputation context.","codeRepository":"https://github.com/vukhanh732/sentrynode","programmingLanguage":"Python","author":{"@type":"Person","name":"Vu Luu","url":"https://security-vu.netlify.app/"},"url":"https://security-vu.netlify.app/sentrynode.html"}
-</script>
-</head>
-<body class="page-violet">
-<a href="#main-content" class="skip-link">Skip to content</a>
-<div class="ambient-cursor-glow" aria-hidden="true"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SentryNode - Vu Luu</title>
+    <meta
+      name="description"
+      content="Find the pattern behind a suspicious request. Collect SSH and web logs, detect repeated failures and attack patterns, then inspect the resulting alerts through a FastAPI service."
+    />
+    <meta name="theme-color" content="#f0f1e9" />
+    <link
+      rel="canonical"
+      href="https://security-vu.netlify.app/sentrynode.html"
+    />
+    <link
+      rel="icon"
+      href="/favicon.svg?v=20261029-study1"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon.ico?v=20261029-study1" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vu Luu" />
+    <meta property="og:title" content="SentryNode - Vu Luu" />
+    <meta
+      property="og:description"
+      content="Find the pattern behind a suspicious request. Collect SSH and web logs, detect repeated failures and attack patterns, then inspect the resulting alerts through a FastAPI service."
+    />
+    <meta
+      property="og:url"
+      content="https://security-vu.netlify.app/sentrynode.html"
+    />
+    <meta
+      property="og:image"
+      content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SentryNode - Vu Luu" />
+    <meta
+      name="twitter:description"
+      content="Find the pattern behind a suspicious request. Collect SSH and web logs, detect repeated failures and attack patterns, then inspect the resulting alerts through a FastAPI service."
+    />
+    <meta
+      name="twitter:image"
+      content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/editorial.css" />
+    <link rel="stylesheet" href="css/projects.css?v=20261101-projects1" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "SentryNode",
+        "description": "A phase-one log-detection API for SSH brute force and suspicious web requests, with IP-reputation context.",
+        "codeRepository": "https://github.com/vukhanh732/sentrynode",
+        "programmingLanguage": "Python",
+        "author": {
+          "@type": "Person",
+          "name": "Vu Luu",
+          "url": "https://security-vu.netlify.app/"
+        },
+        "url": "https://security-vu.netlify.app/sentrynode.html"
+      }
+    </script>
+  </head>
+  <body class="page-violet">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
-<header class="nav">
-  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
-  <nav class="nav-links">
-    <a href="index.html#about" class="nav-link">About</a>
-    <a href="index.html#skills" class="nav-link">Skills</a>
-    <a href="index.html#experience" class="nav-link">Experience</a>
-    <a href="index.html#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog</a>
-    <a href="study-notes.html" class="nav-link">Notes</a>
-    <a href="index.html#contact" class="nav-link">Contact</a>
-    <a href="resume.pdf" download class="btn-resume">Resume</a>
-  </nav>
-  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-  <nav class="mobile-panel">
-    <a href="index.html#about" class="mobile-link">About</a>
-    <a href="index.html#skills" class="mobile-link">Skills</a>
-    <a href="index.html#experience" class="mobile-link">Experience</a>
-    <a href="index.html#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog</a>
-    <a href="study-notes.html" class="mobile-link">Notes</a>
-    <a href="index.html#contact" class="mobile-link">Contact</a>
-    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
-  </nav>
-</header>
+    <header class="nav">
+      <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+      <nav class="nav-links">
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="index.html#skills" class="nav-link">Skills</a>
+        <a href="index.html#experience" class="nav-link">Experience</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="study-notes.html" class="nav-link">Notes</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+        <a href="resume.pdf" download class="btn-resume">Resume</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        ☰
+      </button>
+      <nav class="mobile-panel">
+        <a href="index.html#about" class="mobile-link">About</a>
+        <a href="index.html#skills" class="mobile-link">Skills</a>
+        <a href="index.html#experience" class="mobile-link">Experience</a>
+        <a href="index.html#projects" class="mobile-link">Projects</a>
+        <a href="blog.html" class="mobile-link">Blog</a>
+        <a href="study-notes.html" class="mobile-link">Notes</a>
+        <a href="index.html#contact" class="mobile-link">Contact</a>
+        <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+      </nav>
+    </header>
 
-<main id="main-content">
-<section class="project-hero">
-  <a href="index.html#projects" class="article-back">← All projects</a>
-  <div class="project-eyebrow">PROJECT · SIEM &amp; THREAT DETECTION</div>
-  <h1 class="project-title">SentryNode</h1>
-  <p class="project-lead">A personal log-detection API that turns repeated SSH failures and suspicious web payloads into alerts, with IP-reputation context for triage.</p>
-  <div class="project-stack-row">
-    <span>FastAPI</span><span>Redis</span><span>Docker</span><span>slowapi</span><span>pytest</span>
-  </div>
-  <div class="hero-actions">
-    <a href="https://sentrynode-backend.onrender.com/docs" target="_blank" rel="noopener" class="btn-primary">Try it live →</a>
-    <a href="https://github.com/vukhanh732/sentrynode" class="btn-secondary">View source →</a>
-  </div>
-</section>
+    <main id="main-content">
+      <section class="project-hero">
+        <a href="index.html#projects" class="article-back">← All projects</a>
+        <div class="project-eyebrow">
+          Detection engineering / API + Python collector
+        </div>
+        <h1 class="project-title">SentryNode</h1>
+        <p class="project-lead">
+          Find the pattern behind a suspicious request. Collect SSH and web
+          logs, detect repeated failures and attack patterns, then inspect the
+          resulting alerts through a FastAPI service.
+        </p>
+        <div class="project-actions">
+          <a
+            class="project-open"
+            href="https://sentrynode-backend.onrender.com/docs"
+            target="_blank"
+            rel="noopener"
+            >Open API docs ↗</a
+          ><a
+            href="https://github.com/vukhanh732/sentrynode"
+            target="_blank"
+            rel="noopener"
+            >View repository ↗</a
+          >
+        </div>
+        <p class="project-meta">Python · FastAPI · HTTPX · Redis · pytest</p>
+      </section>
+      <div class="case-image">
+        <figure class="project-cover">
+          <a
+            href="images/sentrynode-flow.svg"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open full-size SentryNode image"
+            ><img
+              src="images/sentrynode-flow.svg"
+              alt="Implemented SentryNode flow from log files through the collector, HTTP ingestion and detection to alerts, with separate IP reputation lookup"
+              width="1400"
+              height="760"
+              loading="lazy"
+              decoding="async"
+          /></a>
+          <figcaption>
+            Implemented architecture / derived from the source code
+          </figcaption>
+        </figure>
+      </div>
+      <section class="project-block">
+        <h2 class="block-label">Why it exists</h2>
+        <p class="block-body">
+          Individual log lines are difficult to investigate without context.
+          This personal monitoring project turns repeated SSH failures and
+          suspicious HTTP payloads into structured alerts.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">Implemented request path</h2>
+        <p class="block-body">
+          A Python collector parses watched log files and sends HTTP batches to
+          FastAPI. The detection engine tracks patterns in memory. A separate IP
+          reputation endpoint queries AbuseIPDB with an optional Redis cache;
+          enrichment is not automatically attached to every ingested event.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">Delivery failure is part of the design</h2>
+        <p class="block-body">
+          The collector now resends the same chunk after transport failures,
+          HTTP 408, 429 or 5xx. It makes at most six attempts, uses bounded
+          exponential delay and honors numeric Retry-After up to 30 seconds.
+          Other HTTP errors fail immediately. Cancellation propagates and
+          batches larger than 500 are split.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">Verification and limits</h2>
+        <p class="block-body">
+          41 backend unit tests and 20 agent tests passed locally. Delivery
+          tests use mocked HTTP transports, including exhaustion and
+          cancellation. Alerts still reset on restart. No disk spool,
+          idempotency key or enforced agent authentication is implemented.
+          RabbitMQ, Elasticsearch, InfluxDB and Grafana remain provisioned
+          experiments, outside the working request path.
+        </p>
+      </section>
+    </main>
 
-<section class="project-block">
-  <div class="block-label">SCOPE</div>
-  <p class="block-body">When failed logins and suspicious web requests arrive as individual events, useful patterns can disappear. I built a personal detection service that groups those events, generates alerts and adds threat-intelligence context for investigation.</p>
-</section>
+    <footer class="footer">
+      <div class="footer-copy">
+        © 2026 Vu Luu. Built from scratch, deployed on Netlify.
+      </div>
+      <div class="footer-links">
+        <a href="mailto:vukhanhluu@gmail.com">Email</a>
+        <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+        <a href="https://github.com/vukhanh732">GitHub</a>
+      </div>
+    </footer>
 
-<section class="project-block">
-  <div class="block-label">APPROACH</div>
-  <p class="block-body">FastAPI handles ingestion, an in-memory detection engine runs stateful rules against the incoming events, and Redis caches AbuseIPDB threat-intel lookups with graceful fallback when the cache or the API is unavailable. RabbitMQ, Elasticsearch, InfluxDB, and Grafana are provisioned via Docker Compose for the intended full pipeline - queued ingestion, long-term log storage, and metrics dashboards - but are not connected to the live request path yet.</p>
-  <div class="diagram">
-    <div class="diagram-row">
-      <div class="diagram-node">Log Sources</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">FastAPI Ingestion</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Detection Engine</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Threat Intel (Redis cache)</div>
-    </div>
-    <div class="diagram-caption">Live request path. RabbitMQ / Elasticsearch / InfluxDB / Grafana are provisioned locally via Docker Compose for the next phase.</div>
-  </div>
-</section>
-
-<section class="project-block">
-  <div class="block-label">WHAT I BUILT</div>
-  <ul class="block-list">
-    <li>SSH brute-force detection using a stateful sliding time window</li>
-    <li>SQL injection pattern matching against URL-decoded payloads</li>
-    <li>Path traversal detection</li>
-    <li>HTTP auth brute-force detection</li>
-    <li>AbuseIPDB threat-intel integration with Redis caching and fallback handling when the lookup fails</li>
-    <li>Rate limiting and payload caps on both public endpoints, plus input validation, to constrain public input and request volume</li>
-  </ul>
-</section>
-
-<section class="project-block">
-  <div class="block-label">IMPACT</div>
-  <p class="block-body">A run of failed logins becomes an alert that can be investigated as a pattern. IP reputation adds context without requiring a fresh external lookup for every event. That is the practical value demonstrated by the current API slice.</p>
-</section>
-
-<section class="project-block last">
-  <div class="block-label">OUTCOME</div>
-  <p class="block-body">The phase-one API is deployed, hardened with input validation, rate limits and payload caps, and covered by unit and integration tests. The demo uses in-memory state that resets on redeploy; queued ingestion, durable storage and dashboards remain future integration work. The free-tier demo may need time to wake from sleep.</p>
-</section>
-
-</main>
-
-<footer class="footer">
-  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
-  <div class="footer-links">
-    <a href="mailto:vukhanhluu@gmail.com">Email</a>
-    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
-    <a href="https://github.com/vukhanh732">GitHub</a>
-  </div>
-</footer>
-
-<script src="js/main.js" defer></script>
-</body>
+    <script src="js/main.js" defer></script>
+  </body>
 </html>

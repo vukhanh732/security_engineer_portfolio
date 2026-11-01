@@ -1,126 +1,197 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gatekeeper - Vu Luu</title>
-<meta name="description" content="A personal Python CI gate that blocks HIGH Bandit findings and reported Safety vulnerabilities, with readable remediation evidence.">
-<meta name="theme-color" content="#f0f1e9">
-<link rel="canonical" href="https://security-vu.netlify.app/gatekeeper.html">
-<link rel="icon" href="/favicon.svg?v=20261029-study1" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico?v=20261029-study1" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Vu Luu">
-<meta property="og:title" content="Gatekeeper - security policy as code">
-<meta property="og:description" content="Bandit and Safety reports drive a readable security policy; MEDIUM code findings and non-blocking ZAP results stay available for review.">
-<meta property="og:url" content="https://security-vu.netlify.app/gatekeeper.html">
-<meta property="og:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Gatekeeper - security policy as code">
-<meta name="twitter:description" content="A severity-aware CI/CD security gate built with GitHub Actions, Bandit, Safety, and OWASP ZAP.">
-<meta name="twitter:image" content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/editorial.css">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Gatekeeper","description":"A severity-aware CI/CD security gate using Bandit, Safety, and OWASP ZAP.","codeRepository":"https://github.com/vukhanh732/gatekeeper-devsecops","programmingLanguage":"Python","author":{"@type":"Person","name":"Vu Luu","url":"https://security-vu.netlify.app/"},"url":"https://security-vu.netlify.app/gatekeeper.html"}
-</script>
-</head>
-<body class="page-coral">
-<a href="#main-content" class="skip-link">Skip to content</a>
-<div class="ambient-cursor-glow" aria-hidden="true"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gatekeeper - Vu Luu</title>
+    <meta
+      name="description"
+      content="A build decision with its evidence attached. Turn Python code and dependency scans into an explicit pass or block, then attach a readable report for the reviewer."
+    />
+    <meta name="theme-color" content="#f0f1e9" />
+    <link
+      rel="canonical"
+      href="https://security-vu.netlify.app/gatekeeper.html"
+    />
+    <link
+      rel="icon"
+      href="/favicon.svg?v=20261029-study1"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon.ico?v=20261029-study1" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Vu Luu" />
+    <meta property="og:title" content="Gatekeeper - Vu Luu" />
+    <meta
+      property="og:description"
+      content="A build decision with its evidence attached. Turn Python code and dependency scans into an explicit pass or block, then attach a readable report for the reviewer."
+    />
+    <meta
+      property="og:url"
+      content="https://security-vu.netlify.app/gatekeeper.html"
+    />
+    <meta
+      property="og:image"
+      content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gatekeeper - Vu Luu" />
+    <meta
+      name="twitter:description"
+      content="A build decision with its evidence attached. Turn Python code and dependency scans into an explicit pass or block, then attach a readable report for the reviewer."
+    />
+    <meta
+      name="twitter:image"
+      content="https://security-vu.netlify.app/images/portfolio-hero-v3.webp"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/editorial.css" />
+    <link rel="stylesheet" href="css/projects.css?v=20261101-projects1" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Gatekeeper",
+        "description": "A severity-aware CI/CD security gate using Bandit, Safety, and OWASP ZAP.",
+        "codeRepository": "https://github.com/vukhanh732/gatekeeper-devsecops",
+        "programmingLanguage": "Python",
+        "author": {
+          "@type": "Person",
+          "name": "Vu Luu",
+          "url": "https://security-vu.netlify.app/"
+        },
+        "url": "https://security-vu.netlify.app/gatekeeper.html"
+      }
+    </script>
+  </head>
+  <body class="page-coral">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="ambient-cursor-glow" aria-hidden="true"></div>
 
-<header class="nav">
-  <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
-  <nav class="nav-links">
-    <a href="index.html#about" class="nav-link">About</a>
-    <a href="index.html#skills" class="nav-link">Skills</a>
-    <a href="index.html#experience" class="nav-link">Experience</a>
-    <a href="index.html#projects" class="nav-link">Projects</a>
-    <a href="blog.html" class="nav-link">Blog</a>
-    <a href="study-notes.html" class="nav-link">Notes</a>
-    <a href="index.html#contact" class="nav-link">Contact</a>
-    <a href="resume.pdf" download class="btn-resume">Resume</a>
-  </nav>
-  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-  <nav class="mobile-panel">
-    <a href="index.html#about" class="mobile-link">About</a>
-    <a href="index.html#skills" class="mobile-link">Skills</a>
-    <a href="index.html#experience" class="mobile-link">Experience</a>
-    <a href="index.html#projects" class="mobile-link">Projects</a>
-    <a href="blog.html" class="mobile-link">Blog</a>
-    <a href="study-notes.html" class="mobile-link">Notes</a>
-    <a href="index.html#contact" class="mobile-link">Contact</a>
-    <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
-  </nav>
-</header>
+    <header class="nav">
+      <a href="index.html" class="nav-logo">Vu Luu<span>.</span></a>
+      <nav class="nav-links">
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="index.html#skills" class="nav-link">Skills</a>
+        <a href="index.html#experience" class="nav-link">Experience</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="study-notes.html" class="nav-link">Notes</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+        <a href="resume.pdf" download class="btn-resume">Resume</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        ☰
+      </button>
+      <nav class="mobile-panel">
+        <a href="index.html#about" class="mobile-link">About</a>
+        <a href="index.html#skills" class="mobile-link">Skills</a>
+        <a href="index.html#experience" class="mobile-link">Experience</a>
+        <a href="index.html#projects" class="mobile-link">Projects</a>
+        <a href="blog.html" class="mobile-link">Blog</a>
+        <a href="study-notes.html" class="mobile-link">Notes</a>
+        <a href="index.html#contact" class="mobile-link">Contact</a>
+        <a href="resume.pdf" download class="mobile-resume">Download Resume</a>
+      </nav>
+    </header>
 
-<main id="main-content">
-<section class="project-hero">
-  <a href="index.html#projects" class="article-back">← All projects</a>
-  <div class="project-eyebrow">PROJECT · DEVSECOPS / CI-CD</div>
-  <h1 class="project-title">Gatekeeper</h1>
-  <p class="project-lead">A personal CI security gate with a readable policy: HIGH code findings and reported vulnerable dependencies block delivery; lower-severity code findings remain visible for review.</p>
-  <div class="project-stack-row">
-    <span>GitHub Actions</span><span>Bandit</span><span>Safety</span><span>OWASP ZAP</span>
-  </div>
-  <a href="https://github.com/vukhanh732/gatekeeper-devsecops" class="project-github">View on GitHub →</a>
-</section>
+    <main id="main-content">
+      <section class="project-hero">
+        <a href="index.html#projects" class="article-back">← All projects</a>
+        <div class="project-eyebrow">
+          Developer tooling / Fail-closed policy gate
+        </div>
+        <h1 class="project-title">Gatekeeper</h1>
+        <p class="project-lead">
+          A build decision with its evidence attached. Turn Python code and
+          dependency scans into an explicit pass or block, then attach a
+          readable report for the reviewer.
+        </p>
+        <div class="project-actions">
+          <a
+            class="project-open"
+            href="https://github.com/vukhanh732/gatekeeper-devsecops"
+            target="_blank"
+            rel="noopener"
+            >View repository ↗</a
+          >
+        </div>
+        <p class="project-meta">Python · GitHub Actions · Bandit · Safety</p>
+      </section>
+      <div class="case-image">
+        <figure class="project-cover">
+          <a
+            href="images/gatekeeper-report.webp"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open full-size Gatekeeper image"
+            ><img
+              src="images/gatekeeper-report.webp"
+              alt="Gatekeeper report visibly labelled demonstration data, showing a blocked policy and scanner coverage"
+              width="1440"
+              height="1297"
+              loading="lazy"
+              decoding="async"
+          /></a>
+          <figcaption>
+            Generated HTML report / synthetic fixture, not a production scan
+          </figcaption>
+        </figure>
+      </div>
+      <section class="project-block">
+        <h2 class="block-label">Why it exists</h2>
+        <p class="block-body">
+          Security scans need a clear consequence in the build process.
+          Gatekeeper reads code and dependency reports, enforces a documented
+          policy and produces a standalone HTML evidence report.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">Fail closed on missing evidence</h2>
+        <p class="block-body">
+          The previous parser could treat missing or malformed reports as zero
+          findings. The updated gate exits 2 when required evidence is
+          unavailable or invalid. Safety metadata and scanned-package evidence
+          are required, so the legacy fabricated empty-report fallback is
+          rejected.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">A reusable action that enforces the policy</h2>
+        <p class="block-body">
+          The composite action scans the caller checkout and declared
+          requirements file, executes the bundled gate and uploads evidence even
+          when the gate fails. Any Bandit High or Safety vulnerability blocks,
+          including ignored dependency findings. Medium/Low Bandit issues remain
+          visible; ZAP is optional context.
+        </p>
+      </section>
+      <section class="project-block">
+        <h2 class="block-label">Verification and limits</h2>
+        <p class="block-body">
+          Eight tests cover outcomes, malformed reports, scanner errors and HTML
+          escaping. The report does not invent a universal patched package
+          version. Its screenshot is generated from a synthetic regression
+          fixture and carries a visible demonstration banner. The intentionally
+          vulnerable Flask target can correctly produce a failing pipeline;
+          scanner credentials and supported Safety report formats are still
+          required.
+        </p>
+      </section>
+    </main>
 
-<section class="project-block">
-  <div class="block-label">SCOPE</div>
-  <p class="block-body">A security report only helps a release if someone knows which findings should stop it. I built a personal CI workflow that applies an explicit policy to Python code and dependency scans, then keeps the resulting evidence available to reviewers.</p>
-</section>
+    <footer class="footer">
+      <div class="footer-copy">
+        © 2026 Vu Luu. Built from scratch, deployed on Netlify.
+      </div>
+      <div class="footer-links">
+        <a href="mailto:vukhanhluu@gmail.com">Email</a>
+        <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
+        <a href="https://github.com/vukhanh732">GitHub</a>
+      </div>
+    </footer>
 
-<section class="project-block">
-  <div class="block-label">APPROACH</div>
-  <p class="block-body">Bandit and Safety reports feed a Python policy script. HIGH Bandit findings or reported Safety vulnerabilities fail the gate; MEDIUM Bandit findings are logged without blocking. After that gate, the workflow can run a non-blocking ZAP baseline against the container and collect its report.</p>
-  <div class="diagram">
-    <div class="diagram-row">
-      <div class="diagram-node">Push / PR</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Bandit + Safety Scan</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Severity Gate</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">ZAP Report (non-blocking)</div>
-      <span class="diagram-arrow">→</span>
-      <div class="diagram-node">Remediation Dashboard</div>
-    </div>
-    <div class="diagram-caption">HIGH Bandit findings and reported Safety vulnerabilities fail the gate. MEDIUM Bandit findings and ZAP results remain available for review.</div>
-  </div>
-</section>
-
-<section class="project-block">
-  <div class="block-label">WHAT I BUILT</div>
-  <ul class="block-list">
-    <li>A severity-tiered gate: any HIGH severity Bandit finding or any Safety CVE fails the build</li>
-    <li>MEDIUM findings are logged for visibility but do not block the pipeline</li>
-    <li>A 600-line HTML dashboard generator that turns raw scan output into a readable remediation report</li>
-  </ul>
-</section>
-
-<section class="project-block">
-  <div class="block-label">IMPACT</div>
-  <p class="block-body">The repository records two useful policy examples: flask-login passes with no HIGH findings, while the intentionally vulnerable demo fails with one HIGH finding. The dashboard puts the relevant code, dependency findings and remediation details in one place.</p>
-</section>
-
-<section class="project-block last">
-  <div class="block-label">OUTCOME</div>
-  <p class="block-body">The working result is a repeatable policy decision and a readable report. The next improvement is to fail safely on scanner errors and invalid reports: the current parser can treat missing or malformed reports as empty results. That boundary needs hardening before production use.</p>
-</section>
-
-</main>
-
-<footer class="footer">
-  <div class="footer-copy">© 2026 Vu Luu. Built from scratch, deployed on Netlify.</div>
-  <div class="footer-links">
-    <a href="mailto:vukhanhluu@gmail.com">Email</a>
-    <a href="https://linkedin.com/in/vukhanhluu">LinkedIn</a>
-    <a href="https://github.com/vukhanh732">GitHub</a>
-  </div>
-</footer>
-
-<script src="js/main.js" defer></script>
-</body>
+    <script src="js/main.js" defer></script>
+  </body>
 </html>

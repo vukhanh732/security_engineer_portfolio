@@ -16,7 +16,7 @@ Enter office starts the typed name introduction, typing sounds, quiet office amb
 
 Poker is five-card draw. Badminton is first to seven with bounded movement, deliberate contact timing and left/centre/right aiming. Clear, drop and smash have different depths and speeds. Friendly and Club opponents react and move to reach each shuttle, rather than retrying random misses. Keyboard, pointer and touch controls use the same simulation. Minimizing badminton pauses it; closing a game ends it. Sound starts only after Enable sound. Music/effects volumes are independently remembered; mute and hidden tabs pause playback.
 
-Phones start with the normal scrolling portfolio and a direct Enter office action. More provides the remaining controls without covering the scene. Simple view, unavailable JavaScript, failed scene downloads and unavailable WebGL all preserve the professional content. Existing case-study paths, legacy hash aliases, contact fields and facts remain intact. BrainTrain's redesign remains explicitly unpublished.
+Phones start with the normal scrolling portfolio and a direct Enter office action. More provides the remaining controls without covering the scene. Simple view, unavailable JavaScript, failed scene downloads and unavailable WebGL all preserve the professional content. Existing case-study paths, legacy hash aliases, contact fields and facts remain intact. BrainTrain.space now links to the live local-first redesign, with new public-app screenshots.
 
 ## Sharpness and loading
 
@@ -69,4 +69,6 @@ Desk artwork: **Henry Heffernan**, MIT. See [ASSET-CREDITS.md](ASSET-CREDITS.md)
 
 ## Project evidence
 
-Project previews and case studies describe practical use, the working result, supporting evidence and the next improvement. Scope was checked against the project repositories: SentryNode is a deployed in-memory phase-one API, Wazuh is a three-endpoint personal lab, Gatekeeper enforces its HIGH-Bandit / Safety policy but still needs report-error hardening, and BrainTrain's redesign is unpublished. No adoption or business-impact metrics are invented.
+Project previews and case studies describe practical use, the working result, supporting evidence and the next improvement. Scope was checked against the project repositories: SentryNode is a deployed in-memory phase-one API, Wazuh is a three-endpoint personal lab, Gatekeeper now rejects invalid scanner evidence and enforces its policy through the reusable action; Wazuh includes an offline triage CLI; and BrainTrain.space is the live React/TypeScript redesign. No adoption or business-impact metrics are invented.
+
+Project presentation updated November 2026: screenshot-led reading panes retain the retro computer and simple/mobile fallbacks. BrainTrain source remains private; no public code link implies otherwise. Gatekeeper screenshots are labelled synthetic fixture reports. SentryNode’s diagram describes implemented code, rather than pretending to be a product dashboard.

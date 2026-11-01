@@ -58,7 +58,8 @@
       content="https://security-vu.netlify.app/images/office-door-20261031.webp"
     />
     <link rel="stylesheet" href="css/clubhouse.css?v=20261031-door1" />
-    <link rel="stylesheet" href="css/desktop.css?v=20261031-door1" />
+    <link rel="stylesheet" href="css/desktop.css?v=20261101-projects1" />
+    <link rel="stylesheet" href="css/projects.css?v=20261101-projects1" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -307,8 +308,8 @@
       <section id="projects" class="portfolio-section">
         <h2>Projects</h2>
         <p class="section-intro">
-          Problems worth solving. Working code, evidence, and what I am still
-          improving.
+          Interactive products, detection systems and tools I use to learn by
+          building.
         </p>
         <div class="project-browser">
           <nav class="project-folders" aria-label="Project folders">
@@ -322,7 +323,7 @@
                 alt=""
                 width="26"
                 height="26"
-              />BrainTrain</button
+              />BrainTrain.space</button
             ><button data-project="sentrynode" aria-pressed="false">
               <img
                 src="assets/icons/folder.svg"
@@ -347,296 +348,291 @@
             </button>
           </nav>
           <div class="project-previews">
-            <article data-project-file="braintrain" class="featured-project">
-              <span class="project-status"
-                >Personal product · redesign in progress</span
-              >
-              <h3>BrainTrain</h3>
-              <p class="project-purpose">
-                Make a short practice session part of a longer story.
-              </p>
-              <p>
-                Standalone games forget you when a round ends. I built
-                BrainTrain so a player can return to saved progress, adaptive
-                difficulty, ranked tiers and insights across six games.
-              </p>
-              <div class="project-result">
-                <span>Working result</span>
-                <p>
-                  One session-recording path updates scores, streaks, rankings
-                  and insights together. A completed round carries through to
-                  the player's next visit.
+            <article data-project-file="braintrain" class="project-sheet">
+              <header class="project-sheet-head">
+                <div class="project-kicker">
+                  <span>01 / Interactive product</span
+                  ><span class="project-state">Redesign now live</span>
+                </div>
+                <h3>BrainTrain.space</h3>
+                <p class="project-deck">
+                  Brain training with a world to come back to. Short maths,
+                  memory, focus and pattern challenges meet a 3D guardian
+                  campaign. Start playing without an account.
                 </p>
-              </div>
-              <dl class="project-evidence">
-                <div>
-                  <dt>Real-world use</dt>
-                  <dd>
-                    A free web app for someone who wants short, repeatable games
-                    and a history of their own results.
-                  </dd>
+                <div class="project-actions">
+                  <a
+                    class="project-open"
+                    href="https://www.braintrain.space/"
+                    target="_blank"
+                    rel="noopener"
+                    >Play BrainTrain ↗</a
+                  ><a href="braintrain.html">Engineering notes →</a>
                 </div>
-                <div>
-                  <dt>Evidence</dt>
-                  <dd>
-                    Unit-tested scoring and analytics, plus browser/backend
-                    checks against a real Supabase project. Elo history is
-                    replayed from recorded sessions.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Still improving</dt>
-                  <dd>
-                    The redesign is not published yet. The screenshot and case
-                    study show the earlier released version.
-                  </dd>
-                </div>
-              </dl>
-              <figure>
-                <img
-                  src="images/braintrain-insights.webp"
-                  alt="Recorded performance insights in BrainTrain's previously published version"
-                  width="1000"
-                  height="626"
-                  loading="lazy"
-                />
+              </header>
+              <figure class="project-cover">
+                <a
+                  href="images/braintrain-space-home.webp"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Open full-size BrainTrain.space image"
+                  ><img
+                    src="images/braintrain-space-home.webp"
+                    alt="The redesigned BrainTrain.space home, with training, campaign and local progress beside a 3D guardian"
+                    width="1440"
+                    height="1000"
+                    loading="lazy"
+                    decoding="async"
+                /></a>
                 <figcaption>
-                  Previously published version. The redesigned app is not
-                  published yet.
+                  Live redesigned app / captured November 2026
                 </figcaption>
               </figure>
-              <p class="project-technologies">
-                Next.js · TypeScript · Supabase · Vitest
+              <p class="project-meta">
+                React · TypeScript · Three.js · IndexedDB
               </p>
-              <div class="project-links">
-                <a href="braintrain.html" class="text-link"
-                  >Read the engineering story ↗</a
-                ><a
-                  href="https://github.com/vukhanh732/BrainTrain"
-                  target="_blank"
-                  rel="noopener"
-                  >Code &amp; evidence ↗</a
-                >
-              </div>
-            </article>
-            <article data-project-file="sentrynode" class="project-entry">
-              <span class="project-status"
-                >Personal build · working phase-one API</span
-              >
-              <h3>SentryNode</h3>
-              <p class="project-purpose">
-                Turn a trail of suspicious requests into something worth
-                investigating.
-              </p>
-              <p>
-                A failed SSH login says little on its own. SentryNode groups
-                repeated failures inside a time window, checks web payloads for
-                attack patterns, and adds IP-reputation context for triage.
-              </p>
-              <ol
-                class="project-flow"
-                aria-label="SentryNode's working request path"
-              >
-                <li>Receive logs</li>
-                <li>Run detection rules</li>
-                <li>Enrich the alert</li>
-                <li>Return results</li>
-              </ol>
-              <div class="project-result">
-                <span>Working result</span>
-                <p>
-                  The live FastAPI slice accepts structured events and produces
-                  alerts. Redis reduces repeated threat-intelligence lookups,
-                  with fallback handling when the cache or external service is
-                  unavailable.
-                </p>
-              </div>
-              <dl class="project-evidence">
+              <dl class="project-notes">
                 <div>
-                  <dt>Real-world use</dt>
+                  <dt>The build</dt>
                   <dd>
-                    The first part of a small monitoring pipeline: flag patterns
-                    in SSH and web logs before a person investigates the
-                    underlying events.
+                    A shared training flow supports Practice, Sprint and
+                    Survival, with selectable skills, difficulty and session
+                    length.
                   </dd>
                 </div>
                 <div>
-                  <dt>Evidence</dt>
+                  <dt>The decision</dt>
                   <dd>
-                    A deployed API, unit/integration tests, input validation,
-                    rate limits and payload caps. The source documents the
-                    request path.
+                    Progress stays in this browser. Removing account setup lets
+                    someone try a session immediately.
                   </dd>
                 </div>
                 <div>
-                  <dt>Still improving</dt>
+                  <dt>Current scope</dt>
                   <dd>
-                    The demo holds state in memory and resets on redeploy.
-                    RabbitMQ, Elasticsearch and dashboards are provisioned
-                    locally but are not connected to the live request path yet.
+                    Duelist and Illusionist are playable. Guardians III-V remain
+                    unreleased; this is a local journey, without cross-device
+                    sync.
                   </dd>
                 </div>
               </dl>
-              <p class="project-technologies">
-                Python · FastAPI · Redis · Docker · pytest
-              </p>
-              <div class="project-links">
-                <a href="sentrynode.html" class="text-link"
-                  >Read the detection story ↗</a
-                ><a
-                  href="https://github.com/vukhanh732/sentrynode"
+            </article>
+            <article data-project-file="sentrynode" class="project-sheet">
+              <header class="project-sheet-head">
+                <div class="project-kicker">
+                  <span>02 / Detection engineering</span
+                  ><span class="project-state">API + Python collector</span>
+                </div>
+                <h3>SentryNode</h3>
+                <p class="project-deck">
+                  Find the pattern behind a suspicious request. Collect SSH and
+                  web logs, detect repeated failures and attack patterns, then
+                  inspect the resulting alerts through a FastAPI service.
+                </p>
+                <div class="project-actions">
+                  <a
+                    class="project-open"
+                    href="https://sentrynode-backend.onrender.com/docs"
+                    target="_blank"
+                    rel="noopener"
+                    >Open API docs ↗</a
+                  ><a
+                    href="https://github.com/vukhanh732/sentrynode"
+                    target="_blank"
+                    rel="noopener"
+                    >View repository ↗</a
+                  ><a href="sentrynode.html">Engineering notes →</a>
+                </div>
+              </header>
+              <figure class="project-cover">
+                <a
+                  href="images/sentrynode-flow.svg"
                   target="_blank"
                   rel="noopener"
-                  >Code &amp; evidence ↗</a
-                >
-              </div>
-            </article>
-            <article data-project-file="wazuh" class="project-entry">
-              <span class="project-status"
-                >Personal home lab · three monitored endpoints</span
-              >
-              <h3>Wazuh SOC HomeLab</h3>
-              <p class="project-purpose">
-                Follow a suspicious file all the way from detection to
-                containment.
-              </p>
-              <p>
-                I joined Windows, Ubuntu and Kali endpoints to one Wazuh
-                manager, then connected file-integrity events to VirusTotal
-                enrichment and an Active Response quarantine action.
-              </p>
-              <ol class="project-flow" aria-label="Home-lab response workflow">
-                <li>File changes</li>
-                <li>Inspect its hash</li>
-                <li>Match an alert</li>
-                <li>Quarantine</li>
-              </ol>
-              <div class="project-result">
-                <span>Working result</span>
-                <p>
-                  In the controlled lab, a matching threat-intelligence alert
-                  can move a file into quarantine automatically. The detection
-                  event and response are visible together in the manager.
-                </p>
-              </div>
-              <dl class="project-evidence">
-                <div>
-                  <dt>Real-world use</dt>
-                  <dd>
-                    Practice the hand-off between endpoint visibility,
-                    investigation and response, instead of stopping at a
-                    dashboard full of alerts.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Evidence</dt>
-                  <dd>
-                    Agent inventory, MITRE ATT&amp;CK views, FIM screenshots and
-                    a documented EICAR test workflow with reproducible commands.
-                  </dd>
-                </div>
-                <div>
-                  <dt>Still improving</dt>
-                  <dd>
-                    The next step is exercising noisier events and failed
-                    response actions. Current evidence comes from three
-                    endpoints in a VMware home lab.
-                  </dd>
-                </div>
-              </dl>
-              <figure>
-                <img
-                  src="images/wazuh-fim.webp"
-                  alt="File integrity events recorded by the Wazuh home lab"
-                  width="1200"
-                  height="644"
-                  loading="lazy"
-                />
+                  aria-label="Open full-size SentryNode image"
+                  ><img
+                    src="images/sentrynode-flow.svg"
+                    alt="Implemented SentryNode flow from log files through the collector, HTTP ingestion and detection to alerts, with separate IP reputation lookup"
+                    width="1400"
+                    height="760"
+                    loading="lazy"
+                    decoding="async"
+                /></a>
                 <figcaption>
-                  Actual file-integrity events from the existing lab.
+                  Implemented architecture / derived from the source code
                 </figcaption>
               </figure>
-              <p class="project-technologies">
-                Wazuh · Windows / Linux · VMware · VirusTotal
+              <p class="project-meta">
+                Python · FastAPI · HTTPX · Redis · pytest
               </p>
-              <div class="project-links">
-                <a href="wazuh.html" class="text-link"
-                  >Follow the lab workflow ↗</a
-                ><a
-                  href="https://github.com/vukhanh732/Wazuh-SOC-HomeLab"
-                  target="_blank"
-                  rel="noopener"
-                  >Configuration &amp; evidence ↗</a
-                >
-              </div>
-            </article>
-            <article data-project-file="gatekeeper" class="project-entry">
-              <span class="project-status"
-                >Personal build · security checks in CI</span
-              >
-              <h3>Gatekeeper</h3>
-              <p class="project-purpose">
-                Give a security finding a clear consequence in the release
-                process.
-              </p>
-              <p>
-                A scan report is easy to ignore. Gatekeeper connects Python code
-                and dependency checks to an explicit build decision, then
-                packages the findings into a readable remediation dashboard.
-              </p>
-              <ol class="project-flow" aria-label="Gatekeeper release workflow">
-                <li>Code changes</li>
-                <li>Scan</li>
-                <li>Apply policy</li>
-                <li>Review evidence</li>
-              </ol>
-              <div class="project-result">
-                <span>Working result</span>
-                <p>
-                  HIGH Bandit findings and reported Safety dependency
-                  vulnerabilities fail the gate. MEDIUM Bandit findings remain
-                  visible without blocking. ZAP adds dynamic-scan evidence
-                  rather than deciding the gate.
-                </p>
-              </div>
-              <dl class="project-evidence">
+              <dl class="project-notes">
                 <div>
-                  <dt>Real-world use</dt>
+                  <dt>Reliability upgrade</dt>
                   <dd>
-                    A repeatable release check for a Python repository, with a
-                    policy reviewers can read and findings they can act on.
+                    Transient delivery failures now resend the same batch with
+                    bounded backoff. Large batches are split at the API’s
+                    500-event limit.
                   </dd>
                 </div>
                 <div>
                   <dt>Evidence</dt>
                   <dd>
-                    The repository records a pass on flask-login with no HIGH
-                    findings and a fail on the deliberately vulnerable demo with
-                    one HIGH finding.
+                    41 backend unit tests and 20 collector tests passed locally,
+                    including retries, permanent failures, chunking and
+                    cancellation.
                   </dd>
                 </div>
                 <div>
-                  <dt>Still improving</dt>
+                  <dt>Current scope</dt>
                   <dd>
-                    Report parsing and scanner-error handling need hardening:
-                    missing or invalid reports can currently be treated as empty
-                    results. This needs to fail safely before production use.
+                    The demo keeps alerts in memory. There is no durable queue
+                    or agent authentication; exhausted retries can lose events
+                    and ambiguous timeouts can duplicate them.
                   </dd>
                 </div>
               </dl>
-              <p class="project-technologies">
-                Python · GitHub Actions · Bandit · Safety · OWASP ZAP
-              </p>
-              <div class="project-links">
-                <a href="gatekeeper.html" class="text-link"
-                  >Read the policy decisions ↗</a
-                ><a
-                  href="https://github.com/vukhanh732/gatekeeper-devsecops"
+            </article>
+            <article data-project-file="wazuh" class="project-sheet">
+              <header class="project-sheet-head">
+                <div class="project-kicker">
+                  <span>03 / Security operations</span
+                  ><span class="project-state">Three-endpoint lab</span>
+                </div>
+                <h3>Wazuh SOC HomeLab</h3>
+                <p class="project-deck">
+                  Make endpoint events useful to an investigator. Windows,
+                  Ubuntu and Kali telemetry in one Wazuh lab, with
+                  file-integrity events, MITRE views and an offline alert triage
+                  tool.
+                </p>
+                <div class="project-actions">
+                  <a
+                    class="project-open"
+                    href="https://github.com/vukhanh732/Wazuh-SOC-HomeLab"
+                    target="_blank"
+                    rel="noopener"
+                    >View repository ↗</a
+                  ><a href="wazuh.html">Engineering notes →</a>
+                </div>
+              </header>
+              <figure class="project-cover">
+                <a
+                  href="images/wazuh-mitre.webp"
                   target="_blank"
                   rel="noopener"
-                  >Workflow &amp; evidence ↗</a
-                >
-              </div>
+                  aria-label="Open full-size Wazuh SOC HomeLab image"
+                  ><img
+                    src="images/wazuh-mitre.webp"
+                    alt="MITRE ATT&amp;CK event views from the existing Wazuh home lab"
+                    width="1200"
+                    height="668"
+                    loading="lazy"
+                    decoding="async"
+                /></a>
+                <figcaption>
+                  Actual lab evidence / MITRE ATT&amp;CK event view
+                </figcaption>
+              </figure>
+              <p class="project-meta">
+                Wazuh · Windows / Linux · VMware · Python
+              </p>
+              <dl class="project-notes">
+                <div>
+                  <dt>New analyst tool</dt>
+                  <dd>
+                    Export JSONL alerts to a Markdown summary by severity,
+                    endpoint, technique and rule. Filter by agent or minimum
+                    rule level.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    Real agent/FIM screenshots plus three passing regression
+                    tests for counts, filtering, malformed input and safe report
+                    text.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Current scope</dt>
+                  <dd>
+                    The triage utility runs offline. Lab notes describe response
+                    configuration, but the custom quarantine script is not
+                    included in the repository.
+                  </dd>
+                </div>
+              </dl>
+            </article>
+            <article data-project-file="gatekeeper" class="project-sheet">
+              <header class="project-sheet-head">
+                <div class="project-kicker">
+                  <span>04 / Developer tooling</span
+                  ><span class="project-state">Fail-closed policy gate</span>
+                </div>
+                <h3>Gatekeeper</h3>
+                <p class="project-deck">
+                  A build decision with its evidence attached. Turn Python code
+                  and dependency scans into an explicit pass or block, then
+                  attach a readable report for the reviewer.
+                </p>
+                <div class="project-actions">
+                  <a
+                    class="project-open"
+                    href="https://github.com/vukhanh732/gatekeeper-devsecops"
+                    target="_blank"
+                    rel="noopener"
+                    >View repository ↗</a
+                  ><a href="gatekeeper.html">Engineering notes →</a>
+                </div>
+              </header>
+              <figure class="project-cover">
+                <a
+                  href="images/gatekeeper-report.webp"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Open full-size Gatekeeper image"
+                  ><img
+                    src="images/gatekeeper-report.webp"
+                    alt="Gatekeeper report visibly labelled demonstration data, showing a blocked policy and scanner coverage"
+                    width="1440"
+                    height="1297"
+                    loading="lazy"
+                    decoding="async"
+                /></a>
+                <figcaption>
+                  Generated HTML report / synthetic fixture, not a production
+                  scan
+                </figcaption>
+              </figure>
+              <p class="project-meta">
+                Python · GitHub Actions · Bandit · Safety
+              </p>
+              <dl class="project-notes">
+                <div>
+                  <dt>Policy upgrade</dt>
+                  <dd>
+                    Missing, malformed and failed scans now block. The reusable
+                    action scans the caller’s requirements file and actually
+                    enforces the policy.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Evidence</dt>
+                  <dd>
+                    Eight passing tests cover gate outcomes, the old fabricated
+                    empty-report fallback and escaping untrusted scanner text in
+                    the HTML report.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Current scope</dt>
+                  <dd>
+                    Bandit High and Safety vulnerabilities block; ZAP is
+                    optional context. The deliberately vulnerable demo is
+                    expected to fail the gate.
+                  </dd>
+                </div>
+              </dl>
             </article>
           </div>
         </div>
